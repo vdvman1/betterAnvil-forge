@@ -334,6 +334,7 @@ public class ContainerRepairBA extends ContainerRepair
     /**
      * Callback for when the crafting gui is closed.
      */
+    @Override
     public void onCraftGuiClosed(EntityPlayer par1EntityPlayer)
     {
         super.onCraftGuiClosed(par1EntityPlayer);
@@ -352,6 +353,7 @@ public class ContainerRepairBA extends ContainerRepair
         }
     }
 
+    @Override
     public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {
         return this.theWorld.getBlockId(this.field_82861_i, this.field_82858_j, this.field_82859_k) != Block.anvil.blockID ? false : par1EntityPlayer.getDistanceSq((double)this.field_82861_i + 0.5D, (double)this.field_82858_j + 0.5D, (double)this.field_82859_k + 0.5D) <= 64.0D;
@@ -360,6 +362,7 @@ public class ContainerRepairBA extends ContainerRepair
     /**
      * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
      */
+    @Override
     public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
     {
         ItemStack itemstack = null;
@@ -414,6 +417,7 @@ public class ContainerRepairBA extends ContainerRepair
     /**
      * used by the Anvil GUI to update the Item Name being typed by the player
      */
+    @Override
     public void updateItemName(String par1Str)
     {
         this.repairedItemName = par1Str;
