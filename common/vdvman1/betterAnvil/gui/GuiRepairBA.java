@@ -26,12 +26,12 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
 {
     private ContainerRepairBA repairContainer;
     private GuiTextField itemNameField;
-    private InventoryPlayer playerInventory;
+    private InventoryPlayer field_82325_q;
 
-    public GuiRepairBA(InventoryPlayer inaventoryPlayer, World world, int x, int y, int z)
+    public GuiRepairBA(InventoryPlayer par1, World par2World, int par3, int par4, int par5)
     {
-        super(new ContainerRepairBA(inaventoryPlayer, world, x, y, z, Minecraft.getMinecraft().thePlayer));
-        this.playerInventory = inaventoryPlayer;
+        super(new ContainerRepairBA(par1, par2World, par3, par4, par5, Minecraft.getMinecraft().thePlayer));
+        this.field_82325_q = par1;
         this.repairContainer = (ContainerRepairBA)this.inventorySlots;
     }
 
@@ -42,9 +42,9 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     {
         super.initGui();
         Keyboard.enableRepeatEvents(true);
-        int var1 = (this.width - this.xSize) / 2;
-        int var2 = (this.height - this.ySize) / 2;
-        this.itemNameField = new GuiTextField(this.fontRenderer, var1 + 62, var2 + 24, 103, 12);
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        this.itemNameField = new GuiTextField(this.fontRenderer, i + 62, j + 24, 103, 12);
         this.itemNameField.setTextColor(-1);
         this.itemNameField.func_82266_h(-1);
         this.itemNameField.setEnableBackgroundDrawing(false);
@@ -73,38 +73,38 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
 
         if (this.repairContainer.maximumCost > 0)
         {
-            int var3 = 8453920;
-            boolean var4 = true;
-            String var5 = StatCollector.translateToLocalFormatted("container.repair.cost", new Object[] {Integer.valueOf(this.repairContainer.maximumCost)});
+            int k = 8453920;
+            boolean flag = true;
+            String s = StatCollector.translateToLocalFormatted("container.repair.cost", new Object[] {Integer.valueOf(this.repairContainer.maximumCost)});
 
             if (!this.repairContainer.getSlot(2).getHasStack())
             {
-                var4 = false;
+                flag = false;
             }
-            else if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
+            else if (!this.repairContainer.getSlot(2).canTakeStack(this.field_82325_q.player))
             {
-                var3 = 16736352;
+                k = 16736352;
             }
 
-            if (var4)
+            if (flag)
             {
-                int var6 = -16777216 | (var3 & 16579836) >> 2 | var3 & -16777216;
-                int var7 = this.xSize - 8 - this.fontRenderer.getStringWidth(var5);
-                byte var8 = 67;
+                int l = -16777216 | (k & 16579836) >> 2 | k & -16777216;
+                int i1 = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
+                byte b0 = 67;
 
                 if (this.fontRenderer.getUnicodeFlag())
                 {
-                    drawRect(var7 - 3, var8 - 2, this.xSize - 7, var8 + 10, -16777216);
-                    drawRect(var7 - 2, var8 - 1, this.xSize - 8, var8 + 9, -12895429);
+                    drawRect(i1 - 3, b0 - 2, this.xSize - 7, b0 + 10, -16777216);
+                    drawRect(i1 - 2, b0 - 1, this.xSize - 8, b0 + 9, -12895429);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(var5, var7, var8 + 1, var6);
-                    this.fontRenderer.drawString(var5, var7 + 1, var8, var6);
-                    this.fontRenderer.drawString(var5, var7 + 1, var8 + 1, var6);
+                    this.fontRenderer.drawString(s, i1, b0 + 1, l);
+                    this.fontRenderer.drawString(s, i1 + 1, b0, l);
+                    this.fontRenderer.drawString(s, i1 + 1, b0 + 1, l);
                 }
 
-                this.fontRenderer.drawString(var5, var7, var8, var3);
+                this.fontRenderer.drawString(s, i1, b0, k);
             }
         }
 
@@ -119,7 +119,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         if (this.itemNameField.textboxKeyTyped(par1, par2))
         {
             this.repairContainer.updateItemName(this.itemNameField.getText());
-            BetterAnvil.proxy.sendItemNamePacket(this.itemNameField.getText(), this.mc.thePlayer);
+            this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
         }
         else
         {
@@ -151,17 +151,16 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      */
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int var4 = this.mc.renderEngine.getTexture("/gui/repair.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(var4);
-        int var5 = (this.width - this.xSize) / 2;
-        int var6 = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(var5, var6, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(var5 + 59, var6 + 20, 0, this.ySize + (this.repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
+        this.mc.renderEngine.bindTexture("/gui/repair.png");
+        int k = (this.width - this.xSize) / 2;
+        int l = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(k + 59, l + 20, 0, this.ySize + (this.repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
         if ((this.repairContainer.getSlot(0).getHasStack() || this.repairContainer.getSlot(1).getHasStack()) && !this.repairContainer.getSlot(2).getHasStack())
         {
-            this.drawTexturedModalRect(var5 + 99, var6 + 45, this.xSize, 0, 28, 21);
+            this.drawTexturedModalRect(k + 99, l + 45, this.xSize, 0, 28, 21);
         }
     }
 
@@ -185,7 +184,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             if (par3ItemStack != null)
             {
                 this.repairContainer.updateItemName(this.itemNameField.getText());
-                this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload("MC|ItemName", this.itemNameField.getText().getBytes()));
+                this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
             }
         }
     }

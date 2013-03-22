@@ -66,9 +66,9 @@ public class BetterAnvil {
 			Class<?> block = Block.class;
 			Field MCAnvil = block.getDeclaredField("anvil");
 			Block.blocksList[145] = null;
-			anvil = (new BlockAnvilBA(145)).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setBlockName("anvil").setRequiresSelfNotify();
+			anvil = (new BlockAnvilBA(145)).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("anvil");
 			Utils.setFinalStatic(MCAnvil, anvil);
-			Item.itemsList[145] = (new ItemAnvilBlock(anvil)).setItemName("anvil");
+			Item.itemsList[145] = (new ItemAnvilBlock(anvil)).setUnlocalizedName("anvil");
 			Block.blocksList[145] = anvil;
 		} catch (NoSuchFieldException e) {
 			System.out.println("Could not replace BlockAnvil, NoSuchFieldException.\nThis should never happen!\nPlease let vdvman1 know which mods you are using!");
