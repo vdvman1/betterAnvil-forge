@@ -34,6 +34,7 @@ public class SlotRepairBA extends Slot
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
+    @Override
     public boolean isItemValid(ItemStack par1ItemStack)
     {
         return false;
@@ -42,11 +43,13 @@ public class SlotRepairBA extends Slot
     /**
      * Return whether this slot's stack can be taken from this slot.
      */
+    @Override
     public boolean canTakeStack(EntityPlayer par1EntityPlayer)
     {
         return (par1EntityPlayer.capabilities.isCreativeMode || par1EntityPlayer.experienceLevel >= this.anvil.maximumCost) && this.anvil.maximumCost > 0 && this.getHasStack();
     }
 
+    @Override
     public void onPickupFromSlot(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
     {
         if (!par1EntityPlayer.capabilities.isCreativeMode)

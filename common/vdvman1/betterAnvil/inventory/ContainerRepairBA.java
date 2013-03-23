@@ -9,6 +9,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ContainerRepair;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.Slot;
@@ -17,6 +18,8 @@ import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import vdvman1.betterAnvil.BetterAnvil;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerRepairBA extends ContainerRepair
 {
@@ -32,6 +35,9 @@ public class ContainerRepairBA extends ContainerRepair
     private int field_82858_j;
     private int field_82859_k;
 
+    /** The maximum cost of repairing/renaming in the anvil. */
+    public int maximumCost = 0;
+
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
     private String repairedItemName;
@@ -39,8 +45,7 @@ public class ContainerRepairBA extends ContainerRepair
     /** The player that has this container open. */
     private final EntityPlayer thePlayer;
 
-    @SuppressWarnings("unchecked")
-	public ContainerRepairBA(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5, EntityPlayer par6EntityPlayer)
+    public ContainerRepairBA(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5, EntityPlayer par6EntityPlayer)
     {
         super(par1InventoryPlayer, par2World, par3, par4, par5, par6EntityPlayer);
     	this.theWorld = par2World;
@@ -49,14 +54,39 @@ public class ContainerRepairBA extends ContainerRepair
         this.field_82859_k = par5;
         this.thePlayer = par6EntityPlayer;
         
-        //replace SlotRepair with SlotRepairBA, instead of completely replacing the constructor
-        //was required to implement this.addSlotToConatiner to force the correct slotIndex
-        this.inventorySlots.remove(2);
-        this.inventoryItemStacks.remove(2);
-        Slot slot = new SlotRepairBA(this, this.outputSlot, 2, 134, 47, par2World, par3, par4, par5);
-        slot.slotNumber = 2;
-        this.inventorySlots.add(2, slot);
-        this.inventoryItemStacks.add(2, (Object)null);
+        this.inventorySlots.clear();
+        this.inventoryItemStacks.clear();
+        this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
+        this.addSlotToContainer(new Slot(this.inputSlots, 1, 76, 47));
+        this.addSlotToContainer(new SlotRepairBA(this, this.outputSlot, 2, 134, 47, par2World, par3, par4, par5));
+        int l;
+
+        for (l = 0; l < 3; ++l)
+        {
+            for (int i1 = 0; i1 < 9; ++i1)
+            {
+                this.addSlotToContainer(new Slot(par1InventoryPlayer, i1 + l * 9 + 9, 8 + i1 * 18, 84 + l * 18));
+            }
+        }
+
+        for (l = 0; l < 9; ++l)
+        {
+            this.addSlotToContainer(new Slot(par1InventoryPlayer, l, 8 + l * 18, 142));
+        }
+    }
+    
+    /**
+     * Callback for when the crafting matrix is changed.
+     */
+    @Override
+    public void onCraftMatrixChanged(IInventory par1IInventory)
+    {
+        super.onCraftMatrixChanged(par1IInventory);
+
+        if (par1IInventory == this.inputSlots)
+        {
+            this.updateRepairOutput();
+        }
     }
 
     /**
@@ -328,6 +358,23 @@ public class ContainerRepairBA extends ContainerRepair
 
             this.outputSlot.setInventorySlotContents(0, itemstack1);
             this.detectAndSendChanges();
+        }
+    }
+
+    @Override
+    public void addCraftingToCrafters(ICrafting par1ICrafting)
+    {
+        super.addCraftingToCrafters(par1ICrafting);
+        par1ICrafting.sendProgressBarUpdate(this, 0, this.maximumCost);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void updateProgressBar(int par1, int par2)
+    {
+        if (par1 == 0)
+        {
+            this.maximumCost = par2;
         }
     }
 
