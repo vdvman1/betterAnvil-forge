@@ -13,16 +13,12 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import vdvman1.betterAnvil.BetterAnvil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockAnvilBA extends BlockAnvil
 {
-	/** List of types/statues the Anvil can be in. */
-    public static final String[] statuses = new String[] {"intact", "slightlyDamaged", "veryDamaged"};
     private static final String[] field_94431_cO = new String[] {"anvil_top", "anvil_top_damaged_1", "anvil_top_damaged_2"};
-    public int field_82521_b = 0;
     @SideOnly(Side.CLIENT)
     private Icon[] iconArray;
 
@@ -49,7 +45,7 @@ public class BlockAnvilBA extends BlockAnvil
     {
         return false;
     }
-    
+
     @SideOnly(Side.CLIENT)
 
     /**
@@ -118,15 +114,22 @@ public class BlockAnvilBA extends BlockAnvil
             par1World.setBlockMetadataWithNotify(par2, par3, par4, 1 | i1 << 2, 2);
         }
     }
-    
+
     /**
      * Called upon block activation (right click on the block.)
      */
     @Override
     public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
     {
-        par5EntityPlayer.openGui(BetterAnvil.instance, 0, par1World, par2, par3, par4);
-        return true;
+        if (par1World.isRemote)
+        {
+            return true;
+        }
+        else
+        {
+            par5EntityPlayer.displayGUIAnvil(par2, par3, par4);
+            return true;
+        }
     }
 
     /**
@@ -203,6 +206,7 @@ public class BlockAnvilBA extends BlockAnvil
      * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
      * coordinates.  Args: blockAccess, x, y, z, side
      */
+    @Override
     public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
         return true;

@@ -17,6 +17,7 @@ public class InventoryRepairBA extends InventoryBasic
     /**
      * Called when an the contents of an Inventory change, usually
      */
+    @Override
     public void onInventoryChanged()
     {
         super.onInventoryChanged();
@@ -26,6 +27,7 @@ public class InventoryRepairBA extends InventoryBasic
     /**
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
+    @Override
     public boolean isStackValidForSlot(int par1, ItemStack par2ItemStack)
     {
         return true;

@@ -68,6 +68,7 @@ public class BetterAnvil {
 			Block.blocksList[145] = null;
 			anvil = (new BlockAnvilBA(145)).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("anvil");
 			Utils.setFinalStatic(MCAnvil, anvil);
+			Item.itemsList[145] = null;
 			Item.itemsList[145] = (new ItemAnvilBlock(anvil)).setUnlocalizedName("anvil");
 			Block.blocksList[145] = anvil;
 		} catch (NoSuchFieldException e) {

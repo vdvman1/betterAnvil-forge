@@ -38,6 +38,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Adds the buttons (and other controls) to the screen in question.
      */
+    @Override
     public void initGui()
     {
         super.initGui();
@@ -56,6 +57,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Called when the screen is unloaded. Used to disable keyboard repeat events
      */
+    @Override
     public void onGuiClosed()
     {
         super.onGuiClosed();
@@ -66,6 +68,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
+    @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
@@ -114,6 +117,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
+    @Override
     protected void keyTyped(char par1, int par2)
     {
         if (this.itemNameField.textboxKeyTyped(par1, par2))
@@ -130,6 +134,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Called when the mouse is clicked.
      */
+    @Override
     protected void mouseClicked(int par1, int par2, int par3)
     {
         super.mouseClicked(par1, par2, par3);
@@ -139,6 +144,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Draws the screen and all the components in it.
      */
+    @Override
     public void drawScreen(int par1, int par2, float par3)
     {
         super.drawScreen(par1, par2, par3);
@@ -149,6 +155,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     /**
      * Draw the background layer for the GuiContainer (everything behind the items)
      */
+    @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -165,6 +172,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     }
 
     @SuppressWarnings("rawtypes")
+    @Override
 	public void sendContainerAndContentsToPlayer(Container par1Container, List par2List)
     {
         this.sendSlotContents(par1Container, 0, par1Container.getSlot(0).getStack());
@@ -174,6 +182,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * Sends the contents of an inventory slot to the client-side Container. This doesn't have to match the actual
      * contents of that slot. Args: Container, slot number, slot contents
      */
+    @Override
     public void sendSlotContents(Container par1Container, int par2, ItemStack par3ItemStack)
     {
         if (par2 == 0)
@@ -194,5 +203,6 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * and enchanting level. Normally the first int identifies which variable to update, and the second contains the new
      * value. Both are truncated to shorts in non-local SMP.
      */
+    @Override
     public void sendProgressBarUpdate(Container par1Container, int par2, int par3) {}
 }

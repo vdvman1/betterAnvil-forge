@@ -35,9 +35,6 @@ public class ContainerRepairBA extends ContainerRepair
     private int field_82858_j;
     private int field_82859_k;
 
-    /** The maximum cost of repairing/renaming in the anvil. */
-    public int maximumCost = 0;
-
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
     private String repairedItemName;
