@@ -21,21 +21,21 @@ public class SlotRepairBA extends Slot
     /** The anvil this slot belongs to. */
     private final ContainerRepairBA anvil;
 
-    public SlotRepairBA(ContainerRepairBA par1ContainerRepair, IInventory par2IInventory, int par3, int par4, int par5, World par6World, int par7, int par8, int par9)
+    public SlotRepairBA(ContainerRepairBA containerRepairBA, IInventory iInventory, int slotIndex, int slotX, int slotY, World world, int blockX, int blockY, int blockZ)
     {
-        super(par2IInventory, par3, par4, par5);
-        this.anvil = par1ContainerRepair;
-        this.theWorld = par6World;
-        this.blockPosX = par7;
-        this.blockPosY = par8;
-        this.blockPosZ = par9;
+        super(iInventory, slotIndex, slotX, slotY);
+        this.anvil = containerRepairBA;
+        this.theWorld = world;
+        this.blockPosX = blockX;
+        this.blockPosY = blockY;
+        this.blockPosZ = blockZ;
     }
 
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
     @Override
-    public boolean isItemValid(ItemStack par1ItemStack)
+    public boolean isItemValid(ItemStack itemStack)
     {
         return false;
     }
@@ -44,17 +44,17 @@ public class SlotRepairBA extends Slot
      * Return whether this slot's stack can be taken from this slot.
      */
     @Override
-    public boolean canTakeStack(EntityPlayer par1EntityPlayer)
+    public boolean canTakeStack(EntityPlayer entityPlayer)
     {
-        return (par1EntityPlayer.capabilities.isCreativeMode || par1EntityPlayer.experienceLevel >= this.anvil.maximumCost) && this.anvil.maximumCost > 0 && this.getHasStack();
+        return (entityPlayer.capabilities.isCreativeMode || entityPlayer.experienceLevel >= this.anvil.maximumCost) && this.anvil.maximumCost > 0 && this.getHasStack();
     }
 
     @Override
-    public void onPickupFromSlot(EntityPlayer par1EntityPlayer, ItemStack par2ItemStack)
+    public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        if (!par1EntityPlayer.capabilities.isCreativeMode)
+        if (!entityPlayer.capabilities.isCreativeMode)
         {
-            par1EntityPlayer.addExperienceLevel(-this.anvil.maximumCost);
+            entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
         }
 
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, (ItemStack)null);
@@ -80,21 +80,21 @@ public class SlotRepairBA extends Slot
 
         this.anvil.maximumCost = 0;
 
-        if (!par1EntityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && par1EntityPlayer.getRNG().nextFloat() < BetterAnvil.breakChance)
+        if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && entityPlayer.getRNG().nextFloat() < BetterAnvil.breakChance)
         {
-            int i = this.theWorld.getBlockMetadata(this.blockPosX, this.blockPosY, this.blockPosZ);
-            int j = i & 3;
-            int k = i >> 2;
-            ++k;
+            int blockMetadata = this.theWorld.getBlockMetadata(this.blockPosX, this.blockPosY, this.blockPosZ);
+            int blockOrientation = blockMetadata & 3;
+            int blockDamage = blockMetadata >> 2;
+            ++blockDamage;
 
-            if (k > 2)
+            if (blockDamage > 2)
             {
                 this.theWorld.setBlockToAir(this.blockPosX, this.blockPosY, this.blockPosZ);
                 this.theWorld.playAuxSFX(1020, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
             }
             else
             {
-                this.theWorld.setBlockMetadataWithNotify(this.blockPosX, this.blockPosY, this.blockPosZ, j | k << 2, 2);
+                this.theWorld.setBlockMetadataWithNotify(this.blockPosX, this.blockPosY, this.blockPosZ, blockOrientation | blockDamage << 2, 2);
                 this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
             }
         }

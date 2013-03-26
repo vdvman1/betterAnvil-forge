@@ -8,10 +8,10 @@ public class InventoryRepairBA extends InventoryBasic
     /** Container of this anvil's block. */
     private final ContainerRepairBA theContainer;
 
-    public InventoryRepairBA(ContainerRepairBA par1ContainerRepair, String par2Str, boolean par3, int par4)
+    public InventoryRepairBA(ContainerRepairBA containerRepairBA, String inventoryTitle, boolean isLocalized, int slotCount)
     {
-        super(par2Str, par3, par4);
-        this.theContainer = par1ContainerRepair;
+        super(inventoryTitle, isLocalized, slotCount);
+        this.theContainer = containerRepairBA;
     }
 
     /**
@@ -28,7 +28,7 @@ public class InventoryRepairBA extends InventoryBasic
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
     @Override
-    public boolean isStackValidForSlot(int par1, ItemStack par2ItemStack)
+    public boolean isStackValidForSlot(int slot, ItemStack itemStack)
     {
         return true;
     }

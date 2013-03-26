@@ -11,13 +11,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockAnvilBA extends BlockAnvil
 {
-    private static final String[] field_94431_cO = new String[] {"anvil_top", "anvil_top_damaged_1", "anvil_top_damaged_2"};
+    private static final String[] textureNames = new String[] {"anvil_top", "anvil_top_damaged_1", "anvil_top_damaged_2"};
     @SideOnly(Side.CLIENT)
     private Icon[] iconArray;
 
-    public BlockAnvilBA(int par1)
+    public BlockAnvilBA(int id)
     {
-        super(par1);
+        super(id);
     }
 
     @SideOnly(Side.CLIENT)
@@ -26,11 +26,11 @@ public class BlockAnvilBA extends BlockAnvil
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-    public Icon getBlockTextureFromSideAndMetadata(int par1, int par2)
+    public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
     {
-        if (this.field_82521_b == 3 && par1 == 1)
+        if (this.field_82521_b == 3 && side == 1) //this.field_82521_b is from normal anvil, is used to represent the section of the anvil being represented, from bottom to top, 0-3
         {
-            int k = (par2 >> 2) % this.iconArray.length;
+            int k = (metadata >> 2) % this.iconArray.length;
             return this.iconArray[k];
         }
         else
@@ -46,14 +46,14 @@ public class BlockAnvilBA extends BlockAnvil
      * is the only chance you get to register icons.
      */
     @Override
-    public void registerIcons(IconRegister par1IconRegister)
+    public void registerIcons(IconRegister iconRegister)
     {
-        this.blockIcon = par1IconRegister.registerIcon("anvil_base");
-        this.iconArray = new Icon[field_94431_cO.length];
+        this.blockIcon = iconRegister.registerIcon("anvil_base");
+        this.iconArray = new Icon[textureNames.length];
 
         for (int i = 0; i < this.iconArray.length; ++i)
         {
-            this.iconArray[i] = par1IconRegister.registerIcon(field_94431_cO[i]);
+            this.iconArray[i] = iconRegister.registerIcon(textureNames[i]);
         }
     }
 
@@ -61,15 +61,15 @@ public class BlockAnvilBA extends BlockAnvil
      * Called upon block activation (right click on the block.)
      */
     @Override
-    public boolean onBlockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer, int par6, float par7, float par8, float par9)
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int sideHit, float sideHitX, float sideHitY, float sideHitZ)
     {
-        if (par1World.isRemote)
+        if (world.isRemote)
         {
             return true;
         }
         else
         {
-            par5EntityPlayer.openGui(BetterAnvil.instance, 0, par1World, par2, par3, par4);
+            entityPlayer.openGui(BetterAnvil.instance, 0, world, x, y, z);
             return true;
         }
     }

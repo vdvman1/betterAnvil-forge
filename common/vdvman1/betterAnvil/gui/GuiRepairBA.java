@@ -26,12 +26,12 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
 {
     private ContainerRepairBA repairContainer;
     private GuiTextField itemNameField;
-    private InventoryPlayer field_82325_q;
+    private InventoryPlayer playerInventory;
 
-    public GuiRepairBA(InventoryPlayer par1, World par2World, int par3, int par4, int par5)
+    public GuiRepairBA(InventoryPlayer playerInventory, World world, int x, int y, int z)
     {
-        super(new ContainerRepairBA(par1, par2World, par3, par4, par5, Minecraft.getMinecraft().thePlayer));
-        this.field_82325_q = par1;
+        super(new ContainerRepairBA(playerInventory, world, x, y, z, Minecraft.getMinecraft().thePlayer));
+        this.playerInventory = playerInventory;
         this.repairContainer = (ContainerRepairBA)this.inventorySlots;
     }
 
@@ -43,11 +43,11 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     {
         super.initGui();
         Keyboard.enableRepeatEvents(true);
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        this.itemNameField = new GuiTextField(this.fontRenderer, i + 62, j + 24, 103, 12);
+        int x = (this.width - this.xSize) / 2;
+        int y = (this.height - this.ySize) / 2;
+        this.itemNameField = new GuiTextField(this.fontRenderer, x + 62, y + 24, 103, 12);
         this.itemNameField.setTextColor(-1);
-        this.itemNameField.func_82266_h(-1);
+        this.itemNameField.func_82266_h(-1); //set disabled colour
         this.itemNameField.setEnableBackgroundDrawing(false);
         this.itemNameField.setMaxStringLength(30);
         this.inventorySlots.removeCraftingFromCrafters(this);
@@ -69,14 +69,14 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * Draw the foreground layer for the GuiContainer (everything in front of the items)
      */
     @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2)
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.repair"), 60, 6, 4210752);
 
         if (this.repairContainer.maximumCost > 0)
         {
-            int k = 8453920;
+            int colour = 8453920;
             boolean flag = true;
             String s = StatCollector.translateToLocalFormatted("container.repair.cost", new Object[] {Integer.valueOf(this.repairContainer.maximumCost)});
 
@@ -84,30 +84,30 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             {
                 flag = false;
             }
-            else if (!this.repairContainer.getSlot(2).canTakeStack(this.field_82325_q.player))
+            else if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
             {
-                k = 16736352;
+                colour = 16736352;
             }
 
             if (flag)
             {
-                int l = -16777216 | (k & 16579836) >> 2 | k & -16777216;
-                int i1 = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
-                byte b0 = 67;
+                int finalColour = -16777216 | (colour & 16579836) >> 2 | colour & -16777216;
+                int stringX = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
+                byte stringY = 67;
 
                 if (this.fontRenderer.getUnicodeFlag())
                 {
-                    drawRect(i1 - 3, b0 - 2, this.xSize - 7, b0 + 10, -16777216);
-                    drawRect(i1 - 2, b0 - 1, this.xSize - 8, b0 + 9, -12895429);
+                    drawRect(stringX - 3, stringY - 2, this.xSize - 7, stringY + 10, -16777216);
+                    drawRect(stringX - 2, stringY - 1, this.xSize - 8, stringY + 9, -12895429);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(s, i1, b0 + 1, l);
-                    this.fontRenderer.drawString(s, i1 + 1, b0, l);
-                    this.fontRenderer.drawString(s, i1 + 1, b0 + 1, l);
+                    this.fontRenderer.drawString(s, stringX, stringY + 1, finalColour);
+                    this.fontRenderer.drawString(s, stringX + 1, stringY, finalColour);
+                    this.fontRenderer.drawString(s, stringX + 1, stringY + 1, finalColour);
                 }
 
-                this.fontRenderer.drawString(s, i1, b0, k);
+                this.fontRenderer.drawString(s, stringX, stringY, colour);
             }
         }
 
@@ -118,16 +118,16 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
      */
     @Override
-    protected void keyTyped(char par1, int par2)
+    protected void keyTyped(char character, int key)
     {
-        if (this.itemNameField.textboxKeyTyped(par1, par2))
+        if (this.itemNameField.textboxKeyTyped(character, key))
         {
             this.repairContainer.updateItemName(this.itemNameField.getText());
             this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
         }
         else
         {
-            super.keyTyped(par1, par2);
+            super.keyTyped(character, key);
         }
     }
 
@@ -135,19 +135,19 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * Called when the mouse is clicked.
      */
     @Override
-    protected void mouseClicked(int par1, int par2, int par3)
+    protected void mouseClicked(int x, int y, int z)
     {
-        super.mouseClicked(par1, par2, par3);
-        this.itemNameField.mouseClicked(par1, par2, par3);
+        super.mouseClicked(x, y, z);
+        this.itemNameField.mouseClicked(x, y, z);
     }
 
     /**
      * Draws the screen and all the components in it.
      */
     @Override
-    public void drawScreen(int par1, int par2, float par3)
+    public void drawScreen(int x, int y, float z)
     {
-        super.drawScreen(par1, par2, par3);
+        super.drawScreen(x, y, z);
         GL11.glDisable(GL11.GL_LIGHTING);
         this.itemNameField.drawTextBox();
     }
@@ -156,26 +156,26 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * Draw the background layer for the GuiContainer (everything behind the items)
      */
     @Override
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
+    protected void drawGuiContainerBackgroundLayer(float x, int y, int z)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture("/gui/repair.png");
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(k + 59, l + 20, 0, this.ySize + (this.repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
+        int centerX = (this.width - this.xSize) / 2;
+        int centerY = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(centerX, centerY, 0, 0, this.xSize, this.ySize);
+        this.drawTexturedModalRect(centerX + 59, centerY + 20, 0, this.ySize + (this.repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
         if ((this.repairContainer.getSlot(0).getHasStack() || this.repairContainer.getSlot(1).getHasStack()) && !this.repairContainer.getSlot(2).getHasStack())
         {
-            this.drawTexturedModalRect(k + 99, l + 45, this.xSize, 0, 28, 21);
+            this.drawTexturedModalRect(centerX + 99, centerY + 45, this.xSize, 0, 28, 21);
         }
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-	public void sendContainerAndContentsToPlayer(Container par1Container, List par2List)
+	public void sendContainerAndContentsToPlayer(Container container, List inventoryList)
     {
-        this.sendSlotContents(par1Container, 0, par1Container.getSlot(0).getStack());
+        this.sendSlotContents(container, 0, container.getSlot(0).getStack());
     }
 
     /**
@@ -183,14 +183,14 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * contents of that slot. Args: Container, slot number, slot contents
      */
     @Override
-    public void sendSlotContents(Container par1Container, int par2, ItemStack par3ItemStack)
+    public void sendSlotContents(Container container, int updateID, ItemStack itemStack)
     {
-        if (par2 == 0)
+        if (updateID == 0)
         {
-            this.itemNameField.setText(par3ItemStack == null ? "" : par3ItemStack.getDisplayName());
-            this.itemNameField.func_82265_c(par3ItemStack != null);
+            this.itemNameField.setText(itemStack == null ? "" : itemStack.getDisplayName());
+            this.itemNameField.func_82265_c(itemStack != null); //set enabled
 
-            if (par3ItemStack != null)
+            if (itemStack != null)
             {
                 this.repairContainer.updateItemName(this.itemNameField.getText());
                 this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
@@ -204,5 +204,5 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
      * value. Both are truncated to shorts in non-local SMP.
      */
     @Override
-    public void sendProgressBarUpdate(Container par1Container, int par2, int par3) {}
+    public void sendProgressBarUpdate(Container container, int updateID, int updateContent) {}
 }
