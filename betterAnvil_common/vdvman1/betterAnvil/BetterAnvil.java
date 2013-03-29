@@ -64,7 +64,8 @@ public class BetterAnvil {
 		//Replace BlockAnvil in Block.class with BlockAnvilBA
 		try {
 			Class<?> block = Block.class;
-			Field MCAnvil = block.getDeclaredField("anvil");
+			//Field MCAnvil = block.getDeclaredField("anvil");
+			Field MCAnvil = block.getDeclaredFields()[166];
 			Block.blocksList[145] = null;
 			anvil = (new BlockAnvilBA(145)).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("anvil");
 			Utils.setFinalStatic(MCAnvil, anvil);
@@ -93,10 +94,12 @@ public class BetterAnvil {
 		//Replace recipe for the anvil to craft the correct anvil
 		try {
 			Class<CraftingManager> craftingManager = CraftingManager.class;
-			Field cmInstanceField = craftingManager.getDeclaredField("instance");
+			//Field cmInstanceField = craftingManager.getDeclaredField("instance");
+			Field cmInstanceField = craftingManager.getDeclaredFields()[0];
 			cmInstanceField.setAccessible(true);
 			CraftingManager cmInstance = (CraftingManager) cmInstanceField.get(craftingManager);
-			Field recipesField = craftingManager.getDeclaredField("recipes");
+			//Field recipesField = craftingManager.getDeclaredField("recipes");
+			Field recipesField = craftingManager.getDeclaredFields()[1];
 			recipesField.setAccessible(true);
 			List<IRecipe> recipes = (List<IRecipe>) recipesField.get(cmInstance);
 			for(IRecipe _recipe: recipes) {
@@ -109,10 +112,6 @@ public class BetterAnvil {
 					}
 				}
 			}
-		} catch (NoSuchFieldException e) {
-			System.out.println("Could not replace anvil recipe, NoSuchFieldException.\nThis should never happen!\nPlease let vdvman1 know which mods you are using!");
-			e.printStackTrace();
-			System.out.println("Better Anvils may/may not work at this stage");
 		} catch (SecurityException e) {
 			System.out.println("Could not replace anvil recipe, SecurityException.\nYou are using too high security levels, please lower them.\nBetter Anvils may/may not work at this stage");
 		} catch (IllegalArgumentException e) {
