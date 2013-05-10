@@ -107,7 +107,7 @@ public class BetterAnvil {
 					ShapedRecipes recipe = (ShapedRecipes)_recipe;
 					if (recipe.recipeOutputItemID == 145) {
 						recipes.remove(recipe);
-						GameRegistry.addShapedRecipe(new ItemStack(Block.anvil, 1), new Object[] {"III", " i ", "iii", 'I', Block.blockSteel, 'i', Item.ingotIron});
+						GameRegistry.addShapedRecipe(new ItemStack(Block.anvil, 1), new Object[] {"III", " i ", "iii", 'I', Block.blockIron, 'i', Item.ingotIron});
 						break;
 					}
 				}

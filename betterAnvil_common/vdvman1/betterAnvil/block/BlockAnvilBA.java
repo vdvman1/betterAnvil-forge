@@ -26,7 +26,7 @@ public class BlockAnvilBA extends BlockAnvil
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-    public Icon getBlockTextureFromSideAndMetadata(int side, int metadata)
+    public Icon getIcon(int side, int metadata)
     {
         if (this.field_82521_b == 3 && side == 1) //this.field_82521_b is from normal anvil, is used to represent the section of the anvil being represented, from bottom to top, 0-3
         {

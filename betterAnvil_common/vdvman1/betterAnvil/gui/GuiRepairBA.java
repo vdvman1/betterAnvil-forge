@@ -47,7 +47,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         int y = (this.height - this.ySize) / 2;
         this.itemNameField = new GuiTextField(this.fontRenderer, x + 62, y + 24, 103, 12);
         this.itemNameField.setTextColor(-1);
-        this.itemNameField.func_82266_h(-1); //set disabled colour
+        this.itemNameField.setDisabledTextColour(-1);
         this.itemNameField.setEnableBackgroundDrawing(false);
         this.itemNameField.setMaxStringLength(30);
         this.inventorySlots.removeCraftingFromCrafters(this);
@@ -188,7 +188,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         if (updateID == 0)
         {
             this.itemNameField.setText(itemStack == null ? "" : itemStack.getDisplayName());
-            this.itemNameField.func_82265_c(itemStack != null); //set enabled
+            this.itemNameField.setEnabled(itemStack != null); //set enabled
 
             if (itemStack != null)
             {
