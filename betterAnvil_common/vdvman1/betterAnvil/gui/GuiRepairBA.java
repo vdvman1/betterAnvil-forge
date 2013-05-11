@@ -74,7 +74,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         GL11.glDisable(GL11.GL_LIGHTING);
         this.fontRenderer.drawString(StatCollector.translateToLocal("container.repair"), 60, 6, 4210752);
 
-        if (this.repairContainer.maximumCost > 0)
+        if (this.repairContainer.maximumCost > 0 || this.repairContainer.isRenamingOnly)
         {
             int colour = 8453920;
             boolean flag = true;

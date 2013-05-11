@@ -26,7 +26,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = BetterAnvil.modid, name = "Better Anvils", version = "4.0b1")
+@Mod(modid = BetterAnvil.modid, name = "Better Anvils", version = "4.1b2")
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {BetterAnvil.channel}, packetHandler = PacketHandler.class)
 public class BetterAnvil {
 	
@@ -40,6 +40,7 @@ public class BetterAnvil {
 	//Configuration
 	public static double breakChance;
 	public static double costMultiplier;
+	public static boolean freeRenaming;
 	
 	@Instance(BetterAnvil.modid)
 	public static BetterAnvil instance;
@@ -54,6 +55,7 @@ public class BetterAnvil {
 		config.load();
 		breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
 		costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
+		freeRenaming = config.get(Configuration.CATEGORY_GENERAL, "freeRenaming", "true").getBoolean(false);
 		config.save();
 	}
 	

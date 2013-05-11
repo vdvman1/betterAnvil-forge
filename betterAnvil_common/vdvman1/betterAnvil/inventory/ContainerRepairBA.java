@@ -38,6 +38,9 @@ public class ContainerRepairBA extends ContainerRepair
 
     /** The player that has this container open. */
     private final EntityPlayer thePlayer;
+    
+    //Currently renaming only
+    public boolean isRenamingOnly = false;
 
     public ContainerRepairBA(InventoryPlayer inventoryPlayer, World world, int x, int y, int z, EntityPlayer entityPlayer)
     {
@@ -90,6 +93,7 @@ public class ContainerRepairBA extends ContainerRepair
     @Override
 	public void updateRepairOutput()
     {
+        this.isRenamingOnly = false;
         ItemStack itemstack = this.inputSlots.getStackInSlot(0);
         this.maximumCost = 0;
         int itemDamage = 0;
@@ -319,11 +323,17 @@ public class ContainerRepairBA extends ContainerRepair
             {
                 itemstack1 = null;
             }
-
-            if (repairAmount == itemDamage && repairAmount > 0 && this.maximumCost >= 40)
+            
+            if (repairAmount == itemDamage && repairAmount > 0)
             {
-                this.theWorld.getWorldLogAgent().logInfo("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
-                this.maximumCost = 39;
+                if(BetterAnvil.freeRenaming) {
+                    this.theWorld.getWorldLogAgent().logInfo("Naming an item only, free renaming enabled, removing cost");
+                    this.maximumCost = 0;
+                    this.isRenamingOnly = true;
+                } else if(this.maximumCost >= 40) {
+                    this.theWorld.getWorldLogAgent().logInfo("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
+                    this.maximumCost = 39;
+                }
             }
 
             if (itemstack1 != null)
