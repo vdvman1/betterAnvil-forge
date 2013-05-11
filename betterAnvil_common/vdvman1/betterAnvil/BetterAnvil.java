@@ -26,13 +26,15 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod(modid = BetterAnvil.modid, name = "Better Anvils", version = "4.1b2")
+@Mod(modid = BetterAnvil.modid, name = BetterAnvil.modName, version = BetterAnvil.version)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {BetterAnvil.channel}, packetHandler = PacketHandler.class)
 public class BetterAnvil {
 	
 	//Global variables
 	public static final String modid = "BetterAnvil";
-	public static final String channel = "BetterAnvil";
+	public static final String channel = modid;
+	public static final String modName = "Better Anvils";
+	public static final String version = "4.1";
 	
 	//Blocks
 	public Block anvil;
