@@ -57,7 +57,7 @@ public class BetterAnvil {
 		config.load();
 		breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
 		costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
-		freeRenaming = config.get(Configuration.CATEGORY_GENERAL, "freeRenaming", "true").getBoolean(false);
+		freeRenaming = config.get(Configuration.CATEGORY_GENERAL, "freeRenaming", "false").getBoolean(false);
 		config.save();
 	}
 	
