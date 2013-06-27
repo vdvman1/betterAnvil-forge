@@ -34,7 +34,7 @@ public class BetterAnvil {
 	public static final String modid = "BetterAnvil";
 	public static final String channel = modid;
 	public static final String modName = "Better Anvils";
-	public static final String version = "4.1";
+	public static final String version = "2.1";
 	
 	//Blocks
 	public Block anvil;
