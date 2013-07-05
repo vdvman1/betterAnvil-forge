@@ -52,32 +52,13 @@ public class SlotRepairBA extends Slot
     @Override
     public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack)
     {
-        if (!entityPlayer.capabilities.isCreativeMode || !this.anvil.isRenamingOnly)
+        if (!entityPlayer.capabilities.isCreativeMode)
         {
             entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
         }
 
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, (ItemStack)null);
-
-        if (ContainerRepairBA.getStackSizeUsedInRepair(this.anvil) > 0)
-        {
-            ItemStack itemstack1 = ContainerRepairBA.getRepairInputInventory(this.anvil).getStackInSlot(1);
-
-            if (itemstack1 != null && itemstack1.stackSize > ContainerRepairBA.getStackSizeUsedInRepair(this.anvil))
-            {
-                itemstack1.stackSize -= ContainerRepairBA.getStackSizeUsedInRepair(this.anvil);
-                ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, itemstack1);
-            }
-            else
-            {
-                ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, (ItemStack)null);
-            }
-        }
-        else
-        {
-            ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, (ItemStack)null);
-        }
-
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, this.anvil.resultInputStack);
         this.anvil.maximumCost = 0;
 
         if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && entityPlayer.getRNG().nextFloat() < BetterAnvil.breakChance)

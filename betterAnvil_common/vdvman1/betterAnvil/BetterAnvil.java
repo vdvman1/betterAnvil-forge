@@ -1,9 +1,13 @@
 package vdvman1.betterAnvil;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAnvilBlock;
 import net.minecraft.item.ItemStack;
@@ -18,9 +22,11 @@ import vdvman1.betterAnvil.proxy.CommonProxy;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -34,15 +40,18 @@ public class BetterAnvil {
 	public static final String modid = "BetterAnvil";
 	public static final String channel = modid;
 	public static final String modName = "Better Anvils";
-	public static final String version = "2.1";
+	public static final String version = "3.0";
 	
 	//Blocks
 	public Block anvil;
 	
 	//Configuration
+	static Configuration config;
 	public static double breakChance;
 	public static double costMultiplier;
-	public static boolean freeRenaming;
+	public static int renamingCost;
+	public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
+	public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
 	
 	@Instance(BetterAnvil.modid)
 	public static BetterAnvil instance;
@@ -53,12 +62,11 @@ public class BetterAnvil {
 	//Called before initialization, usually used for configuration
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
+		config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 		breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
 		costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
-		freeRenaming = config.get(Configuration.CATEGORY_GENERAL, "freeRenaming", "false").getBoolean(false);
-		config.save();
+		renamingCost = config.get(Configuration.CATEGORY_GENERAL, "renamingCost", "5").getInt(5);
 	}
 	
 	//Called during initialization, used for registering everything etc.
@@ -130,6 +138,28 @@ public class BetterAnvil {
 		
 		//register gui
 		NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+	}
+	
+	@PostInit
+	public void modsLoaded(FMLPostInitializationEvent event) {
+	    for(Enchantment ench: Enchantment.enchantmentsList) {
+            if(ench != null) {
+                String enchName = Utils.getEnchName(ench);
+                int defaulLimit = ench.getMaxLevel();
+                int enchLimit = BetterAnvil.config.get("Enchantment Limits", enchName, defaulLimit).getInt(5);
+                BetterAnvil.enchantLimits.put(ench.effectId, enchLimit);
+                ArrayList<String> defaultBlackList = new ArrayList<String>();
+                for(Enchantment ench1: Enchantment.enchantmentsList) {
+                    if(ench1 != null && ench1.effectId != ench.effectId && !ench.canApplyTogether(ench1)) {
+                        String ench1Name = Utils.getEnchName(ench1);
+                        defaultBlackList.add(ench1Name);
+                    }
+                }
+                String[] enchBlackList = BetterAnvil.config.get("Enchantment Blacklist", enchName, defaultBlackList.toArray(new String[0])).getStringList();
+                BetterAnvil.enchantBlackList.put(ench.effectId, enchBlackList);
+            }
+        }
+        config.save();
 	}
 
 }

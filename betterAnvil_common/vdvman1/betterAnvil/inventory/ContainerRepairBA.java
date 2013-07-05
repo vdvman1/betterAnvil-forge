@@ -34,6 +34,7 @@ public class ContainerRepairBA extends ContainerRepair
 
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
+    public ItemStack resultInputStack = (ItemStack)null;
     private String repairedItemName;
 
     /** The player that has this container open. */
@@ -85,13 +86,66 @@ public class ContainerRepairBA extends ContainerRepair
             this.updateRepairOutput();
         }
     }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Override
+    public void updateRepairOutput() {
+        this.isRenamingOnly = false;
+        ItemStack stack1 = this.inputSlots.getStackInSlot(0);
+        ItemStack stack2 = this.inputSlots.getStackInSlot(1);
+        int repairCost = 0;
+        if(stack1 == null) {
+            this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
+            this.maximumCost = 0;
+        } else {
+            ItemStack outStack = stack1.copy();
+            if(stack2 != null) {
+                Map enchantments1 = EnchantmentHelper.getEnchantments(outStack);
+                Map enchantments2 = EnchantmentHelper.getEnchantments(stack2);
+                if(outStack.itemID == Item.enchantedBook.itemID && stack2.itemID == Item.enchantedBook.itemID) {
+                    if(enchantments2 != null) {
+                        Iterator it = enchantments2.keySet().iterator();
+                        while(it.hasNext()) {
+                            int id = ((Integer)it.next()).intValue();
+                            if(enchantments1.containsKey(id)) {
+                                if(enchantments1.get(id).equals(enchantments2.get(id))) {
+                                    int level = ((Integer)enchantments2.get(id)).intValue();
+                                    if(level < BetterAnvil.enchantLimits.get(id)) {
+                                        level++;
+                                    }
+                                    enchantments1.put(id, level);
+                                    repairCost += 2;
+                                } else if((short)enchantments1.get(id) < (short)enchantments2.get(id)) {
+                                    enchantments1.put(id, enchantments2.get(id));
+                                    repairCost++;
+                                }
+                            } else {
+                                enchantments1.put(id, enchantments2.get(id));
+                                repairCost++;
+                            }
+                        }
+                    }
+                    EnchantmentHelper.setEnchantments(enchantments1, outStack);
+                    this.resultInputStack = new ItemStack(Item.book);
+                }
+            }
+            if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
+                outStack.setItemName(this.repairedItemName);
+                repairCost += BetterAnvil.renamingCost;
+                this.isRenamingOnly = (repairCost == BetterAnvil.renamingCost) ? true : false;
+            }
+            this.maximumCost = repairCost;
+            if(this.maximumCost > 0 || this.isRenamingOnly) {
+                this.outputSlot.setInventorySlotContents(0, outStack);
+            }
+        }
+    }
 
     /**
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Override
-	public void updateRepairOutput()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public void updateRepairOutput1()
     {
         this.isRenamingOnly = false;
         ItemStack itemstack = this.inputSlots.getStackInSlot(0);
@@ -326,7 +380,7 @@ public class ContainerRepairBA extends ContainerRepair
             
             if (repairAmount == itemDamage && repairAmount > 0)
             {
-                if(BetterAnvil.freeRenaming) {
+                if(BetterAnvil.renamingCost == 0) {
                     this.theWorld.getWorldLogAgent().logInfo("Naming an item only, free renaming enabled, removing cost");
                     this.maximumCost = 0;
                     this.isRenamingOnly = true;
@@ -363,6 +417,7 @@ public class ContainerRepairBA extends ContainerRepair
             this.outputSlot.setInventorySlotContents(0, itemstack1);
             this.detectAndSendChanges();
         }
+        
     }
 
     /**
