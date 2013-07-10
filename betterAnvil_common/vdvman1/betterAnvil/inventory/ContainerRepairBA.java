@@ -145,7 +145,7 @@ public class ContainerRepairBA extends ContainerRepair
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public void updateRepairOutput1()
+	public void updateRepairOutputOld()
     {
         this.isRenamingOnly = false;
         ItemStack itemstack = this.inputSlots.getStackInSlot(0);

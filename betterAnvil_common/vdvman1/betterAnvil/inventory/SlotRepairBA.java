@@ -1,12 +1,12 @@
 package vdvman1.betterAnvil.inventory;
 
-import vdvman1.betterAnvil.BetterAnvil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import vdvman1.betterAnvil.BetterAnvil;
 
 public class SlotRepairBA extends Slot
 {
