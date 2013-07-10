@@ -15,6 +15,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraftforge.common.Configuration;
+import scala.Tuple3;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.gui.GuiHandler;
 import vdvman1.betterAnvil.packet.PacketHandler;
@@ -160,14 +161,14 @@ public class BetterAnvil {
             }
         }
         config.save();
-        Map<Integer, Integer> enchList1 = new HashMap<Integer, Integer>(), enchList2 = new HashMap<Integer, Integer>();
+        /*Map<Integer, Integer> enchList1 = new HashMap<Integer, Integer>(), enchList2 = new HashMap<Integer, Integer>();
         for(Enchantment ench: Enchantment.enchantmentsList) {
             if(ench != null) enchList1.put(ench.effectId, 1);
         }
         for(Enchantment ench: Enchantment.enchantmentsList) {
             if(ench != null) enchList2.put(ench.effectId, 1);
         }
-        Utils.combine(enchList1, enchList2, new ItemStack(Item.book));
+        Utils.combine(enchList1, enchList2, new ItemStack(Item.book));*/
     }
 
 }
