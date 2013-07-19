@@ -1,5 +1,6 @@
 package vdvman1.betterAnvil.inventory;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -16,7 +17,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import scala.Tuple4;
 import vdvman1.betterAnvil.BetterAnvil;
+import vdvman1.betterAnvil.Utils;
 
 public class ContainerRepairBA extends ContainerRepair
 {
@@ -94,49 +97,53 @@ public class ContainerRepairBA extends ContainerRepair
         ItemStack stack1 = this.inputSlots.getStackInSlot(0);
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         int repairCost = 0;
+        int repairAmount = 0;
         if(stack1 == null) {
             this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
             this.maximumCost = 0;
         } else {
-            ItemStack outStack = stack1.copy();
+            ItemStack workStack = stack1.copy();
+            //Remove all enchantments from output stack
+            EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), workStack);
             if(stack2 != null) {
-                Map enchantments1 = EnchantmentHelper.getEnchantments(outStack);
-                Map enchantments2 = EnchantmentHelper.getEnchantments(stack2);
-                if(outStack.itemID == Item.enchantedBook.itemID && stack2.itemID == Item.enchantedBook.itemID) {
-                    if(enchantments2 != null) {
-                        Iterator it = enchantments2.keySet().iterator();
-                        while(it.hasNext()) {
-                            int id = ((Integer)it.next()).intValue();
-                            if(enchantments1.containsKey(id)) {
-                                if(enchantments1.get(id).equals(enchantments2.get(id))) {
-                                    int level = ((Integer)enchantments2.get(id)).intValue();
-                                    if(level < BetterAnvil.enchantLimits.get(id)) {
-                                        level++;
-                                    }
-                                    enchantments1.put(id, level);
-                                    repairCost += 2;
-                                } else if((short)enchantments1.get(id) < (short)enchantments2.get(id)) {
-                                    enchantments1.put(id, enchantments2.get(id));
-                                    repairCost++;
-                                }
-                            } else {
-                                enchantments1.put(id, enchantments2.get(id));
-                                repairCost++;
-                            }
-                        }
+                Map<Integer, Integer> enchantments1 = EnchantmentHelper.getEnchantments(stack1);
+                Map<Integer, Integer> enchantments2 = EnchantmentHelper.getEnchantments(stack2);
+                if(stack1.itemID == stack2.itemID) {
+                    //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
+                    Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer> > combined = Utils.combine(enchantments1, enchantments2, stack1);
+                    repairCost = combined._1();
+                    repairAmount = combined._2();
+                    EnchantmentHelper.setEnchantments(combined._3(), workStack);
+                    this.resultInputStack = stack2.copy();
+                    EnchantmentHelper.setEnchantments(combined._4(), this.resultInputStack);
+                    if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined._3().isEmpty()) {
+                        this.resultInputStack = new ItemStack(Item.book);
                     }
-                    EnchantmentHelper.setEnchantments(enchantments1, outStack);
-                    this.resultInputStack = new ItemStack(Item.book);
+                } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
+                    //add first enchantment from item to book
+                    Iterator<Map.Entry<Integer, Integer>> it = enchantments2.entrySet().iterator();
+                    if(it.hasNext()) {
+                        Map.Entry<Integer, Integer> ench = it.next();
+                        enchantments1.put(ench.getKey(), ench.getValue());
+                        enchantments2.remove(ench.getKey());
+                    }
+                    workStack = new ItemStack(Item.enchantedBook);
+                    EnchantmentHelper.setEnchantments(enchantments1, workStack);
+                    ItemStack resultInput = new ItemStack(stack2.getItem());
+                    EnchantmentHelper.setEnchantments(enchantments2, resultInput);
+                    this.resultInputStack = resultInput;
+                    repairCost = 1;
                 }
             }
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
-                outStack.setItemName(this.repairedItemName);
+                workStack.setItemName(this.repairedItemName);
                 repairCost += BetterAnvil.renamingCost;
-                this.isRenamingOnly = (repairCost == BetterAnvil.renamingCost) ? true : false;
+                this.isRenamingOnly = repairCost == BetterAnvil.renamingCost;
+                repairAmount++;
             }
             this.maximumCost = repairCost;
             if(this.maximumCost > 0 || this.isRenamingOnly) {
-                this.outputSlot.setInventorySlotContents(0, outStack);
+                this.outputSlot.setInventorySlotContents(0, workStack);
             }
         }
     }

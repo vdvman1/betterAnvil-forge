@@ -3,15 +3,14 @@ package vdvman1.betterAnvil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
-import com.google.common.primitives.Ints;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import scala.Tuple3;
+import scala.Tuple4;
+
+import com.google.common.primitives.Ints;
 
 
 public class Utils {
@@ -27,16 +26,18 @@ public class Utils {
         field.set(null, newValue);
     }
 
-    public static Tuple3<Integer, Map<Integer, Integer>, Map<Integer, Integer> > combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
+    public static Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer> > combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
         int repairCost = 0;
+        int repairAmount = 0;
         Map<Integer, Integer> compatEnchList = new HashMap<Integer, Integer>();
         Map<Integer, Integer> inCompatEnchList = new HashMap<Integer, Integer>();
         if(enchList1 != null && enchList2 != null) {
             compatEnchList.putAll(enchList1);
-            for(Map.Entry<Integer, Integer> entry: compatEnchList.entrySet()) {
+            //Combine all enchantments
+            for(Map.Entry<Integer, Integer> entry: enchList2.entrySet()) {
                 int id = entry.getKey();
-                int value = enchList2.get(id);
                 if(compatEnchList.containsKey(id)) {
+                    int value = enchList2.get(id);
                     int origVal = compatEnchList.get(id);
                     if(origVal == value && origVal < BetterAnvil.enchantLimits.get(id)) {
                         compatEnchList.put(id, value + 1);
@@ -45,13 +46,16 @@ public class Utils {
                         compatEnchList.put(id, value);
                         repairCost++;
                     }
-                } else if(Enchantment.enchantmentsList[id].canApply(item)) {
-                    compatEnchList.put(id, value);
+                    repairAmount++;
+                } else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
+                    compatEnchList.put(id, entry.getValue());
                     repairCost++;
+                    repairAmount++;
                 } else {
-                    inCompatEnchList.put(id, value);
+                    inCompatEnchList.put(id, entry.getValue());
                 }
             }
+            //Move incompatible enchantments to in inCompatEnchList
             int[] ids = Ints.toArray(compatEnchList.keySet());
             for (int i = 0; i < ids.length; i++) {
                 int id1 = ids[i];
@@ -63,19 +67,8 @@ public class Utils {
                     }
                 }
             }
-            /*System.out.println("Compatible");
-            for(Map.Entry<Integer, Integer> entry: compatEnchList.entrySet()) {
-                System.out.println(Enchantment.enchantmentsList[entry.getKey()].getTranslatedName(entry.getValue()));
-            }
-            System.out.println();
-            System.out.println("Incompatible");
-            for(Map.Entry<Integer, Integer> entry: inCompatEnchList.entrySet()) {
-                if(entry.getKey() != null && entry.getValue() != null)
-                    System.out.println(Enchantment.enchantmentsList[entry.getKey()].getTranslatedName(entry.getValue()));
-            }
-            System.out.println("Repair Cost: " + repairCost);*/
         }
-        return new Tuple3<Integer, Map<Integer, Integer>, Map<Integer, Integer>>(repairCost, compatEnchList, inCompatEnchList);
+        return new Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer>>(repairCost, repairAmount, compatEnchList, inCompatEnchList);
     }
 
     public static String getEnchName(Enchantment ench) {
