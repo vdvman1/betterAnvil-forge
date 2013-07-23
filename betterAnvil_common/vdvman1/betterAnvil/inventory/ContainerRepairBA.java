@@ -90,7 +90,7 @@ public class ContainerRepairBA extends ContainerRepair
         }
     }
     
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({ "unchecked" })
     @Override
     public void updateRepairOutput() {
         this.isRenamingOnly = false;
@@ -133,6 +133,15 @@ public class ContainerRepairBA extends ContainerRepair
                     EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                     this.resultInputStack = resultInput;
                     repairCost = 1;
+                } else if(stack1.itemID == Item.enchantedBook.itemID && stack2.itemID == Item.book.itemID) {
+                    if(!enchantments1.isEmpty()) {
+                        this.resultInputStack = new ItemStack(Item.enchantedBook);
+                        EnchantmentHelper.setEnchantments(enchantments1, this.resultInputStack);
+                        for(Map.Entry<Integer, Integer> entry: enchantments1.entrySet()) {
+                            repairCost += entry.getValue();
+                        }
+                        workStack = stack2.copy();
+                    }
                 }
             }
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
