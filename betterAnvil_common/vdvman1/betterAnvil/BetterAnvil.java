@@ -51,6 +51,7 @@ public class BetterAnvil {
     public static double breakChance;
     public static double costMultiplier;
     public static int renamingCost;
+    public static int repairBonus;
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
 
@@ -68,6 +69,7 @@ public class BetterAnvil {
         breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
         costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
         renamingCost = config.get(Configuration.CATEGORY_GENERAL, "renamingCost", "5").getInt(5);
+        repairBonus = config.get(Configuration.CATEGORY_GENERAL, "repairBonus", "5").getInt(5);
     }
 
     //Called during initialization, used for registering everything etc.

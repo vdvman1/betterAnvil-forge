@@ -64,6 +64,7 @@ public class Utils {
                     if(contains(BetterAnvil.enchantBlackList.get(id1), getEnchName(id2))) {
                         inCompatEnchList.put(id2, compatEnchList.get(id2));
                         compatEnchList.remove(id2);
+                        repairAmount--;
                     }
                 }
             }
