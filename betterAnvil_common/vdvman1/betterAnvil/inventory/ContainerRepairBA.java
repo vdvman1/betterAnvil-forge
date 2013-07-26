@@ -147,7 +147,7 @@ public class ContainerRepairBA extends ContainerRepair
                     repairCost = 1;
                 }
                 //Repair
-                if(stack1.itemID == stack2.itemID) {
+                if(stack1.itemID == stack2.itemID && stack1.getItem().isItemTool(stack1) && stack2.getItem().isItemTool(stack2)) {
                     int damage1 = stack1.getMaxDamage() - stack1.getItemDamage();
                     int damage2 = stack2.getMaxDamage() - stack2.getItemDamage();
                     double amount = Math.max(workStack.getMaxDamage() - (damage1 + damage2 + BetterAnvil.repairBonus), 0);
