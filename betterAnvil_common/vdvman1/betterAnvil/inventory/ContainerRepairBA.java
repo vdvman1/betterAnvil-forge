@@ -174,7 +174,7 @@ public class ContainerRepairBA extends ContainerRepair
                 repairCost += amount * 3;
             }
             //Set outputs
-            workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount)/*workStack.getMaxDamage() - (workStack.getMaxDamage() - workStack.getItemDamage() + repairAmount)*/);
+            workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));
             this.maximumCost = (int) repairCost;
             if(this.maximumCost > 0 || this.isRenamingOnly) {
                 this.outputSlot.setInventorySlotContents(0, workStack);
