@@ -89,7 +89,7 @@ public class ContainerRepairBA extends ContainerRepair
             this.updateRepairOutput();
         }
     }
-    
+
     @SuppressWarnings({ "unchecked" })
     @Override
     public void updateRepairOutput() {
@@ -97,7 +97,7 @@ public class ContainerRepairBA extends ContainerRepair
         ItemStack stack1 = this.inputSlots.getStackInSlot(0);
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         double repairCost = 0;
-        int repairAmount = 0;
+        double repairAmount = 0;
         if(stack1 == null) {
             this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
             this.maximumCost = 0;
@@ -148,21 +148,22 @@ public class ContainerRepairBA extends ContainerRepair
                 }
                 //Repair
                 if(stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
-                    int damage1 = stack1.getMaxDamage() - stack1.getItemDamage();
-                    int damage2 = stack2.getMaxDamage() - stack2.getItemDamage();
-                    double amount = Math.max(workStack.getMaxDamage() - (damage1 + damage2 + BetterAnvil.repairBonus), 0);
-                    repairCost += (double) workStack.getMaxDamage() / damage2;
-                    repairAmount += Math.min(amount + repairAmount, workStack.getMaxDamage());
+                    double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * 12 / 100);
+                    repairAmount += amount;
+                    repairCost += amount / 100;
                 } else if(stack1.getItem().getIsRepairable(stack1, stack2)) {
-                    int damage = stack1.getMaxDamage() - stack1.getItemDamage();
+                    int orig = stack1.getMaxDamage() - stack1.getItemDamage();
+                    double damage = orig;
                     int max = workStack.getMaxDamage();
                     int amount = 0;
-                    for(int i = stack2.stackSize; i < stack2.stackSize && damage != max; i--) {
-                        damage = Math.min(damage + (max / 4), max);
+                    for(int i = 0; i < stack2.stackSize && damage < max; i++) {
+                        damage = Math.min(damage + (max * BetterAnvil.itemRepairAmount), max);
                         amount++;
                     }
                     this.resultInputStack = stack2.copy();
                     this.resultInputStack.stackSize = stack2.stackSize - amount;
+                    repairAmount += Math.round(damage) - orig;
+                    repairCost += amount * 3;
                 }
                 
             }
@@ -174,7 +175,7 @@ public class ContainerRepairBA extends ContainerRepair
                 repairAmount++;
             }
             //Set outputs
-            workStack.setItemDamage(repairAmount);
+            workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount)/*workStack.getMaxDamage() - (workStack.getMaxDamage() - workStack.getItemDamage() + repairAmount)*/);
             this.maximumCost = (int) repairCost;
             if(this.maximumCost > 0 || this.isRenamingOnly) {
                 this.outputSlot.setInventorySlotContents(0, workStack);

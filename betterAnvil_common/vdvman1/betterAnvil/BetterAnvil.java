@@ -15,7 +15,7 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraftforge.common.Configuration;
-import scala.Tuple3;
+import net.minecraftforge.common.Property;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.gui.GuiHandler;
 import vdvman1.betterAnvil.packet.PacketHandler;
@@ -51,7 +51,7 @@ public class BetterAnvil {
     public static double breakChance;
     public static double costMultiplier;
     public static int renamingCost;
-    public static int repairBonus;
+    public static double itemRepairAmount;
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
 
@@ -69,7 +69,9 @@ public class BetterAnvil {
         breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
         costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
         renamingCost = config.get(Configuration.CATEGORY_GENERAL, "renamingCost", "5").getInt(5);
-        repairBonus = config.get(Configuration.CATEGORY_GENERAL, "repairBonus", "5").getInt(5);
+        Property itemRepairAmountProp = config.get(Configuration.CATEGORY_GENERAL, "itemRepairAmount", "25");
+        itemRepairAmount = (double)itemRepairAmountProp.getInt(25) / 100;
+        itemRepairAmountProp.comment = "Percentage each item will repair the tool by";
     }
 
     //Called during initialization, used for registering everything etc.
