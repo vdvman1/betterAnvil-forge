@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -155,11 +157,11 @@ public class ContainerRepairBA extends ContainerRepair
                 repairAmount++;
             }
             //Repair
-            if(stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
+            if(stack2 != null && stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
                 double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * 12 / 100);
                 repairAmount += amount;
                 repairCost += amount / 100;
-            } else if(stack1.getItem().getIsRepairable(stack1, stack2)) {
+            } else if(stack2 != null && stack1.getItem().getIsRepairable(stack1, stack2)) {
                 double orig = stack1.getMaxDamage() - stack1.getItemDamage() - repairAmount;
                 double damage = orig;
                 int max = workStack.getMaxDamage();
@@ -356,7 +358,16 @@ public class ContainerRepairBA extends ContainerRepair
                 }
             }
 
-            if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equalsIgnoreCase(this.thePlayer.getTranslator().translateNamedKey(itemstack.getItemName())) && !this.repairedItemName.equals(itemstack.getDisplayName()))
+            if (StringUtils.isBlank(this.repairedItemName))
+            {
+                if (itemstack.hasDisplayName())
+                {
+                    repairAmount = itemstack.isItemStackDamageable() ? 7 : itemstack.stackSize * 5;
+                    itemDamage += repairAmount;
+                    itemstack1.func_135074_t();
+                }
+            }
+            else if (!this.repairedItemName.equals(itemstack.getDisplayName()))
             {
                 repairAmount = itemstack.isItemStackDamageable() ? 7 : itemstack.stackSize * 5;
                 itemDamage += repairAmount;
@@ -465,9 +476,9 @@ public class ContainerRepairBA extends ContainerRepair
      * Callback for when the crafting gui is closed.
      */
     @Override
-    public void onCraftGuiClosed(EntityPlayer entityPlayer)
+    public void onContainerClosed(EntityPlayer entityPlayer)
     {
-        super.onCraftGuiClosed(entityPlayer);
+        super.onContainerClosed(entityPlayer);
 
         if (!this.theWorld.isRemote)
         {
