@@ -21,10 +21,8 @@ import vdvman1.betterAnvil.gui.GuiHandler;
 import vdvman1.betterAnvil.packet.PacketHandler;
 import vdvman1.betterAnvil.proxy.CommonProxy;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -68,7 +66,7 @@ public class BetterAnvil {
     public static CommonProxy proxy;
 
     //Called before initialization, usually used for configuration
-    @PreInit
+    @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
@@ -92,7 +90,7 @@ public class BetterAnvil {
 
     //Called during initialization, used for registering everything etc.
     @SuppressWarnings("unchecked")
-    @Init
+    @EventHandler
     public void init(FMLInitializationEvent event) {
         //Replace BlockAnvil in Block.class with BlockAnvilBA
         try {
@@ -161,7 +159,7 @@ public class BetterAnvil {
         NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
     }
 
-    @PostInit
+    @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
         for(Enchantment ench: Enchantment.enchantmentsList) {
             if(ench != null) {
