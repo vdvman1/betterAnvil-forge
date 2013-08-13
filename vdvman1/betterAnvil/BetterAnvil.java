@@ -52,8 +52,14 @@ public class BetterAnvil {
     public static double costMultiplier;
     public static int renamingCost;
     public static double itemRepairAmount;
+    public static int enchantCombineRepairCost;
+    public static int enchantTransferRepairCost;
+    
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
+    
+    //Configuration categories
+    public static final String catAdjustments = "Adjustments";
 
     @Instance(BetterAnvil.modid)
     public static BetterAnvil instance;
@@ -66,12 +72,22 @@ public class BetterAnvil {
     public void preInit(FMLPreInitializationEvent event) {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
-        breakChance = config.get(Configuration.CATEGORY_GENERAL, "breakChance", "0.12").getDouble(0.12);
-        costMultiplier = config.get(Configuration.CATEGORY_GENERAL, "anvilCostMultiplier", "1").getDouble(1);
-        renamingCost = config.get(Configuration.CATEGORY_GENERAL, "renamingCost", "5").getInt(5);
-        Property itemRepairAmountProp = config.get(Configuration.CATEGORY_GENERAL, "itemRepairAmount", "25");
-        itemRepairAmount = (double)itemRepairAmountProp.getInt(25) / 100;
-        itemRepairAmountProp.comment = "Percentage each item will repair the tool by";
+        Property prop;
+        breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", "12").getDouble(12) / 100;
+        costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", "1").getDouble(1);
+        renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", "5").getInt(5);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", "2");
+        prop.comment = "Cost to increase an enchantment by a level";
+        enchantCombineRepairCost = prop.getInt(2);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", "1");
+        prop.comment = "Cost to transfer an enchantment to a tool";
+        enchantCombineRepairCost = prop.getInt(1);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
+        prop.comment = "Percentage each item will repair the tool by";
+        itemRepairAmount = (double)prop.getInt(25) / 100;
     }
 
     //Called during initialization, used for registering everything etc.

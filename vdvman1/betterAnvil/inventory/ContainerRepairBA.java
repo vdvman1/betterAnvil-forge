@@ -113,7 +113,7 @@ public class ContainerRepairBA extends ContainerRepair
                 Map<Integer, Integer> enchantments2 = EnchantmentHelper.getEnchantments(stack2);
                 if(stack1.itemID == stack2.itemID) {
                     //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
-                    Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer> > combined = Utils.combine(enchantments1, enchantments2, stack1);
+                    Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer> > combined = Utils.combine(enchantments1, enchantments2, stack1);
                     repairCost = combined._1();
                     repairAmount = combined._2();
                     EnchantmentHelper.setEnchantments(combined._3(), workStack);

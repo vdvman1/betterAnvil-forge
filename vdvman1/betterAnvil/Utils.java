@@ -26,9 +26,9 @@ public class Utils {
         field.set(null, newValue);
     }
 
-    public static Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer> > combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
+    public static Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer>> combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
         int repairCost = 0;
-        int repairAmount = 0;
+        double repairAmount = 0;
         Map<Integer, Integer> compatEnchList = new HashMap<Integer, Integer>();
         Map<Integer, Integer> inCompatEnchList = new HashMap<Integer, Integer>();
         if(enchList1 != null && enchList2 != null) {
@@ -41,10 +41,10 @@ public class Utils {
                     int origVal = compatEnchList.get(id);
                     if(origVal == value && origVal < BetterAnvil.enchantLimits.get(id)) {
                         compatEnchList.put(id, value + 1);
-                        repairCost += 2;
+                        repairCost += BetterAnvil.enchantCombineRepairCost;
                     } else if(origVal < value) {
                         compatEnchList.put(id, value);
-                        repairCost++;
+                        repairCost += BetterAnvil.enchantTransferRepairCost;
                     }
                     repairAmount++;
                 } else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
@@ -69,7 +69,7 @@ public class Utils {
                 }
             }
         }
-        return new Tuple4<Integer, Integer, Map<Integer, Integer>, Map<Integer, Integer>>(repairCost, repairAmount, compatEnchList, inCompatEnchList);
+        return new Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer>>(repairCost, repairAmount, compatEnchList, inCompatEnchList);
     }
 
     public static String getEnchName(Enchantment ench) {
