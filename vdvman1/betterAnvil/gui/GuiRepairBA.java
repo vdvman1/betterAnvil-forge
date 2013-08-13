@@ -10,6 +10,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -159,7 +160,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     protected void drawGuiContainerBackgroundLayer(float x, int y, int z)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture("/gui/repair.png");
+        this.mc.renderEngine.func_110577_a(new ResourceLocation("textures/gui/container/anvil.png"));
         int centerX = (this.width - this.xSize) / 2;
         int centerY = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(centerX, centerY, 0, 0, this.xSize, this.ySize);

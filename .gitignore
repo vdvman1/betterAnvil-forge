@@ -1,0 +1,20 @@
+*.class
+
+# Package files #
+*.jar
+*.war
+*.ear
+
+# Mojang and Forge stuff - DO NOT ACCIDENTALLY REDISTRIBUTE! #
+/cpw
+/ibxm
+/net
+/paulscode
+/deobfuscation_data-1.6.2.lzma
+/fml_at.cfg
+/fml_marker.cfg
+/fmlversion.properties
+/forge_at.cfg
+/forge_logo.png
+/mcpmod.info
+/Start.java

@@ -28,7 +28,7 @@ public class InventoryRepairBA extends InventoryBasic
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
     @Override
-    public boolean isStackValidForSlot(int slot, ItemStack itemStack)
+    public boolean isItemValidForSlot(int slot, ItemStack itemStack)
     {
         return true;
     }
