@@ -100,7 +100,7 @@ public class ContainerRepairBA extends ContainerRepair
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         double repairCost = 0;
         double repairAmount = 0;
-        if(stack1 == null) {
+        if(stack1 == null || stack2 == null) {
             this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
             this.maximumCost = 0;
         } else {
