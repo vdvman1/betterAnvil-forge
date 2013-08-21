@@ -52,6 +52,8 @@ public class BetterAnvil {
     public static double itemRepairAmount;
     public static int enchantCombineRepairCost;
     public static int enchantTransferRepairCost;
+    public static int enchantCombineRepairBonus;
+    public static int enchantTransferRepairBonus;
     
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
@@ -75,12 +77,20 @@ public class BetterAnvil {
         costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", "1").getDouble(1);
         renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", "5").getInt(5);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", "2");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", "2");
         prop.comment = "Cost to increase an enchantment by a level";
         enchantCombineRepairCost = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", "1");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairCost", "1");
         prop.comment = "Cost to transfer an enchantment to a tool";
+        enchantCombineRepairCost = prop.getInt(1);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", "2");
+        prop.comment = "Repair bonus added when increasing an enchantment by a level";
+        enchantCombineRepairBonus = prop.getInt(2);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", "1");
+        prop.comment = "Repair bonus added when transfering an enchantment to a tool";
         enchantCombineRepairCost = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
