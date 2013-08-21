@@ -100,7 +100,7 @@ public class ContainerRepairBA extends ContainerRepair
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         double repairCost = 0;
         double repairAmount = 0;
-        if(stack1 == null || stack2 == null) {
+        if(stack1 == null) {
             this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
             this.maximumCost = 0;
         } else {
@@ -148,6 +148,10 @@ public class ContainerRepairBA extends ContainerRepair
                     this.resultInputStack = resultInput;
                     repairCost = 1;
                 }
+            } else {
+            	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
+                this.maximumCost = 0;
+                return;
             }
             //Rename
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
