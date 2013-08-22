@@ -150,8 +150,6 @@ public class ContainerRepairBA extends ContainerRepair
                 }
             } else {
             	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
-                this.maximumCost = 0;
-                return;
             }
             //Rename
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
