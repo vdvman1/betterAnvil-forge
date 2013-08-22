@@ -97,11 +97,11 @@ public class BetterAnvil {
         
         prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", "1");
         prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
-        enchantCombineRepairBonus = prop.getInt(2);
+        copyEnchantToBookCostMultiplier = prop.getInt(2);
         
         prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", "1");
         prop.comment = "Repair bonus added when copying an enchantment to a book";
-        enchantCombineRepairCost = prop.getInt(1);
+        copyEnchantToBookRepairBonus = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
         prop.comment = "Percentage each item will repair the tool by";
