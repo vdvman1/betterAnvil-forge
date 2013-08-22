@@ -139,6 +139,8 @@ public class ContainerRepairBA extends ContainerRepair
                     if(it.hasNext()) {
                         Map.Entry<Integer, Integer> ench = it.next();
                         enchantments1.put(ench.getKey(), ench.getValue());
+                        repairCost += ench.getValue() * BetterAnvil.copyEnchantToBookCostMultiplier;
+                        repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
                         enchantments2.remove(ench.getKey());
                     }
                     workStack = new ItemStack(Item.enchantedBook);
@@ -146,7 +148,6 @@ public class ContainerRepairBA extends ContainerRepair
                     ItemStack resultInput = new ItemStack(stack2.getItem());
                     EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                     this.resultInputStack = resultInput;
-                    repairCost = 1;
                 }
             } else {
             	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
