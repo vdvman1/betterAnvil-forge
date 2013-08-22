@@ -134,7 +134,7 @@ public class ContainerRepairBA extends ContainerRepair
                         }
                         workStack = stack2.copy();
                     }
-                } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && (stack2.isItemEnchanted() || stack2.itemID == Item.enchantedBook.itemID)) {
+                } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
                     //add first enchantment from item to book
                     Iterator<Map.Entry<Integer, Integer>> it = enchantments2.entrySet().iterator();
                     if(it.hasNext()) {
