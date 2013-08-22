@@ -122,7 +122,7 @@ public class ContainerRepairBA extends ContainerRepair
                     if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined._4().isEmpty()) {
                         this.resultInputStack = new ItemStack(Item.book);
                     }
-                } else if(stack1.itemID == Item.enchantedBook.itemID && stack2.itemID == Item.book.itemID) {
+                } else if(stack1.itemID == Item.book.itemID && stack2.itemID == Item.enchantedBook.itemID) {
                     //Copy an enchanted book
                     if(!enchantments1.isEmpty()) {
                         this.resultInputStack = new ItemStack(Item.enchantedBook);
@@ -131,7 +131,7 @@ public class ContainerRepairBA extends ContainerRepair
                             repairCost += entry.getValue();
                             repairAmount++;
                         }
-                        workStack = stack1.copy();
+                        workStack = stack2.copy();
                     }
                 } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
                     //add first enchantment from item to book
