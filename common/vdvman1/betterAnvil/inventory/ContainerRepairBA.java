@@ -119,6 +119,7 @@ public class ContainerRepairBA extends ContainerRepair
                     EnchantmentHelper.setEnchantments(combined._3(), workStack);
                     this.resultInputStack = stack2.copy();
                     EnchantmentHelper.setEnchantments(combined._4(), this.resultInputStack);
+                    this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined._4().size());
                     if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined._4().isEmpty()) {
                         this.resultInputStack = new ItemStack(Item.book);
                     }
