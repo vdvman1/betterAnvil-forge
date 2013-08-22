@@ -161,7 +161,7 @@ public class ContainerRepairBA extends ContainerRepair
             }
             //Repair
             if(stack2 != null && stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
-                double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * 12 / 100);
+                double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * BetterAnvil.mainRepairBonusPercent);
                 repairAmount += amount;
                 repairCost += amount / 100;
             } else if(stack2 != null && stack1.getItem().getIsRepairable(stack1, stack2)) {
@@ -176,7 +176,7 @@ public class ContainerRepairBA extends ContainerRepair
                 this.resultInputStack = stack2.copy();
                 this.resultInputStack.stackSize = stack2.stackSize - amount;
                 repairAmount += Math.round(damage) - orig;
-                repairCost += amount * 3;
+                repairCost += amount * BetterAnvil.repairCostPerItem;
             }
             //Set outputs
             workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));

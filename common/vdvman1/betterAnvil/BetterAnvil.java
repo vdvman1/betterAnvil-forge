@@ -57,6 +57,8 @@ public class BetterAnvil {
     public static int copyEnchantToBookCostMultiplier;
     public static int copyEnchantToBookRepairBonus;
     public static int renamingRepairBonus;
+    public static int mainRepairBonusPercent;
+    public static int repairCostPerItem;
     
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
@@ -80,6 +82,8 @@ public class BetterAnvil {
         costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", "1").getDouble(1);
         renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", "5").getInt(5);
         renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", "1").getInt(1);
+        mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", "12").getInt(12) / 100;
+        repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", "3").getInt(3);
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", "2");
         prop.comment = "Cost to increase an enchantment by a level";
