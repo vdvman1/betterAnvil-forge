@@ -128,8 +128,8 @@ public class ContainerRepairBA extends ContainerRepair
                         this.resultInputStack = new ItemStack(Item.enchantedBook);
                         EnchantmentHelper.setEnchantments(enchantments1, this.resultInputStack);
                         for(Map.Entry<Integer, Integer> entry: enchantments1.entrySet()) {
-                            repairCost += entry.getValue();
-                            repairAmount++;
+                            repairCost += entry.getValue() * BetterAnvil.copyEnchantToBookCostMultiplier;
+                            repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
                         }
                         workStack = stack2.copy();
                     }

@@ -54,6 +54,8 @@ public class BetterAnvil {
     public static int enchantTransferRepairCost;
     public static int enchantCombineRepairBonus;
     public static int enchantTransferRepairBonus;
+    public static int copyEnchantToBookCostMultiplier;
+    public static int copyEnchantToBookRepairBonus;
     
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
@@ -91,6 +93,14 @@ public class BetterAnvil {
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", "1");
         prop.comment = "Repair bonus added when transfering an enchantment to a tool";
+        enchantCombineRepairCost = prop.getInt(1);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", "1");
+        prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
+        enchantCombineRepairBonus = prop.getInt(2);
+        
+        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", "1");
+        prop.comment = "Repair bonus added when copying an enchantment to a book";
         enchantCombineRepairCost = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
