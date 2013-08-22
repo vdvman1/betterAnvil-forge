@@ -52,6 +52,7 @@ public class Utils {
 						if(contains(BetterAnvil.enchantBlackList.get(entry2.getKey()), getEnchName(id))) {
 							inCompatEnchList.put(id, entry.getValue());
 							found = true;
+							break;
 						}
 					}
 					if(!found) {
