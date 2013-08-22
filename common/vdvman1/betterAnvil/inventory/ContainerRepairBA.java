@@ -157,7 +157,7 @@ public class ContainerRepairBA extends ContainerRepair
                 workStack.setItemName(this.repairedItemName);
                 repairCost += BetterAnvil.renamingCost;
                 this.isRenamingOnly = repairCost == BetterAnvil.renamingCost;
-                repairAmount++;
+                repairAmount += BetterAnvil.renamingRepairBonus;
             }
             //Repair
             if(stack2 != null && stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
