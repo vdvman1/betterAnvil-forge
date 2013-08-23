@@ -112,6 +112,7 @@ public class BetterAnvil {
         prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
         prop.comment = "Percentage each item will repair the tool by";
         itemRepairAmount = (double)prop.getInt(25) / 100;
+        config.save();
     }
 
     //Called during initialization, used for registering everything etc.
