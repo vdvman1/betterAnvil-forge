@@ -178,6 +178,9 @@ public class ContainerRepairBA extends ContainerRepair
                 }
                 this.resultInputStack = stack2.copy();
                 this.resultInputStack.stackSize = stack2.stackSize - amount;
+                if(this.resultInputStack.stackSize == 0) {
+                	this.resultInputStack = null;
+                }
                 repairAmount += Math.round(damage) - orig;
                 repairCost += amount * BetterAnvil.repairCostPerItem;
             }
