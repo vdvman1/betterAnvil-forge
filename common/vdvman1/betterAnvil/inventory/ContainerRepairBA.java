@@ -1,10 +1,7 @@
 package vdvman1.betterAnvil.inventory;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -19,6 +16,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemEnchantedBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import org.apache.commons.lang3.StringUtils;
+
 import scala.Tuple4;
 import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.Utils;
@@ -96,6 +96,7 @@ public class ContainerRepairBA extends ContainerRepair
     @Override
     public void updateRepairOutput() {
         this.isRenamingOnly = false;
+        this.resultInputStack = null;
         ItemStack stack1 = this.inputSlots.getStackInSlot(0);
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         double repairCost = 0;
