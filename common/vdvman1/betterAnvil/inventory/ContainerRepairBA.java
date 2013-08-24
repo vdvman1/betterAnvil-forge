@@ -105,8 +105,6 @@ public class ContainerRepairBA extends ContainerRepair
             this.maximumCost = 0;
         } else {
             ItemStack workStack = stack1.copy();
-            //Remove all enchantments from output stack
-            EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), workStack);
             //Combine enchantments
             if(stack2 != null) {
                 Map<Integer, Integer> enchantments1 = EnchantmentHelper.getEnchantments(stack1);
