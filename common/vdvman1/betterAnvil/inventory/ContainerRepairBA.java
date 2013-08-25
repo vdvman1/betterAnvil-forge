@@ -41,6 +41,7 @@ public class ContainerRepairBA extends ContainerRepair
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
     public ItemStack resultInputStack = (ItemStack)null;
+    public ItemStack resultInputStack1 = (ItemStack)null;
     private String repairedItemName;
 
     /** The player that has this container open. */
@@ -98,6 +99,7 @@ public class ContainerRepairBA extends ContainerRepair
     public void updateRepairOutput() {
         this.isRenamingOnly = false;
         this.resultInputStack = null;
+        this.resultInputStack1 = null;
         ItemStack stack1 = this.inputSlots.getStackInSlot(0);
         ItemStack stack2 = this.inputSlots.getStackInSlot(1);
         double repairCost = 0;
@@ -138,6 +140,13 @@ public class ContainerRepairBA extends ContainerRepair
                             repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
                         }
                         workStack = stack2.copy();
+                        if(stack1.stackSize == 1) {
+                        	this.resultInputStack1 = null;
+                        } else {
+                        	ItemStack resultInput = stack1.copy();
+                        	resultInput.stackSize -= 1;
+                        	this.resultInputStack1 = resultInput;
+                        }
                     }
                 } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
                     //add first enchantment from item to book
@@ -151,9 +160,19 @@ public class ContainerRepairBA extends ContainerRepair
                     }
                     workStack = new ItemStack(Item.enchantedBook);
                     EnchantmentHelper.setEnchantments(enchantments1, workStack);
-                    ItemStack resultInput = new ItemStack(stack2.getItem());
+                    ItemStack resultInput = stack2.copy();
                     EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                     this.resultInputStack = resultInput;
+                    if(stack1.itemID == Item.book.itemID) {
+                    	resultInput = stack1.copy();
+                    	resultInput.stackSize -= 1;
+                        if(resultInput.stackSize == 0) {
+                        	resultInput = null;
+                        }
+                    } else {
+                    	resultInput = null;
+                    }
+                    this.resultInputStack1 = resultInput;
                 } else if(notEnchanted.isItemEnchantable() && stack2.itemID == Item.enchantedBook.itemID) {
                 	CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
                 	repairCost = combined.repairCost;

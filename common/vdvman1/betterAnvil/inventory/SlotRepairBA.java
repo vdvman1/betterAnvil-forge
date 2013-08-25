@@ -57,7 +57,7 @@ public class SlotRepairBA extends Slot
             entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
         }
 
-        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, (ItemStack)null);
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, this.anvil.resultInputStack);
         this.anvil.maximumCost = 0;
 
