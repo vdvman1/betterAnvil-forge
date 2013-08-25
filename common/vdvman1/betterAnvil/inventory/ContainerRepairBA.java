@@ -19,8 +19,8 @@ import net.minecraft.world.World;
 
 import org.apache.commons.lang3.StringUtils;
 
-import scala.Tuple4;
 import vdvman1.betterAnvil.BetterAnvil;
+import vdvman1.betterAnvil.CombinedEnchantments;
 import vdvman1.betterAnvil.Utils;
 
 public class ContainerRepairBA extends ContainerRepair
@@ -112,15 +112,15 @@ public class ContainerRepairBA extends ContainerRepair
                 Map<Integer, Integer> enchantments2 = EnchantmentHelper.getEnchantments(stack2);
                 if(stack1.itemID == stack2.itemID) {
                     //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
-                    Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer> > combined = Utils.combine(enchantments1, enchantments2, stack1);
-                    repairCost = combined._1();
-                    repairAmount = combined._2();
-                    EnchantmentHelper.setEnchantments(combined._3(), workStack);
-                    if(combined._4().size() != 0) {
+                    CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                    repairCost = combined.repairCost;
+                    repairAmount = combined.repairAmount;
+                    EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
+                    if(combined.incompatEnchList.size() != 0) {
                     	this.resultInputStack = stack2.copy();
-                        EnchantmentHelper.setEnchantments(combined._4(), this.resultInputStack);
-                        this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined._4().size());
-                        if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined._4().isEmpty()) {
+                        EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
+                        this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
+                        if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined.incompatEnchList.isEmpty()) {
                             this.resultInputStack = new ItemStack(Item.book);
                         }
                     }

@@ -8,7 +8,6 @@ import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import scala.Tuple4;
 
 
 public class Utils {
@@ -24,7 +23,7 @@ public class Utils {
 		field.set(null, newValue);
 	}
 
-	public static Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer>> combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
+	public static CombinedEnchantments combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
 		int repairCost = 0;
 		double repairAmount = 0;
 		Map<Integer, Integer> compatEnchList = new HashMap<Integer, Integer>();
@@ -65,7 +64,7 @@ public class Utils {
 				}
 			}
 		}
-		return new Tuple4<Integer, Double, Map<Integer, Integer>, Map<Integer, Integer>>(repairCost, repairAmount, compatEnchList, inCompatEnchList);
+		return new CombinedEnchantments(repairCost, repairAmount, compatEnchList, inCompatEnchList);
 	}
 
 	public static String getEnchName(Enchantment ench) {
