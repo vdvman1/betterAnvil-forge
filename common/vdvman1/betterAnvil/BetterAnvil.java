@@ -78,38 +78,38 @@ public class BetterAnvil {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
         Property prop;
-        breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", "12").getDouble(12) / 100;
-        costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", "1").getDouble(1);
-        renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", "5").getInt(5);
-        renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", "1").getInt(1);
-        mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", "12").getInt(12) / 100;
-        repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", "3").getInt(3);
+        breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", 12).getDouble(12) / 100;
+        costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", 1).getDouble(1);
+        renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", 5).getInt(5);
+        renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", 1).getInt(1);
+        mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", 12).getInt(12) / 100;
+        repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", 3).getInt(3);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", "2");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
         enchantCombineRepairCost = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairCost", "1");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairCost", 1);
         prop.comment = "Cost to transfer an enchantment to a tool";
         enchantTransferRepairCost = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", "2");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", 2);
         prop.comment = "Repair bonus added when increasing an enchantment by a level";
         enchantCombineRepairBonus = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", "1");
+        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", 1);
         prop.comment = "Repair bonus added when transfering an enchantment to a tool";
         enchantTransferRepairBonus = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", "1");
+        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", 1);
         prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
         copyEnchantToBookCostMultiplier = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", "1");
+        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", 1);
         prop.comment = "Repair bonus added when copying an enchantment to a book";
         copyEnchantToBookRepairBonus = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", "25");
+        prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", 25);
         prop.comment = "Percentage each item will repair the tool by";
         itemRepairAmount = (double)prop.getInt(25) / 100;
         config.save();
