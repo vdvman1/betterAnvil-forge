@@ -57,8 +57,8 @@ public class SlotRepairBA extends Slot
             entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
         }
 
-        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, this.anvil.resultInputStack);
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         this.anvil.maximumCost = 0;
 
         if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && entityPlayer.getRNG().nextFloat() < BetterAnvil.breakChance)
@@ -83,5 +83,7 @@ public class SlotRepairBA extends Slot
         {
             this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
         }
+        
+        this.anvil.detectAndSendChanges();
     }
 }

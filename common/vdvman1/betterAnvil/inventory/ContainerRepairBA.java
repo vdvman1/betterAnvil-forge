@@ -133,8 +133,7 @@ public class ContainerRepairBA extends ContainerRepair
                 } else if(stack1.itemID == Item.book.itemID && stack2.itemID == Item.enchantedBook.itemID) {
                     //Copy an enchanted book
                     if(!enchantments2.isEmpty()) {
-                        this.resultInputStack = new ItemStack(Item.enchantedBook);
-                        EnchantmentHelper.setEnchantments(enchantments2, this.resultInputStack);
+                        this.resultInputStack = stack2.copy();
                         for(Map.Entry<Integer, Integer> entry: enchantments2.entrySet()) {
                             repairCost += entry.getValue() * BetterAnvil.copyEnchantToBookCostMultiplier;
                             repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
@@ -147,6 +146,7 @@ public class ContainerRepairBA extends ContainerRepair
                         	resultInput.stackSize -= 1;
                         	this.resultInputStack1 = resultInput;
                         }
+                        
                     }
                 } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
                     //add first enchantment from item to book
