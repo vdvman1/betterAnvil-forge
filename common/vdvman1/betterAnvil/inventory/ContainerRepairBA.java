@@ -1,5 +1,6 @@
 package vdvman1.betterAnvil.inventory;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -110,6 +111,9 @@ public class ContainerRepairBA extends ContainerRepair
             if(stack2 != null) {
                 Map<Integer, Integer> enchantments1 = EnchantmentHelper.getEnchantments(stack1);
                 Map<Integer, Integer> enchantments2 = EnchantmentHelper.getEnchantments(stack2);
+                //Used for checking if the stack can be enchanted
+                ItemStack notEnchanted = stack1.copy();
+                EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), notEnchanted);
                 if(stack1.itemID == stack2.itemID) {
                     //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
                     CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
@@ -150,6 +154,18 @@ public class ContainerRepairBA extends ContainerRepair
                     ItemStack resultInput = new ItemStack(stack2.getItem());
                     EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                     this.resultInputStack = resultInput;
+                } else if(notEnchanted.isItemEnchantable() && stack2.itemID == Item.enchantedBook.itemID) {
+                	CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                	repairCost = combined.repairCost;
+                    repairAmount = combined.repairAmount;
+                    EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
+                    if(combined.incompatEnchList.size() != 0) {
+                    	this.resultInputStack = stack2.copy();
+                        EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
+                        if(combined.incompatEnchList.isEmpty()) {
+                            this.resultInputStack = new ItemStack(Item.book);
+                        }
+                    }
                 }
             } else {
             	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
