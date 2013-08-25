@@ -179,11 +179,10 @@ public class ContainerRepairBA extends ContainerRepair
                     repairAmount = combined.repairAmount;
                     EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
                     if(combined.incompatEnchList.size() != 0) {
-                    	this.resultInputStack = stack2.copy();
+                    	this.resultInputStack = new ItemStack(Item.enchantedBook);
                         EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
-                        if(combined.incompatEnchList.isEmpty()) {
-                            this.resultInputStack = new ItemStack(Item.book);
-                        }
+                    } else {
+                    	this.resultInputStack = new ItemStack(Item.book);
                     }
                 }
             } else {
