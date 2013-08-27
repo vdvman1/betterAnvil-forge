@@ -20,8 +20,8 @@ import net.minecraft.world.World;
 
 import org.apache.commons.lang3.StringUtils;
 
-import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.CombinedEnchantments;
+import vdvman1.betterAnvil.Config;
 import vdvman1.betterAnvil.Utils;
 
 public class ContainerRepairBA extends ContainerRepair
@@ -90,7 +90,7 @@ public class ContainerRepairBA extends ContainerRepair
 
         if (iInventory == this.inputSlots)
         {
-            if(BetterAnvil.isLegacyMode) {
+            if(Config.isLegacyMode) {
             	this.updateRepairOutputOld();
             } else {
             	this.updateRepairOutput();
@@ -139,8 +139,8 @@ public class ContainerRepairBA extends ContainerRepair
                     if(!enchantments2.isEmpty()) {
                         this.resultInputStack = stack2.copy();
                         for(Map.Entry<Integer, Integer> entry: enchantments2.entrySet()) {
-                            repairCost += entry.getValue() * BetterAnvil.copyEnchantToBookCostMultiplier;
-                            repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
+                            repairCost += entry.getValue() * Config.copyEnchantToBookCostMultiplier;
+                            repairAmount += Config.copyEnchantToBookRepairBonus;
                         }
                         workStack = stack2.copy();
                         if(stack1.stackSize == 1) {
@@ -158,8 +158,8 @@ public class ContainerRepairBA extends ContainerRepair
                     if(it.hasNext()) {
                         Map.Entry<Integer, Integer> ench = it.next();
                         enchantments1.put(ench.getKey(), ench.getValue());
-                        repairCost += ench.getValue() * BetterAnvil.copyEnchantToBookCostMultiplier;
-                        repairAmount += BetterAnvil.copyEnchantToBookRepairBonus;
+                        repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
+                        repairAmount += Config.copyEnchantToBookRepairBonus;
                         enchantments2.remove(ench.getKey());
                     }
                     workStack = new ItemStack(Item.enchantedBook);
@@ -195,13 +195,13 @@ public class ContainerRepairBA extends ContainerRepair
             //Rename
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
                 workStack.setItemName(this.repairedItemName);
-                repairCost += BetterAnvil.renamingCost;
-                this.isRenamingOnly = repairCost == BetterAnvil.renamingCost;
-                repairAmount += BetterAnvil.renamingRepairBonus;
+                repairCost += Config.renamingCost;
+                this.isRenamingOnly = repairCost == Config.renamingCost;
+                repairAmount += Config.renamingRepairBonus;
             }
             //Repair
             if(stack2 != null && stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
-                double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * BetterAnvil.mainRepairBonusPercent);
+                double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * Config.mainRepairBonusPercent);
                 repairAmount += amount;
                 repairCost += amount / 100;
             } else if(stack2 != null && stack1.getItem().getIsRepairable(stack1, stack2)) {
@@ -210,7 +210,7 @@ public class ContainerRepairBA extends ContainerRepair
                 int max = workStack.getMaxDamage();
                 int amount = 0;
                 for(int i = 0; i < stack2.stackSize && damage < max; i++) {
-                    damage = Math.min(damage + (max * BetterAnvil.itemRepairAmount), max);
+                    damage = Math.min(damage + (max * Config.itemRepairAmount), max);
                     amount++;
                 }
                 this.resultInputStack = stack2.copy();
@@ -219,7 +219,7 @@ public class ContainerRepairBA extends ContainerRepair
                 	this.resultInputStack = null;
                 }
                 repairAmount += Math.round(damage) - orig;
-                repairCost += amount * BetterAnvil.repairCostPerItem;
+                repairCost += amount * Config.repairCostPerItem;
             }
             //Set outputs
             workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));
@@ -469,7 +469,7 @@ public class ContainerRepairBA extends ContainerRepair
                 repairCost = Math.max(1, repairCost / 2);
             }
 
-            this.maximumCost = (int)Math.round((repairCost + itemDamage) * BetterAnvil.costMultiplier);
+            this.maximumCost = (int)Math.round((repairCost + itemDamage) * Config.costMultiplier);
 
             if (itemDamage <= 0)
             {
@@ -478,7 +478,7 @@ public class ContainerRepairBA extends ContainerRepair
             
             if (repairAmount == itemDamage && repairAmount > 0)
             {
-                if(BetterAnvil.renamingCost == 0) {
+                if(Config.renamingCost == 0) {
                     this.theWorld.getWorldLogAgent().logInfo("Naming an item only, free renaming enabled, removing cost");
                     this.maximumCost = 0;
                     this.isRenamingOnly = true;

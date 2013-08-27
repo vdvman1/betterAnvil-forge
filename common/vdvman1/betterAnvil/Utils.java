@@ -36,19 +36,19 @@ public class Utils {
 				if(compatEnchList.containsKey(id)) {
 					int value = enchList2.get(id);
 					int origVal = compatEnchList.get(id);
-					if(origVal == value && origVal < BetterAnvil.enchantLimits.get(id)) {
+					if(origVal == value && origVal < Config.enchantLimits.get(id)) {
 						compatEnchList.put(id, value + 1);
-						repairCost += BetterAnvil.enchantCombineRepairCost * value;
-						repairAmount += BetterAnvil.enchantCombineRepairBonus * value;
+						repairCost += Config.enchantCombineRepairCost * value;
+						repairAmount += Config.enchantCombineRepairBonus * value;
 					} else if(origVal < value) {
 						compatEnchList.put(id, value);
-						repairCost += BetterAnvil.enchantTransferRepairCost;
-						repairAmount += BetterAnvil.enchantTransferRepairBonus;
+						repairCost += Config.enchantTransferRepairCost;
+						repairAmount += Config.enchantTransferRepairBonus;
 					}
 				} else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
 					boolean found = false;
 					for(Map.Entry<Integer, Integer> entry2: compatEnchList.entrySet()) {
-						if(contains(BetterAnvil.enchantBlackList.get(entry2.getKey()), getEnchName(id))) {
+						if(contains(Config.enchantBlackList.get(entry2.getKey()), getEnchName(id))) {
 							inCompatEnchList.put(id, entry.getValue());
 							found = true;
 							break;
@@ -56,8 +56,8 @@ public class Utils {
 					}
 					if(!found) {
 						compatEnchList.put(id, entry.getValue());
-						repairCost += BetterAnvil.enchantTransferRepairCost;
-						repairAmount += BetterAnvil.enchantTransferRepairBonus;
+						repairCost += Config.enchantTransferRepairCost;
+						repairAmount += Config.enchantTransferRepairBonus;
 					}
 				} else {
 					inCompatEnchList.put(id, entry.getValue());

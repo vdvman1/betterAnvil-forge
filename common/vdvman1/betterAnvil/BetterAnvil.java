@@ -2,9 +2,7 @@ package vdvman1.betterAnvil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
@@ -43,26 +41,8 @@ public class BetterAnvil {
 
     //Blocks
     public Block anvil;
-
-    //Configuration
-    static Configuration config;
-    public static double breakChance;
-    public static double costMultiplier;
-    public static int renamingCost;
-    public static double itemRepairAmount;
-    public static int enchantCombineRepairCost;
-    public static int enchantTransferRepairCost;
-    public static int enchantCombineRepairBonus;
-    public static int enchantTransferRepairBonus;
-    public static int copyEnchantToBookCostMultiplier;
-    public static int copyEnchantToBookRepairBonus;
-    public static int renamingRepairBonus;
-    public static int mainRepairBonusPercent;
-    public static int repairCostPerItem;
-    public static boolean isLegacyMode;
     
-    public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
-    public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
+    static Configuration config;
     
     //Configuration categories
     public static final String catAdjustments = "Adjustments";
@@ -79,41 +59,41 @@ public class BetterAnvil {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
         Property prop;
-        isLegacyMode = config.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
-        breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", 12).getDouble(12) / 100;
-        costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", 1).getDouble(1);
-        renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", 5).getInt(5);
-        renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", 1).getInt(1);
-        mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", 12).getInt(12) / 100;
-        repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", 3).getInt(3);
+        Config.isLegacyMode = config.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
+        Config.breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", 12).getDouble(12) / 100;
+        Config.costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", 1).getDouble(1);
+        Config.renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", 5).getInt(5);
+        Config.renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", 1).getInt(1);
+        Config.mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", 12).getInt(12) / 100;
+        Config.repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", 3).getInt(3);
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
-        enchantCombineRepairCost = prop.getInt(2);
+        Config.enchantCombineRepairCost = prop.getInt(2);
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairCost", 1);
         prop.comment = "Cost to transfer an enchantment to a tool";
-        enchantTransferRepairCost = prop.getInt(1);
+        Config.enchantTransferRepairCost = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", 2);
         prop.comment = "Repair bonus added when increasing an enchantment by a level";
-        enchantCombineRepairBonus = prop.getInt(2);
+        Config.enchantCombineRepairBonus = prop.getInt(2);
         
         prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", 1);
         prop.comment = "Repair bonus added when transfering an enchantment to a tool";
-        enchantTransferRepairBonus = prop.getInt(1);
+        Config.enchantTransferRepairBonus = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", 1);
         prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
-        copyEnchantToBookCostMultiplier = prop.getInt(2);
+        Config.copyEnchantToBookCostMultiplier = prop.getInt(2);
         
         prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", 1);
         prop.comment = "Repair bonus added when copying an enchantment to a book";
-        copyEnchantToBookRepairBonus = prop.getInt(1);
+        Config.copyEnchantToBookRepairBonus = prop.getInt(1);
         
         prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", 25);
         prop.comment = "Percentage each item will repair the tool by";
-        itemRepairAmount = (double)prop.getInt(25) / 100;
+        Config.itemRepairAmount = (double)prop.getInt(25) / 100;
         config.save();
     }
 
@@ -195,7 +175,7 @@ public class BetterAnvil {
                 String enchName = Utils.getEnchName(ench);
                 int defaulLimit = ench.getMaxLevel();
                 int enchLimit = BetterAnvil.config.get("Enchantment Limits", enchName, defaulLimit).getInt(5);
-                BetterAnvil.enchantLimits.put(ench.effectId, enchLimit);
+                Config.enchantLimits.put(ench.effectId, enchLimit);
                 ArrayList<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {
                     if(ench1 != null && ench1.effectId != ench.effectId && !ench.canApplyTogether(ench1)) {
@@ -204,7 +184,7 @@ public class BetterAnvil {
                     }
                 }
                 String[] enchBlackList = BetterAnvil.config.get("Enchantment Blacklist", enchName, defaultBlackList.toArray(new String[0])).getStringList();
-                BetterAnvil.enchantBlackList.put(ench.effectId, enchBlackList);
+                Config.enchantBlackList.put(ench.effectId, enchBlackList);
             }
         }
         config.save();
