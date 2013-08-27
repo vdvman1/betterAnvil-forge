@@ -38,8 +38,8 @@ public class Utils {
 					int origVal = compatEnchList.get(id);
 					if(origVal == value && origVal < BetterAnvil.enchantLimits.get(id)) {
 						compatEnchList.put(id, value + 1);
-						repairCost += BetterAnvil.enchantCombineRepairCost;
-						repairAmount += BetterAnvil.enchantCombineRepairBonus;
+						repairCost += BetterAnvil.enchantCombineRepairCost * value;
+						repairAmount += BetterAnvil.enchantCombineRepairBonus * value;
 					} else if(origVal < value) {
 						compatEnchList.put(id, value);
 						repairCost += BetterAnvil.enchantTransferRepairCost;
