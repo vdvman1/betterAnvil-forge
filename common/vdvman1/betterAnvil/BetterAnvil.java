@@ -59,6 +59,7 @@ public class BetterAnvil {
     public static int renamingRepairBonus;
     public static int mainRepairBonusPercent;
     public static int repairCostPerItem;
+    public static boolean isLegacyMode;
     
     public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
     public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
@@ -78,6 +79,7 @@ public class BetterAnvil {
         config = new Configuration(event.getSuggestedConfigurationFile());
         config.load();
         Property prop;
+        isLegacyMode = config.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
         breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", 12).getDouble(12) / 100;
         costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", 1).getDouble(1);
         renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", 5).getInt(5);

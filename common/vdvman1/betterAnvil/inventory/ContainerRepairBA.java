@@ -90,7 +90,11 @@ public class ContainerRepairBA extends ContainerRepair
 
         if (iInventory == this.inputSlots)
         {
-            this.updateRepairOutput();
+            if(BetterAnvil.isLegacyMode) {
+            	this.updateRepairOutputOld();
+            } else {
+            	this.updateRepairOutput();
+            }
         }
     }
 
