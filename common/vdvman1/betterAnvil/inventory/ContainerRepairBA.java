@@ -354,7 +354,7 @@ public class ContainerRepairBA extends ContainerRepair
                         {
                             int enchantmentValue1 = ((Integer)iterator1.next()).intValue();
 
-                            if (enchantmentValue1 != tempInt1 && !enchantment.canApplyTogether(Enchantment.enchantmentsList[enchantmentValue1]))
+                            if (enchantmentValue1 != tempInt1 && !Utils.canApplyTogether(enchantment, Enchantment.enchantmentsList[enchantmentValue1]))
                             {
                                 flag1 = false;
                                 itemDamage += finalEnchantmentValue;

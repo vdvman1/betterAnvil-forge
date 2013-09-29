@@ -84,5 +84,9 @@ public class Utils {
 		}
 		return false;
 	}
+	
+	public static boolean canApplyTogether(Enchantment ench1, Enchantment ench2) {
+		return contains(Config.enchantBlackList.get(ench1.effectId), getEnchName(ench2));
+	}
 
 }
