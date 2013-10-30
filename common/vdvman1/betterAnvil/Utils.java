@@ -37,7 +37,7 @@ public class Utils {
 				if(compatEnchList.containsKey(id)) {
 					int value = enchList2.get(id);
 					int origVal = compatEnchList.get(id);
-					if(origVal == value && origVal < Config.enchantLimits.get(id)) {
+					if(origVal == value && origVal <= Config.enchantLimits.get(id)) {
 						compatEnchList.put(id, value + 1);
 						repairCost += Config.enchantCombineRepairCost * value;
 						repairAmount += Config.enchantCombineRepairBonus * value;
