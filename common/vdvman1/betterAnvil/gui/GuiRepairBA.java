@@ -160,7 +160,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     protected void drawGuiContainerBackgroundLayer(float x, int y, int z)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.func_110577_a(new ResourceLocation("textures/gui/container/anvil.png"));
+        this.mc.renderEngine.bindTexture(new ResourceLocation("textures/gui/container/anvil.png"));
         int centerX = (this.width - this.xSize) / 2;
         int centerY = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(centerX, centerY, 0, 0, this.xSize, this.ySize);
