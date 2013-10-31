@@ -43,8 +43,8 @@ public class Utils {
 						repairAmount += Config.enchantCombineRepairBonus * value;
 					} else if(origVal < value) {
 						compatEnchList.put(id, value);
-						repairCost += Config.enchantTransferRepairCost;
-						repairAmount += Config.enchantTransferRepairBonus;
+						repairCost += Config.enchantTransferRepairCost * value;
+						repairAmount += Config.enchantTransferRepairBonus * value;
 					}
 				} else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
 					boolean found = false;
@@ -57,8 +57,8 @@ public class Utils {
 					}
 					if(!found) {
 						compatEnchList.put(id, entry.getValue());
-						repairCost += Config.enchantTransferRepairCost;
-						repairAmount += Config.enchantTransferRepairBonus;
+						repairCost += Config.enchantTransferRepairCost * entry.getValue();
+						repairAmount += Config.enchantTransferRepairBonus * entry.getValue();
 					}
 				} else {
 					inCompatEnchList.put(id, entry.getValue());
