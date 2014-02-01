@@ -224,7 +224,7 @@ public class ContainerRepairBA extends ContainerRepair
             //Set outputs
             workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));
             this.maximumCost = (int) Math.round(repairCost * Config.costMultiplier);
-            if(this.maximumCost > 0 || this.isRenamingOnly) {
+            if((this.maximumCost > 0 || this.isRenamingOnly) && this.getSlot(2).canTakeStack(thePlayer)) {
                 this.outputSlot.setInventorySlotContents(0, workStack);
             }
         }

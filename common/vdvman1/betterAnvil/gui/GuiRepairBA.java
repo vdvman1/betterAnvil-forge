@@ -81,13 +81,21 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             boolean flag = true;
             String s = StatCollector.translateToLocalFormatted("container.repair.cost", new Object[] {Integer.valueOf(this.repairContainer.maximumCost)});
 
-            if (!this.repairContainer.getSlot(2).getHasStack())
+            /*if (!this.repairContainer.getSlot(2).getHasStack())
             {
                 flag = false;
             }
             else if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
             {
                 colour = 16736352;
+            }*/
+            if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
+            {
+                colour = 16736352;
+            } 
+            else if (!this.repairContainer.getSlot(2).getHasStack())
+            {
+                flag = false;
             }
 
             if (flag)
