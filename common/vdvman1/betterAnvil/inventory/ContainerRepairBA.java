@@ -49,6 +49,7 @@ public class ContainerRepairBA extends ContainerRepair
     
     //Currently renaming only
     public boolean isRenamingOnly = false;
+    public boolean hadOutput = false;
 
     public ContainerRepairBA(InventoryPlayer inventoryPlayer, World world, int x, int y, int z, EntityPlayer entityPlayer)
     {
@@ -102,6 +103,7 @@ public class ContainerRepairBA extends ContainerRepair
     @Override
     public void updateRepairOutput() {
         this.isRenamingOnly = false;
+        this.hadOutput = false;
         this.resultInputStack = null;
         this.resultInputStack1 = null;
         ItemStack stack1 = this.inputSlots.getStackInSlot(0);
@@ -226,6 +228,7 @@ public class ContainerRepairBA extends ContainerRepair
             this.maximumCost = (int) Math.round(repairCost * Config.costMultiplier);
             if(this.maximumCost > 0 || this.isRenamingOnly) {
                 this.outputSlot.setInventorySlotContents(0, workStack);
+                this.hadOutput = true;
             }
             if(!this.getSlot(2).canTakeStack(thePlayer)) {
             	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);

@@ -92,13 +92,9 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
             {
                 colour = 16736352;
-            } 
-            else if (!this.repairContainer.getSlot(2).getHasStack())
-            {
-                flag = false;
             }
 
-            if (flag)
+            if (this.repairContainer.hadOutput)
             {
                 int finalColour = -16777216 | (colour & 16579836) >> 2 | colour & -16777216;
                 int stringX = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
