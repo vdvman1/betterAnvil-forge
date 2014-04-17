@@ -8,7 +8,6 @@ import java.util.Map;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.StatCollector;
 
 
 public class Utils {
@@ -70,7 +69,7 @@ public class Utils {
 	}
 	
 	public static String getEnchName(Enchantment ench) {
-		return StatCollector.translateToLocal(ench.getName());
+		return ench.getName().substring(ench.getName().indexOf('.') + 1);
 	}
 
 	public static String getEnchName(int id) {
