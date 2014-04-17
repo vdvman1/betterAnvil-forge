@@ -68,7 +68,7 @@ public class Utils {
 		}
 		return new CombinedEnchantments(repairCost, repairAmount, compatEnchList, inCompatEnchList);
 	}
-
+	
 	public static String getEnchName(Enchantment ench) {
 		return StatCollector.translateToLocal(ench.getName());
 	}
