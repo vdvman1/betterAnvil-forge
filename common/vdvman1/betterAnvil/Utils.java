@@ -77,9 +77,11 @@ public class Utils {
 	}
 
 	public static boolean contains(String[] array, String target) {
-		for (String value : array) {
-			if (value.equals(target)) {
-				return true;
+		if(array != null) {
+			for (String value : array) {
+				if (value != null && value.equals(target)) {
+					return true;
+				}
 			}
 		}
 		return false;
