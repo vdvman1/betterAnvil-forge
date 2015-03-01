@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'forge'
+
+sourceCompatibility = "1.6"
+targetCompatibility = "1.7"
+
+version = project.properties['Version']
+group = "vdvman1.betterAnvil.BetterAnvil"
+archivesBaseName = "BetterAnvil"
+
+minecraft {
+    version = project.properties['Forge_Version']
+    runDir = "build"
+    replace "@VERSION@", project.version
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task makeSourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task makeDeobfuscatedJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+task makeJavaDocsJar(type: Jar) {
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+build.dependsOn makeSourcesJar, makeDeobfuscatedJar, makeJavaDocsJar

@@ -1,5 +1,7 @@
 package vdvman1.betterAnvil.gui;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import vdvman1.betterAnvil.inventory.ContainerRepairBA;
@@ -16,6 +18,7 @@ public class GuiHandler implements IGuiHandler {
 	}
 
 	@Override
+    @SideOnly(Side.CLIENT)
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if(ID == 0) {
 			return new GuiRepairBA(player.inventory, world, z, z, z);

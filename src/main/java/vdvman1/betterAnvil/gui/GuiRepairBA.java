@@ -1,26 +1,23 @@
 package vdvman1.betterAnvil.gui;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-
+import org.apache.commons.io.Charsets;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
-import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.inventory.ContainerRepairBA;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiRepairBA extends GuiContainer implements ICrafting
@@ -31,7 +28,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
 
     public GuiRepairBA(InventoryPlayer playerInventory, World world, int x, int y, int z)
     {
-        super(new ContainerRepairBA(playerInventory, world, x, y, z, Minecraft.getMinecraft().thePlayer));
+        super(new ContainerRepairBA(playerInventory, world, x, y, z, playerInventory.player));
         this.playerInventory = playerInventory;
         this.repairContainer = (ContainerRepairBA)this.inventorySlots;
     }
@@ -46,7 +43,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         Keyboard.enableRepeatEvents(true);
         int x = (this.width - this.xSize) / 2;
         int y = (this.height - this.ySize) / 2;
-        this.itemNameField = new GuiTextField(this.fontRenderer, x + 62, y + 24, 103, 12);
+        this.itemNameField = new GuiTextField(this.fontRendererObj, x + 62, y + 24, 103, 12);
         this.itemNameField.setTextColor(-1);
         this.itemNameField.setDisabledTextColour(-1);
         this.itemNameField.setEnableBackgroundDrawing(false);
@@ -73,13 +70,12 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         GL11.glDisable(GL11.GL_LIGHTING);
-        this.fontRenderer.drawString(StatCollector.translateToLocal("container.repair"), 60, 6, 4210752);
+        this.fontRendererObj.drawString(StatCollector.translateToLocal("container.repair"), 60, 6, 4210752);
 
         if (this.repairContainer.maximumCost > 0 || this.repairContainer.isRenamingOnly)
         {
             int colour = 8453920;
-            boolean flag = true;
-            String s = StatCollector.translateToLocalFormatted("container.repair.cost", new Object[] {Integer.valueOf(this.repairContainer.maximumCost)});
+            String s = StatCollector.translateToLocalFormatted("container.repair.cost", repairContainer.maximumCost);
 
             /*if (!this.repairContainer.getSlot(2).getHasStack())
             {
@@ -97,22 +93,22 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             if (this.repairContainer.hadOutput)
             {
                 int finalColour = -16777216 | (colour & 16579836) >> 2 | colour & -16777216;
-                int stringX = this.xSize - 8 - this.fontRenderer.getStringWidth(s);
+                int stringX = this.xSize - 8 - this.fontRendererObj.getStringWidth(s);
                 byte stringY = 67;
 
-                if (this.fontRenderer.getUnicodeFlag())
+                if (this.fontRendererObj.getUnicodeFlag())
                 {
                     drawRect(stringX - 3, stringY - 2, this.xSize - 7, stringY + 10, -16777216);
                     drawRect(stringX - 2, stringY - 1, this.xSize - 8, stringY + 9, -12895429);
                 }
                 else
                 {
-                    this.fontRenderer.drawString(s, stringX, stringY + 1, finalColour);
-                    this.fontRenderer.drawString(s, stringX + 1, stringY, finalColour);
-                    this.fontRenderer.drawString(s, stringX + 1, stringY + 1, finalColour);
+                    this.fontRendererObj.drawString(s, stringX, stringY + 1, finalColour);
+                    this.fontRendererObj.drawString(s, stringX + 1, stringY, finalColour);
+                    this.fontRendererObj.drawString(s, stringX + 1, stringY + 1, finalColour);
                 }
 
-                this.fontRenderer.drawString(s, stringX, stringY, colour);
+                this.fontRendererObj.drawString(s, stringX, stringY, colour);
             }
         }
 
@@ -128,7 +124,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
         if (this.itemNameField.textboxKeyTyped(character, key))
         {
             this.repairContainer.updateItemName(this.itemNameField.getText());
-            this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
+            mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", itemNameField.getText().getBytes(Charsets.UTF_8)));
         }
         else
         {
@@ -164,7 +160,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
     protected void drawGuiContainerBackgroundLayer(float x, int y, int z)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.renderEngine.bindTexture(new ResourceLocation("textures/gui/container/anvil.png"));
+        this.mc.renderEngine.bindTexture(new ResourceLocation("minecraft", "textures/gui/container/anvil.png"));
         int centerX = (this.width - this.xSize) / 2;
         int centerY = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(centerX, centerY, 0, 0, this.xSize, this.ySize);
@@ -198,7 +194,7 @@ public class GuiRepairBA extends GuiContainer implements ICrafting
             if (itemStack != null)
             {
                 this.repairContainer.updateItemName(this.itemNameField.getText());
-                this.mc.thePlayer.sendQueue.addToSendQueue(new Packet250CustomPayload(BetterAnvil.channel, this.itemNameField.getText().getBytes()));
+                mc.thePlayer.sendQueue.addToSendQueue(new C17PacketCustomPayload("MC|ItemName", itemNameField.getText().getBytes(Charsets.UTF_8)));
             }
         }
     }
