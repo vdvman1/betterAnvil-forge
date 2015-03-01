@@ -5,19 +5,13 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.Type;
-import cpw.mods.fml.relauncher.Side;
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemAnvilBlock;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.gui.GuiHandler;
-import vdvman1.betterAnvil.packet.MessageCharacters;
 
 import java.util.ArrayList;
 
@@ -26,17 +20,14 @@ public class BetterAnvil {
 
     //Global variables
     public static final String MODID = "BetterAnvil";
-    public static final String CHANNEL = BetterAnvil.MODID;
     public static final String MOD_NAME = "Better Anvils";
     public static final String VERSION = "@VERSION@";
 
     //Blocks
-    public static Block anvil;
+    public static final BlockAnvilBA ANVIL = new BlockAnvilBA();
     
     static Configuration config;
 
-    public static SimpleNetworkWrapper network = null;
-    
     //Configuration categories
     public static final String CAT_ADJUSTMENTS = "Adjustments";
 
@@ -90,19 +81,10 @@ public class BetterAnvil {
     //Called during initialization, used for registering everything etc.
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        BetterAnvil.network = NetworkRegistry.INSTANCE.newSimpleChannel(BetterAnvil.CHANNEL);
-        BetterAnvil.network.registerMessage(MessageCharacters.MessageCharactersHandler.class, MessageCharacters.class, 0, Side.SERVER);
-        //Replace BlockAnvil in Block.class with BlockAnvilBA
-        anvil = new BlockAnvilBA().setHardness(5.0F).setStepSound(Block.soundTypeAnvil).setResistance(2000.0F).setBlockName("anvil");
-        try {
-            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.anvil);
-            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.anvil));
-        } catch(ExistingSubstitutionException e) {
-            System.out.println("Could not replace BlockAnvil, " + e + "\nThis should never happen!\nThis means that Better Anvils could not replace the normal anvil.\nPlease let vdvman1 know!");
-            e.printStackTrace();
-            System.out.println("Disabling Better Anvils");
-            return;
-        }
+//            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);//FIXME BROKEN IMPLEMENTATION! THIS IS A BUG WITHIN FML ITSELF!!!!
+//            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));//FIXME BROKEN IMPLEMENTATION! THIS IS A BUG WITHIN FML ITSELF!!!!
+
+        GameRegistry.registerBlock(BetterAnvil.ANVIL, ItemAnvilBlock.class, "betterAnvil");
         //register gui
         NetworkRegistry.INSTANCE.registerGuiHandler(BetterAnvil.instance, new GuiHandler());
     }
@@ -114,7 +96,7 @@ public class BetterAnvil {
                 String enchName = Utils.getEnchName(ench);
                 int defaulLimit = ench.getMaxLevel();
                 int enchLimit = BetterAnvil.config.get("Enchantment Limits", enchName, defaulLimit).getInt(5);
-                Config.enchantLimits.put(ench.effectId, enchLimit);
+                Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
                 ArrayList<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {
                     if(ench1 != null && ench1.effectId != ench.effectId && !ench.canApplyTogether(ench1)) {
@@ -123,7 +105,7 @@ public class BetterAnvil {
                     }
                 }
                 String[] enchBlackList = BetterAnvil.config.get("Enchantment Blacklist", enchName, defaultBlackList.toArray(new String[0])).getStringList();
-                Config.enchantBlackList.put(ench.effectId, enchBlackList);
+                Config.ENCHANT_BLACK_LIST.put(ench.effectId, enchBlackList);
             }
         }
         config.save();

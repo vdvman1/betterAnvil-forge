@@ -8,8 +8,8 @@ import net.minecraft.world.World;
 import vdvman1.betterAnvil.Config;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 
-public class SlotRepairBA extends Slot
-{
+public class SlotRepairBA extends Slot {
+
     private final World theWorld;
 
     private final int blockPosX;
@@ -21,8 +21,7 @@ public class SlotRepairBA extends Slot
     /** The anvil this slot belongs to. */
     private final ContainerRepairBA anvil;
 
-    public SlotRepairBA(ContainerRepairBA containerRepairBA, IInventory iInventory, int slotIndex, int slotX, int slotY, World world, int blockX, int blockY, int blockZ)
-    {
+    public SlotRepairBA(ContainerRepairBA containerRepairBA, IInventory iInventory, int slotIndex, int slotX, int slotY, World world, int blockX, int blockY, int blockZ) {
         super(iInventory, slotIndex, slotX, slotY);
         this.anvil = containerRepairBA;
         this.theWorld = world;
@@ -35,8 +34,7 @@ public class SlotRepairBA extends Slot
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
     @Override
-    public boolean isItemValid(ItemStack itemStack)
-    {
+    public boolean isItemValid(ItemStack itemStack) {
         return false;
     }
 
@@ -44,16 +42,13 @@ public class SlotRepairBA extends Slot
      * Return whether this slot's stack can be taken from this slot.
      */
     @Override
-    public boolean canTakeStack(EntityPlayer entityPlayer)
-    {
+    public boolean canTakeStack(EntityPlayer entityPlayer) {
         return (entityPlayer.capabilities.isCreativeMode || entityPlayer.experienceLevel >= this.anvil.maximumCost) && (this.anvil.maximumCost > 0 || this.anvil.isRenamingOnly) && this.getHasStack();
     }
 
     @Override
-    public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack)
-    {
-        if (!entityPlayer.capabilities.isCreativeMode)
-        {
+    public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack) {
+        if (!entityPlayer.capabilities.isCreativeMode) {
             entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
         }
 
@@ -61,29 +56,23 @@ public class SlotRepairBA extends Slot
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         this.anvil.maximumCost = 0;
 
-        if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlock(this.blockPosX, this.blockPosY, this.blockPosZ) instanceof BlockAnvilBA && entityPlayer.getRNG().nextFloat() < Config.breakChance)
-        {
+        if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlock(this.blockPosX, this.blockPosY, this.blockPosZ) instanceof BlockAnvilBA && entityPlayer.getRNG().nextFloat() < Config.breakChance) {
             int blockMetadata = this.theWorld.getBlockMetadata(this.blockPosX, this.blockPosY, this.blockPosZ);
             int blockOrientation = blockMetadata & 3;
             int blockDamage = blockMetadata >> 2;
             ++blockDamage;
 
-            if (blockDamage > 2)
-            {
+            if (blockDamage > 2) {
                 this.theWorld.setBlockToAir(this.blockPosX, this.blockPosY, this.blockPosZ);
                 this.theWorld.playAuxSFX(1020, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
-            }
-            else
-            {
+            } else {
                 this.theWorld.setBlockMetadataWithNotify(this.blockPosX, this.blockPosY, this.blockPosZ, blockOrientation | blockDamage << 2, 2);
                 this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
             }
-        }
-        else if (!this.theWorld.isRemote)
-        {
+        } else if (!this.theWorld.isRemote) {
             this.theWorld.playAuxSFX(1021, this.blockPosX, this.blockPosY, this.blockPosZ, 0);
         }
-        
         this.anvil.detectAndSendChanges();
     }
+
 }
