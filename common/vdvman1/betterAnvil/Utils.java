@@ -1,13 +1,13 @@
 package vdvman1.betterAnvil;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 
 public class Utils {
@@ -46,7 +46,7 @@ public class Utils {
 						repairCost += Config.enchantTransferRepairCost * value;
 						repairAmount += Config.enchantTransferRepairBonus * value;
 					}
-				} else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
+				} else if(item.getItem() == Items.enchanted_book || Enchantment.enchantmentsList[id].canApply(item)) {
 					boolean found = false;
 					for(Map.Entry<Integer, Integer> entry2: compatEnchList.entrySet()) {
 						if(contains(Config.enchantBlackList.get(entry2.getKey()), getEnchName(id))) {

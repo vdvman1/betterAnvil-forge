@@ -8,11 +8,6 @@ import vdvman1.betterAnvil.BetterAnvil;
 public class BlockAnvilBA extends BlockAnvil
 {
 
-    public BlockAnvilBA(int id)
-    {
-        super(id);
-    }
-
     /**
      * Called upon block activation (right click on the block.)
      */

@@ -1,28 +1,19 @@
 package vdvman1.betterAnvil.inventory;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
-import net.minecraft.block.Block;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.ContainerRepair;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemEnchantedBook;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
 import org.apache.commons.lang3.StringUtils;
+import vdvman1.betterAnvil.*;
+import vdvman1.betterAnvil.block.BlockAnvilBA;
 
-import vdvman1.betterAnvil.CombinedEnchantments;
-import vdvman1.betterAnvil.Config;
-import vdvman1.betterAnvil.Utils;
+import java.util.*;
 
 public class ContainerRepairBA extends ContainerRepair
 {
@@ -122,7 +113,7 @@ public class ContainerRepairBA extends ContainerRepair
                 //Used for checking if the stack can be enchanted
                 ItemStack notEnchanted = stack1.copy();
                 EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), notEnchanted);
-                if(stack1.itemID == stack2.itemID) {
+                if(stack1.getItem() == stack2.getItem()) {
                     //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
                     CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
                     repairCost = combined.repairCost;
@@ -132,11 +123,11 @@ public class ContainerRepairBA extends ContainerRepair
                     	this.resultInputStack = stack2.copy();
                         EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
                         this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
-                        if(this.resultInputStack.itemID == Item.enchantedBook.itemID && combined.incompatEnchList.isEmpty()) {
-                            this.resultInputStack = new ItemStack(Item.book);
+                        if(this.resultInputStack.getItem() == Items.enchanted_book && combined.incompatEnchList.isEmpty()) {
+                            this.resultInputStack = new ItemStack(Items.book);
                         }
                     }
-                } else if(stack1.itemID == Item.book.itemID && stack2.itemID == Item.enchantedBook.itemID) {
+                } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book) {
                     //Copy an enchanted book
                     if(!enchantments2.isEmpty()) {
                         this.resultInputStack = stack2.copy();
@@ -154,7 +145,7 @@ public class ContainerRepairBA extends ContainerRepair
                         }
                         
                     }
-                } else if((stack1.itemID == Item.book.itemID || stack1.itemID == Item.enchantedBook.itemID) && stack2.isItemEnchanted()) {
+                } else if((stack1.getItem()== Items.book || stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
                     //add first enchantment from item to book
                     Iterator<Map.Entry<Integer, Integer>> it = enchantments2.entrySet().iterator();
                     if(it.hasNext()) {
@@ -164,12 +155,12 @@ public class ContainerRepairBA extends ContainerRepair
                         repairAmount += Config.copyEnchantToBookRepairBonus;
                         enchantments2.remove(ench.getKey());
                     }
-                    workStack = new ItemStack(Item.enchantedBook);
+                    workStack = new ItemStack(Items.enchanted_book);
                     EnchantmentHelper.setEnchantments(enchantments1, workStack);
                     ItemStack resultInput = stack2.copy();
                     EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                     this.resultInputStack = resultInput;
-                    if(stack1.itemID == Item.book.itemID) {
+                    if(stack1.getItem() == Items.book) {
                     	resultInput = stack1.copy();
                     	resultInput.stackSize -= 1;
                         if(resultInput.stackSize == 0) {
@@ -179,16 +170,16 @@ public class ContainerRepairBA extends ContainerRepair
                     	resultInput = null;
                     }
                     this.resultInputStack1 = resultInput;
-                } else if(notEnchanted.isItemEnchantable() && stack2.itemID == Item.enchantedBook.itemID) {
+                } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
                 	CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
                 	repairCost = combined.repairCost;
                     repairAmount = combined.repairAmount;
                     EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
                     if(combined.incompatEnchList.size() != 0) {
-                    	this.resultInputStack = new ItemStack(Item.enchantedBook);
+                    	this.resultInputStack = new ItemStack(Items.enchanted_book);
                         EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
                     } else {
-                    	this.resultInputStack = new ItemStack(Item.book);
+                    	this.resultInputStack = new ItemStack(Items.book);
                     }
                 }
             } else {
@@ -196,13 +187,13 @@ public class ContainerRepairBA extends ContainerRepair
             }
             //Rename
             if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
-                workStack.setItemName(this.repairedItemName);
+                workStack.setStackDisplayName(this.repairedItemName);
                 repairCost += Config.renamingCost;
                 this.isRenamingOnly = repairCost == Config.renamingCost;
                 if (stack1.getItem().isRepairable()) repairAmount += Config.renamingRepairBonus;
             }
             //Repair
-            if(stack2 != null && stack1.itemID == stack2.itemID && stack1.getItem().isRepairable()) {
+            if(stack2 != null && stack1.getItem() == stack2.getItem() && stack1.getItem().isRepairable()) {
                 double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * Config.mainRepairBonusPercent);
                 repairAmount += amount;
                 repairCost += amount / 100;
@@ -272,15 +263,15 @@ public class ContainerRepairBA extends ContainerRepair
 
             if (itemstack2 != null)
             {
-                flag = itemstack2.itemID == Item.enchantedBook.itemID && Item.enchantedBook.func_92110_g(itemstack2).tagCount() > 0;//has enchantments on book
+                flag = itemstack2.getItem() == Items.enchanted_book && Items.enchanted_book.func_92110_g(itemstack2).tagCount() > 0;//has enchantments on book
 
-                if (itemstack1.isItemStackDamageable() && Item.itemsList[itemstack1.itemID].getIsRepairable(itemstack, itemstack2))
+                if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack, itemstack2))
                 {
                     itemDamage1 = Math.min(itemstack1.getItemDamageForDisplay(), itemstack1.getMaxDamage() / 4);
 
                     if (itemDamage1 <= 0)
                     {
-                        this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
+                        this.outputSlot.setInventorySlotContents(0, null);
                         this.maximumCost = 0;
                         return;
                     }
@@ -297,9 +288,9 @@ public class ContainerRepairBA extends ContainerRepair
                 }
                 else
                 {
-                    if (!flag && (itemstack1.itemID != itemstack2.itemID || !itemstack1.isItemStackDamageable()))
+                    if (!flag && (itemstack1.getItem() != itemstack2.getItem() || !itemstack1.isItemStackDamageable()))
                     {
-                        this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
+                        this.outputSlot.setInventorySlotContents(0, null);
                         this.maximumCost = 0;
                         return;
                     }
@@ -349,7 +340,7 @@ public class ContainerRepairBA extends ContainerRepair
                         int finalEnchantmentValue = tempInt3 - tempInt2;
                         boolean flag1 = enchantment.canApply(itemstack);
 
-                        if (this.thePlayer.capabilities.isCreativeMode || itemstack.itemID == ItemEnchantedBook.enchantedBook.itemID)
+                        if (this.thePlayer.capabilities.isCreativeMode || itemstack.getItem() == Items.enchanted_book)
                         {
                             flag1 = true;
                         }
@@ -429,7 +420,7 @@ public class ContainerRepairBA extends ContainerRepair
                     repairCost += repairAmount / 2;
                 }
 
-                itemstack1.setItemName(this.repairedItemName);
+                itemstack1.setStackDisplayName(this.repairedItemName);
             }
 
             itemDamage1 = 0;
@@ -485,11 +476,11 @@ public class ContainerRepairBA extends ContainerRepair
             if (repairAmount == itemDamage && repairAmount > 0)
             {
                 if(Config.renamingCost == 0) {
-                    this.theWorld.getWorldLogAgent().logInfo("Naming an item only, free renaming enabled, removing cost");
+                    FMLCommonHandler.instance().getFMLLogger().info("Naming an item only, free renaming enabled, removing cost");
                     this.maximumCost = 0;
                     this.isRenamingOnly = true;
                 } else if(this.maximumCost >= 40) {
-                    this.theWorld.getWorldLogAgent().logInfo("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
+                    FMLCommonHandler.instance().getFMLLogger().info("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
                     this.maximumCost = 39;
                 }
             }
@@ -540,7 +531,7 @@ public class ContainerRepairBA extends ContainerRepair
 
                 if (itemstack != null)
                 {
-                    entityPlayer.dropPlayerItem(itemstack);
+                    entityPlayer.entityDropItem(itemstack, theWorld.rand.nextFloat() + 0.05F);
                 }
             }
         }
@@ -549,7 +540,7 @@ public class ContainerRepairBA extends ContainerRepair
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer)
     {
-        return this.theWorld.getBlockId(this.x, this.y, this.z) != Block.anvil.blockID ? false : entityPlayer.getDistanceSq((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) <= 64.0D;
+        return theWorld.getBlock(x, y, z) instanceof BlockAnvilBA && entityPlayer.getDistanceSq((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) <= 64.0D;
     }
 
     /**
@@ -562,7 +553,7 @@ public class ContainerRepairBA extends ContainerRepair
 
         if (this.getSlot(2).getHasStack())
         {
-            this.getSlot(2).getStack().setItemName(this.repairedItemName);
+            this.getSlot(2).getStack().setStackDisplayName(this.repairedItemName);
         }
 
         this.updateRepairOutput();

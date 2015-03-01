@@ -18,9 +18,9 @@ public class InventoryRepairBA extends InventoryBasic
      * Called when an the contents of an Inventory change, usually
      */
     @Override
-    public void onInventoryChanged()
+    public void markDirty()
     {
-        super.onInventoryChanged();
+        super.markDirty();
         this.theContainer.onCraftMatrixChanged(this);
     }
 

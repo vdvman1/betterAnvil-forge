@@ -1,5 +1,6 @@
 package vdvman1.betterAnvil.packet;
 
+/*
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -35,3 +36,4 @@ public class PacketHandler implements IPacketHandler {
 	} 
 
 }
+*/

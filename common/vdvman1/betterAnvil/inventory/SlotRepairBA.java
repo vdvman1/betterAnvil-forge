@@ -1,12 +1,12 @@
 package vdvman1.betterAnvil.inventory;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import vdvman1.betterAnvil.Config;
+import vdvman1.betterAnvil.block.BlockAnvilBA;
 
 public class SlotRepairBA extends Slot
 {
@@ -61,7 +61,7 @@ public class SlotRepairBA extends Slot
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         this.anvil.maximumCost = 0;
 
-        if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlockId(this.blockPosX, this.blockPosY, this.blockPosZ) == Block.anvil.blockID && entityPlayer.getRNG().nextFloat() < Config.breakChance)
+        if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlock(this.blockPosX, this.blockPosY, this.blockPosZ) instanceof BlockAnvilBA && entityPlayer.getRNG().nextFloat() < Config.breakChance)
         {
             int blockMetadata = this.theWorld.getBlockMetadata(this.blockPosX, this.blockPosY, this.blockPosZ);
             int blockOrientation = blockMetadata & 3;

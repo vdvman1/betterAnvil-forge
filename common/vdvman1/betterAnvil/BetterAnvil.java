@@ -1,57 +1,47 @@
 package vdvman1.betterAnvil;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.ExistingSubstitutionException;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.Type;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemAnvilBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.gui.GuiHandler;
-import vdvman1.betterAnvil.packet.PacketHandler;
-import vdvman1.betterAnvil.proxy.CommonProxy;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
+import vdvman1.betterAnvil.packet.MessageCharacters;
 
-@Mod(modid = BetterAnvil.modid, name = BetterAnvil.modName, version = BetterAnvil.version)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false, channels = {BetterAnvil.channel}, packetHandler = PacketHandler.class)
+import java.util.ArrayList;
+
+@Mod(modid = BetterAnvil.MODID, name = BetterAnvil.MOD_NAME, version = BetterAnvil.VERSION)
 public class BetterAnvil {
 
     //Global variables
-    public static final String modid = "BetterAnvil";
-    public static final String channel = modid;
-    public static final String modName = "Better Anvils";
-    public static final String version = "3.0.6";
+    public static final String MODID = "BetterAnvil";
+    public static final String CHANNEL = BetterAnvil.MODID;
+    public static final String MOD_NAME = "Better Anvils";
+    public static final String VERSION = "@VERSION@";
 
     //Blocks
-    public Block anvil;
+    public static Block anvil;
     
     static Configuration config;
+
+    public static SimpleNetworkWrapper network = null;
     
     //Configuration categories
-    public static final String catAdjustments = "Adjustments";
+    public static final String CAT_ADJUSTMENTS = "Adjustments";
 
-    @Instance(BetterAnvil.modid)
+    @Instance(BetterAnvil.MODID)
     public static BetterAnvil instance;
-
-    @SidedProxy(clientSide="vdvman1.betterAnvil.proxy.ClientProxy", serverSide = "vdvman1.betterAnvil.proxy.CommonProxy")
-    public static CommonProxy proxy;
 
     //Called before initialization, usually used for configuration
     @EventHandler
@@ -60,112 +50,61 @@ public class BetterAnvil {
         config.load();
         Property prop;
         Config.isLegacyMode = config.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
-        Config.breakChance = config.get(BetterAnvil.catAdjustments, "breakChance", 12).getDouble(12) / 100;
-        Config.costMultiplier = config.get(BetterAnvil.catAdjustments, "anvilCostMultiplier", 1).getDouble(1);
-        Config.renamingCost = config.get(BetterAnvil.catAdjustments, "renamingCost", 5).getInt(5);
-        Config.renamingRepairBonus = config.get(BetterAnvil.catAdjustments, "renamingRepairBonus", 1).getInt(1);
-        Config.mainRepairBonusPercent = config.get(BetterAnvil.catAdjustments, "mainRepairBonusPercent", 12).getInt(12) / 100;
-        Config.repairCostPerItem = config.get(BetterAnvil.catAdjustments, "repairCostPerItem", 3).getInt(3);
+        Config.breakChance = config.get(BetterAnvil.CAT_ADJUSTMENTS, "breakChance", 12).getDouble(12) / 100;
+        Config.costMultiplier = config.get(BetterAnvil.CAT_ADJUSTMENTS, "anvilCostMultiplier", 1).getDouble(1);
+        Config.renamingCost = config.get(BetterAnvil.CAT_ADJUSTMENTS, "renamingCost", 5).getInt(5);
+        Config.renamingRepairBonus = config.get(BetterAnvil.CAT_ADJUSTMENTS, "renamingRepairBonus", 1).getInt(1);
+        Config.mainRepairBonusPercent = config.get(BetterAnvil.CAT_ADJUSTMENTS, "mainRepairBonusPercent", 12).getInt(12) / 100;
+        Config.repairCostPerItem = config.get(BetterAnvil.CAT_ADJUSTMENTS, "repairCostPerItem", 3).getInt(3);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairCost", 2);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
         Config.enchantCombineRepairCost = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairCost", 1);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "enchantTransferRepairCost", 1);
         prop.comment = "Cost to transfer an enchantment to a tool";
         Config.enchantTransferRepairCost = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantCombineRepairBonus", 2);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "enchantCombineRepairBonus", 2);
         prop.comment = "Repair bonus added when increasing an enchantment by a level";
         Config.enchantCombineRepairBonus = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "enchantTransferRepairBonus", 1);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "enchantTransferRepairBonus", 1);
         prop.comment = "Repair bonus added when transfering an enchantment to a tool";
         Config.enchantTransferRepairBonus = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookCostMultiplier", 1);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "copyEnchantToBookCostMultiplier", 1);
         prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
         Config.copyEnchantToBookCostMultiplier = prop.getInt(2);
         
-        prop = config.get(BetterAnvil.catAdjustments, "copyEnchantToBookRepairBonus", 1);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "copyEnchantToBookRepairBonus", 1);
         prop.comment = "Repair bonus added when copying an enchantment to a book";
         Config.copyEnchantToBookRepairBonus = prop.getInt(1);
         
-        prop = config.get(BetterAnvil.catAdjustments, "itemRepairAmount", 25);
+        prop = config.get(BetterAnvil.CAT_ADJUSTMENTS, "itemRepairAmount", 25);
         prop.comment = "Percentage each item will repair the tool by";
-        Config.itemRepairAmount = (double)prop.getInt(25) / 100;
+        Config.itemRepairAmount = prop.getInt(25) / 100.0D;
         config.save();
     }
 
     //Called during initialization, used for registering everything etc.
-    @SuppressWarnings("unchecked")
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        BetterAnvil.network = NetworkRegistry.INSTANCE.newSimpleChannel(BetterAnvil.CHANNEL);
+        BetterAnvil.network.registerMessage(MessageCharacters.MessageCharactersHandler.class, MessageCharacters.class, 0, Side.SERVER);
         //Replace BlockAnvil in Block.class with BlockAnvilBA
+        anvil = new BlockAnvilBA().setHardness(5.0F).setStepSound(Block.soundTypeAnvil).setResistance(2000.0F).setBlockName("anvil");
         try {
-            Class<?> block = Block.class;
-            //Field MCAnvil = block.getDeclaredField("anvil");
-            Field MCAnvil = block.getDeclaredFields()[166];
-            Block.blocksList[145] = null;
-            anvil = (new BlockAnvilBA(145)).setHardness(5.0F).setStepSound(Block.soundAnvilFootstep).setResistance(2000.0F).setUnlocalizedName("anvil");
-            Utils.setFinalStatic(MCAnvil, anvil);
-            Item.itemsList[145] = null;
-            Item.itemsList[145] = (new ItemAnvilBlock(anvil)).setUnlocalizedName("anvil");
-            Block.blocksList[145] = anvil;
-        } catch (NoSuchFieldException e) {
-            System.out.println("Could not replace BlockAnvil, NoSuchFieldException.\nThis should never happen!\nPlease let vdvman1 know which mods you are using!");
-            e.printStackTrace();
-            System.out.println("Disabling Better Anvils");
-            return;
-        } catch (SecurityException e) {
-            System.out.println("Could not replace BlockAnvil, SecurityException.\nYou are using too high security levels, please lower them.\nDisabling Better Anvils");
-            return;
-        } catch (IllegalArgumentException e) {
-            System.out.println("Could not replace BlockAnvil, IllegalArgumentException.\nThis should never happen!\nThis means that BlockAnvil could not be set to BlockAnvilBA.\nPlease let vdvman1 know ASAP!");
-            e.printStackTrace();
-            System.out.println("Disabling Better Anvils");
-            return;
-        } catch (IllegalAccessException e) {
-            System.out.println("Could not replace BlockAnvil, IllegalAccessException.\nThis should never happen!\nThis means that Better Anvils could not access BlockAnvil.\nPlease let vdvman1 know!");
+            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.anvil);
+            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.anvil));
+        } catch(ExistingSubstitutionException e) {
+            System.out.println("Could not replace BlockAnvil, " + e + "\nThis should never happen!\nThis means that Better Anvils could not replace the normal anvil.\nPlease let vdvman1 know!");
             e.printStackTrace();
             System.out.println("Disabling Better Anvils");
             return;
         }
-        //Replace recipe for the anvil to craft the correct anvil
-        try {
-            Class<CraftingManager> craftingManager = CraftingManager.class;
-            //Field cmInstanceField = craftingManager.getDeclaredField("instance");
-            Field cmInstanceField = craftingManager.getDeclaredFields()[0];
-            cmInstanceField.setAccessible(true);
-            CraftingManager cmInstance = (CraftingManager) cmInstanceField.get(craftingManager);
-            //Field recipesField = craftingManager.getDeclaredField("recipes");
-            Field recipesField = craftingManager.getDeclaredFields()[1];
-            recipesField.setAccessible(true);
-            List<IRecipe> recipes = (List<IRecipe>) recipesField.get(cmInstance);
-            for(IRecipe _recipe: recipes) {
-                if(_recipe instanceof ShapedRecipes) {
-                    ShapedRecipes recipe = (ShapedRecipes)_recipe;
-                    if (recipe.recipeOutputItemID == 145) {
-                        recipes.remove(recipe);
-                        GameRegistry.addShapedRecipe(new ItemStack(Block.anvil, 1), new Object[] {"III", " i ", "iii", 'I', Block.blockIron, 'i', Item.ingotIron});
-                        break;
-                    }
-                }
-            }
-        } catch (SecurityException e) {
-            System.out.println("Could not replace anvil recipe, SecurityException.\nYou are using too high security levels, please lower them.\nBetter Anvils may/may not work at this stage");
-        } catch (IllegalArgumentException e) {
-            System.out.println("Could not replace anvil recipe, IllegalArgumentException.\nThis should never happen!\nThis means that the anvil recipe could not be set/retrieved.\nPlease let vdvman1 know ASAP!");
-            e.printStackTrace();
-            System.out.println("Better Anvils may/may not work at this stage");
-        } catch (IllegalAccessException e) {
-            System.out.println("Could not replace anvil recipe, IllegalAccessException.\nThis should never happen!\nThis means that Better Anvils could not access the anvil recipe.\nPlease let vdvman1 know!");
-            e.printStackTrace();
-            System.out.println("Better Anvils may/may not work at this stage");
-        }
-
         //register gui
-        NetworkRegistry.instance().registerGuiHandler(this, new GuiHandler());
+        NetworkRegistry.INSTANCE.registerGuiHandler(BetterAnvil.instance, new GuiHandler());
     }
 
     @EventHandler
