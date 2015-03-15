@@ -3,7 +3,7 @@ package vdvman1.betterAnvil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Config {
+public final class Config {
 
 	public static double breakChance;
 	public static double costMultiplier;
