@@ -1,19 +1,18 @@
 package vdvman1.betterAnvil;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.Type;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemAnvilBlock;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -40,6 +39,8 @@ public final class BetterAnvil {
 
     @Instance(BetterAnvil.MODID)
     public static BetterAnvil instance;
+
+    public static boolean shouldRefundPlayer = false;
 
     //Called before initialization, usually used for configuration
     @EventHandler
@@ -89,6 +90,7 @@ public final class BetterAnvil {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
+        FMLCommonHandler.instance().bus().register(EventHandlerBA.INSTANCE);
         try {
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));
@@ -121,18 +123,15 @@ public final class BetterAnvil {
         config.save();
     }
 
-    public static final class EventHandlerBA {
-
-        public static final Object INSTANCE = new EventHandlerBA();
-
-        @SubscribeEvent
-        @SideOnly(Side.CLIENT)
-        public void registerTextures(TextureStitchEvent e) {//Fixes FML/Forge bug.
-            if (e.map.getTextureType() == 0) {//Block texture type.
-                BetterAnvil.ANVIL.registerBlockIcons(e.map);
+    @EventHandler
+    public void updateAlphaAnvil(FMLMissingMappingsEvent event) {
+        for(int i = 0; i < event.get().size(); i++) {
+            final MissingMapping missingMapping = event.get().get(i);
+            if (missingMapping.name.equals("BetterAnvil:anvilba")) {
+                missingMapping.remap(Blocks.anvil);
+                BetterAnvil.shouldRefundPlayer = true;
             }
         }
-
     }
 
 }
