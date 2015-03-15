@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class Utils {
+public final class Utils {
 
 	public static CombinedEnchantments combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
 		int repairCost = 0;

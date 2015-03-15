@@ -4,10 +4,17 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.Type;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemAnvilBlock;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
@@ -16,7 +23,7 @@ import vdvman1.betterAnvil.gui.GuiHandler;
 import java.util.ArrayList;
 
 @Mod(modid = BetterAnvil.MODID, name = BetterAnvil.MOD_NAME, version = BetterAnvil.VERSION)
-public class BetterAnvil {
+public final class BetterAnvil {
 
     //Global variables
     public static final String MODID = "BetterAnvil";
@@ -81,10 +88,13 @@ public class BetterAnvil {
     //Called during initialization, used for registering everything etc.
     @EventHandler
     public void init(FMLInitializationEvent event) {
-//            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);//FIXME BROKEN IMPLEMENTATION! THIS IS A BUG WITHIN FML ITSELF!!!!
-//            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));//FIXME BROKEN IMPLEMENTATION! THIS IS A BUG WITHIN FML ITSELF!!!!
-
-        GameRegistry.registerBlock(BetterAnvil.ANVIL, ItemAnvilBlock.class, "betterAnvil");
+        MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
+        try {
+            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);
+            GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));
+        } catch(ExistingSubstitutionException e) {
+            e.printStackTrace();
+        }
         //register gui
         NetworkRegistry.INSTANCE.registerGuiHandler(BetterAnvil.instance, new GuiHandler());
     }
@@ -109,6 +119,20 @@ public class BetterAnvil {
             }
         }
         config.save();
+    }
+
+    public static final class EventHandlerBA {
+
+        public static final Object INSTANCE = new EventHandlerBA();
+
+        @SubscribeEvent
+        @SideOnly(Side.CLIENT)
+        public void registerTextures(TextureStitchEvent e) {//Fixes FML/Forge bug.
+            if (e.map.getTextureType() == 0) {//Block texture type.
+                BetterAnvil.ANVIL.registerBlockIcons(e.map);
+            }
+        }
+
     }
 
 }
