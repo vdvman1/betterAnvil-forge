@@ -1,14 +1,10 @@
 package vdvman1.betterAnvil;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiRepair;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemAnvilBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -64,14 +60,6 @@ public final class EventHandlerBA {
 
 
             e.buttonList.addAll(list);
-        }
-    }
-
-    @SubscribeEvent
-    public void refundPlayer(ItemPickupEvent e) {
-        if (BetterAnvil.shouldRefundPlayer && !e.player.worldObj.isRemote && e.pickedUp.getEntityItem().getItem() instanceof ItemAnvilBlock) {
-            e.player.inventory.addItemStackToInventory(new ItemStack(Items.iron_ingot, 3, 0));//We only give out three ingots, because we're already replacing the alpha anvil with a workable anvil.
-            BetterAnvil.shouldRefundPlayer = false;
         }
     }
 

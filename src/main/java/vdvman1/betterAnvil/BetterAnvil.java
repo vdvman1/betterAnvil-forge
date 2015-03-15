@@ -1,6 +1,5 @@
 package vdvman1.betterAnvil;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -39,8 +38,6 @@ public final class BetterAnvil {
 
     @Instance(BetterAnvil.MODID)
     public static BetterAnvil instance;
-
-    public static boolean shouldRefundPlayer = false;
 
     //Called before initialization, usually used for configuration
     @EventHandler
@@ -90,7 +87,6 @@ public final class BetterAnvil {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
-        FMLCommonHandler.instance().bus().register(EventHandlerBA.INSTANCE);
         try {
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));
@@ -128,8 +124,14 @@ public final class BetterAnvil {
         for(int i = 0; i < event.get().size(); i++) {
             final MissingMapping missingMapping = event.get().get(i);
             if (missingMapping.name.equals("BetterAnvil:anvilba")) {
-                missingMapping.remap(Blocks.anvil);
-                BetterAnvil.shouldRefundPlayer = true;
+                switch(missingMapping.type) {
+                    case BLOCK:
+                        missingMapping.remap(Blocks.anvil);
+                        break;
+                    case ITEM:
+                        missingMapping.remap(new ItemAnvilBlock(Blocks.anvil));
+                        break;
+                }
             }
         }
     }
