@@ -20,13 +20,11 @@ import vdvman1.betterAnvil.gui.GuiHandler;
 
 import java.util.ArrayList;
 
-@Mod(modid = BetterAnvil.MODID, name = BetterAnvil.MOD_NAME, version = BetterAnvil.VERSION)
+@Mod(modid = BetterAnvil.MODID, name = BetterAnvil.MOD_NAME, version = BetterAnvil.VERSION, dependencies = "required-after:Forge@[10.13.2.1342,11]")
 public final class BetterAnvil {
 
     //Global variables
-    public static final String MODID = "BetterAnvil";
-    public static final String MOD_NAME = "Better Anvils";
-    public static final String VERSION = "@VERSION@";
+    public static final String MODID = "BetterAnvil", MOD_NAME = "Better Anvils", VERSION = "@VERSION@";
 
     //Blocks
     public static final BlockAnvilBA ANVIL = new BlockAnvilBA();
@@ -81,18 +79,20 @@ public final class BetterAnvil {
         prop.comment = "Percentage each item will repair the tool by";
         Config.itemRepairAmount = prop.getInt(25) / 100.0D;
         config.save();
+
     }
 
     //Called during initialization, used for registering everything etc.
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
         try {
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));
         } catch(ExistingSubstitutionException e) {
             e.printStackTrace();
         }
+        MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
+
         //register gui
         NetworkRegistry.INSTANCE.registerGuiHandler(BetterAnvil.instance, new GuiHandler());
     }

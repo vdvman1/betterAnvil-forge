@@ -23,14 +23,6 @@ public final class EventHandlerBA {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void registerTextures(TextureStitchEvent e) {//Fixes FML/Forge bug.
-        if (e.map.getTextureType() == 0) {//Block texture type.
-            BetterAnvil.ANVIL.registerBlockIcons(e.map);
-        }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @SubscribeEvent
     public void anvilGui(AnvilUpdateEvent e) {
         //TODO
     }
