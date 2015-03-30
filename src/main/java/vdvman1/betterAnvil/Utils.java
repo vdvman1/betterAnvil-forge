@@ -1,27 +1,14 @@
 package vdvman1.betterAnvil;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
-
-public class Utils {
-
-	public static void setFinalStatic(Field field, Object newValue) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		field.setAccessible(true);
-
-		// remove final modifier from field
-		Field modifiersField = Field.class.getDeclaredField("modifiers");
-		modifiersField.setAccessible(true);
-		modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-
-		field.set(null, newValue);
-	}
+public final class Utils {
 
 	public static CombinedEnchantments combine(Map<Integer, Integer> enchList1, Map<Integer, Integer> enchList2, ItemStack item) {
 		int repairCost = 0;
@@ -36,7 +23,7 @@ public class Utils {
 				if(compatEnchList.containsKey(id)) {
 					int value = enchList2.get(id);
 					int origVal = compatEnchList.get(id);
-					int limit = Config.enchantLimits.get(id);
+					int limit = Config.ENCHANT_LIMITS.get(id);
 					if(origVal == value && origVal < limit) {
 						compatEnchList.put(id, value + 1);
 						repairCost += Config.enchantCombineRepairCost * value;
@@ -46,10 +33,10 @@ public class Utils {
 						repairCost += Config.enchantTransferRepairCost * value;
 						repairAmount += Config.enchantTransferRepairBonus * value;
 					}
-				} else if(item.itemID == Item.enchantedBook.itemID || Enchantment.enchantmentsList[id].canApply(item)) {
+				} else if(item.getItem() == Items.enchanted_book || Enchantment.enchantmentsList[id].canApply(item)) {
 					boolean found = false;
 					for(Map.Entry<Integer, Integer> entry2: compatEnchList.entrySet()) {
-						if(contains(Config.enchantBlackList.get(entry2.getKey()), getEnchName(id))) {
+						if(contains(Config.ENCHANT_BLACK_LIST.get(entry2.getKey()), getEnchName(id))) {
 							inCompatEnchList.put(id, entry.getValue());
 							found = true;
 							break;
@@ -88,7 +75,7 @@ public class Utils {
 	}
 	
 	public static boolean canApplyTogether(Enchantment ench1, Enchantment ench2) {
-		return contains(Config.enchantBlackList.get(ench1.effectId), getEnchName(ench2));
+		return contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), getEnchName(ench2));
 	}
 
 }

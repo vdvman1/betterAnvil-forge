@@ -3,7 +3,7 @@ package vdvman1.betterAnvil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Config {
+public final class Config {
 
 	public static double breakChance;
 	public static double costMultiplier;
@@ -19,7 +19,7 @@ public class Config {
 	public static int mainRepairBonusPercent;
 	public static int repairCostPerItem;
 	public static boolean isLegacyMode;
-	public static Map<Integer,Integer> enchantLimits = new HashMap<Integer, Integer>();
-	public static Map<Integer,String[]> enchantBlackList = new HashMap<Integer, String[]>();
+	public static final Map<Integer,Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
+	public static final Map<Integer,String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
 
 }
