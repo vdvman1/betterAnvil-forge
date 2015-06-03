@@ -19,7 +19,7 @@ public final class GuiScreenConfigBA extends GuiConfig {
      * Do not touch this constructor, it is reflectively gotten and invoked by the config factory.
      */
     public GuiScreenConfigBA(GuiScreen parentScreen) {
-        super(parentScreen, Arrays.asList((IConfigElement)new CategoryGeneral(), new CategoryAdjustments(), new CategoryEnchantmentLimits()), BetterAnvil.MOD_ID, "BA-CFG", false, false, GuiConfig.getAbridgedConfigPath(Config.getConfiguration().toString()));
+        super(parentScreen, Arrays.asList((IConfigElement)new CategoryGeneral(), new CategoryAdjustments(), new CategoryEnchantmentLimits()), BetterAnvil.MOD_ID, "BA-CFG", false, false, BetterAnvil.MOD_NAME, GuiConfig.getAbridgedConfigPath(Config.getConfiguration().toString()));
     }
 
 }
