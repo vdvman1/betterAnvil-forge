@@ -13,6 +13,8 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemAnvilBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.common.*;
 
@@ -25,6 +27,8 @@ public final class BetterAnvil {
 
     //Global variables
     public static final String MOD_ID = "BetterAnvil", MOD_NAME = "Better Anvils", VERSION = "@VERSION@";
+
+    public static final Logger BETTER_ANVIL_LOGGER = LogManager.getLogger(BetterAnvil.MOD_NAME);
 
     //Blocks
     public static final BlockAnvilBA BLOCK_ANVIL = new BlockAnvilBA();
@@ -60,10 +64,10 @@ public final class BetterAnvil {
 
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
-        for(Enchantment ench: Enchantment.enchantmentsList) {
+        for(Enchantment ench : Enchantment.enchantmentsList) {
             if(ench != null) {
                 String enchName = Utils.getEnchName(ench);
-                int defaulLimit = ench.getMaxLevel(), enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaulLimit).setRequiresWorldRestart(true).getInt(5);
+                int defaulLimit = ench.getMaxLevel(), enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaulLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
                 Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
                 List<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {

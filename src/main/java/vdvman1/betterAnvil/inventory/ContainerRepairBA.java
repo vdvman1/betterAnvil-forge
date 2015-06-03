@@ -10,6 +10,7 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
+import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.common.*;
 
@@ -110,6 +111,10 @@ public class ContainerRepairBA extends ContainerRepair {
             if(stack1.getItem() == stack2.getItem()) {
                 //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
                 CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                if (combined == null) {
+                    BetterAnvil.BETTER_ANVIL_LOGGER.warn(String.format("Failed to combine enchants from item stack %s and item stack %s!", stack1.toString(), stack2.toString()));
+                    return;
+                }
                 repairCost = combined.repairCost;
                 repairAmount = combined.repairAmount;
                 EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
@@ -165,6 +170,10 @@ public class ContainerRepairBA extends ContainerRepair {
                 this.resultInputStack1 = resultInput;
             } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
                 CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                if (combined == null) {
+                    BetterAnvil.BETTER_ANVIL_LOGGER.warn(String.format("Failed to combine enchants from item stack %s and item stack %s!", notEnchanted.toString(), stack2.toString()));
+                    return;
+                }
                 repairCost = combined.repairCost;
                 repairAmount = combined.repairAmount;
                 EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);

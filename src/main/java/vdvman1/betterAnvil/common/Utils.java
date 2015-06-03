@@ -3,6 +3,7 @@ package vdvman1.betterAnvil.common;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import vdvman1.betterAnvil.BetterAnvil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,36 +19,51 @@ public final class Utils {
             compatEnchList.putAll(enchList1);
             //Combine all enchantments
             for(Map.Entry<Integer, Integer> entry: enchList2.entrySet()) {
-                int id = entry.getKey();
-                if(compatEnchList.containsKey(id)) {
-                    int value = enchList2.get(id);
-                    int origVal = compatEnchList.get(id);
-                    int limit = Config.ENCHANT_LIMITS.get(id);
+                if (entry == null) {
+                    continue;
+                }
+                Enchantment enchantment = null;
+                final int index = entry.getKey();
+                if (index < Enchantment.enchantmentsList.length) {
+                    enchantment = Enchantment.enchantmentsList[index];
+                } else {
+                    BetterAnvil.BETTER_ANVIL_LOGGER.warn(String.format("Enchantment id %d, is invalid!", index));
+                }
+                if (enchantment == null) {
+                    continue;
+                }
+                if(compatEnchList.containsKey(enchantment.effectId)) {
+                    int value = enchList2.get(enchantment.effectId);
+                    int origVal = compatEnchList.get(enchantment.effectId);
+                    int limit = Config.ENCHANT_LIMITS.get(enchantment.effectId);
                     if(origVal == value && origVal < limit) {
-                        compatEnchList.put(id, value + 1);
+                        compatEnchList.put(enchantment.effectId, value + 1);
                         repairCost += Config.enchantCombineRepairCost * value;
                         repairAmount += Config.enchantCombineRepairBonus * value;
                     } else if(origVal < value) {
-                        compatEnchList.put(id, value);
+                        compatEnchList.put(enchantment.effectId, value);
                         repairCost += Config.enchantTransferRepairCost * value;
                         repairAmount += Config.enchantTransferRepairBonus * value;
                     }
-                } else if(item.getItem() == Items.enchanted_book || Enchantment.enchantmentsList[id].canApply(item)) {
+                } else if(item.getItem() == Items.enchanted_book || enchantment.canApply(item)) {
                     boolean found = false;
                     for(Map.Entry<Integer, Integer> entry2: compatEnchList.entrySet()) {
-                        if(contains(Config.ENCHANT_BLACK_LIST.get(entry2.getKey()), getEnchName(id))) {
-                            inCompatEnchList.put(id, entry.getValue());
+                        if (entry2 == null) {
+                            continue;
+                        }
+                        if(Utils.contains(Config.ENCHANT_BLACK_LIST.get(entry2.getKey()), Utils.getEnchName(enchantment.effectId))) {
+                            inCompatEnchList.put(enchantment.effectId, entry.getValue());
                             found = true;
                             break;
                         }
                     }
                     if(!found) {
-                        compatEnchList.put(id, entry.getValue());
+                        compatEnchList.put(enchantment.effectId, entry.getValue());
                         repairCost += Config.enchantTransferRepairCost * entry.getValue();
                         repairAmount += Config.enchantTransferRepairBonus * entry.getValue();
                     }
                 } else {
-                    inCompatEnchList.put(id, entry.getValue());
+                    inCompatEnchList.put(enchantment.effectId, entry.getValue());
                 }
             }
         }
