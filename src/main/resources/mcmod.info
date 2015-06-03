@@ -1,0 +1,17 @@
+[
+{
+  "modid": "BetterAnvil",
+  "name": "Better Anvil",
+  "description": "This is a small mod that removes the XP limit for anvils.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "logoFile": "",
+  "url": "http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1286937",
+  "updateUrl": "",
+  "authors": ["vdvman1", "eggdropsoap", "Master801"],
+  "credits": "",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

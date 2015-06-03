@@ -10,10 +10,11 @@ import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
-import vdvman1.betterAnvil.*;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
+import vdvman1.betterAnvil.common.*;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class ContainerRepairBA extends ContainerRepair {
 
@@ -31,8 +32,8 @@ public class ContainerRepairBA extends ContainerRepair {
 
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
-    public ItemStack resultInputStack = (ItemStack)null;
-    public ItemStack resultInputStack1 = (ItemStack)null;
+    public ItemStack resultInputStack = null;
+    public ItemStack resultInputStack1 = null;
     private String repairedItemName;
 
     /** The player that has this container open. */
@@ -74,149 +75,147 @@ public class ContainerRepairBA extends ContainerRepair {
     @Override
     public void onCraftMatrixChanged(IInventory iInventory) {
         super.onCraftMatrixChanged(iInventory);
-        if (iInventory == this.inputSlots) {
+        if (iInventory == inputSlots) {
             if(Config.isLegacyMode) {
-            	this.updateRepairOutputOld();
+            	updateRepairOutputOld();
             } else {
-            	this.updateRepairOutput();
+            	updateRepairOutput();
             }
         }
     }
 
-    @SuppressWarnings({ "unchecked" })
     @Override
     public void updateRepairOutput() {
-        this.isRenamingOnly = false;
-        this.hadOutput = false;
-        this.resultInputStack = null;
-        this.resultInputStack1 = null;
-        ItemStack stack1 = this.inputSlots.getStackInSlot(0);
-        ItemStack stack2 = this.inputSlots.getStackInSlot(1);
+        isRenamingOnly = false;
+        hadOutput = false;
+        resultInputStack = null;
+        resultInputStack1 = null;
+        ItemStack stack1 = inputSlots.getStackInSlot(0);
+        ItemStack stack2 = inputSlots.getStackInSlot(1);
         double repairCost = 0;
         double repairAmount = 0;
         if(stack1 == null) {
-            this.outputSlot.setInventorySlotContents(0, null);
-            this.maximumCost = 0;
-        } else {
-            ItemStack workStack = stack1.copy();
-            //Combine enchantments
-            if(stack2 != null) {
-                Map<Integer, Integer> enchantments1 = EnchantmentHelper.getEnchantments(stack1);
-                Map<Integer, Integer> enchantments2 = EnchantmentHelper.getEnchantments(stack2);
-                //Used for checking if the stack can be enchanted
-                ItemStack notEnchanted = stack1.copy();
-                EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), notEnchanted);
-                if(stack1.getItem() == stack2.getItem()) {
-                    //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
-                    CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
-                    repairCost = combined.repairCost;
-                    repairAmount = combined.repairAmount;
-                    EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
-                    if(combined.incompatEnchList.size() != 0) {
-                    	this.resultInputStack = stack2.copy();
-                        EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
-                        this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
-                        if(this.resultInputStack.getItem() == Items.enchanted_book && combined.incompatEnchList.isEmpty()) {
-                            this.resultInputStack = new ItemStack(Items.book);
-                        }
+            outputSlot.setInventorySlotContents(0, null);
+            maximumCost = 0;
+            return;
+        }
+        ItemStack workStack = stack1.copy();
+        //Combine enchantments
+        if(stack2 != null) {
+            Map<Integer, Integer> enchantments1 = (Map<Integer, Integer>)EnchantmentHelper.getEnchantments(stack1);
+            Map<Integer, Integer> enchantments2 = (Map<Integer, Integer>)EnchantmentHelper.getEnchantments(stack2);
+            //Used for checking if the stack can be enchanted
+            ItemStack notEnchanted = stack1.copy();
+            EnchantmentHelper.setEnchantments(new HashMap<Integer, Integer>(), notEnchanted);
+            if(stack1.getItem() == stack2.getItem()) {
+                //Enchanted item + same enchanted item = item with incompatible enchantments and item with compatible enchantments
+                CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                repairCost = combined.repairCost;
+                repairAmount = combined.repairAmount;
+                EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
+                if(combined.incompatEnchList.size() != 0) {
+                    this.resultInputStack = stack2.copy();
+                    EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
+                    this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
+                    if(this.resultInputStack.getItem() == Items.enchanted_book && combined.incompatEnchList.isEmpty()) {
+                        this.resultInputStack = new ItemStack(Items.book);
                     }
-                } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book) {
-                    //Copy an enchanted book
-                    if(!enchantments2.isEmpty()) {
-                        this.resultInputStack = stack2.copy();
-                        for(Map.Entry<Integer, Integer> entry: enchantments2.entrySet()) {
-                            repairCost += entry.getValue() * Config.copyEnchantToBookCostMultiplier;
-                            repairAmount += Config.copyEnchantToBookRepairBonus;
-                        }
-                        workStack = stack2.copy();
-                        if(stack1.stackSize == 1) {
-                        	this.resultInputStack1 = null;
-                        } else {
-                        	ItemStack resultInput = stack1.copy();
-                        	resultInput.stackSize -= 1;
-                        	this.resultInputStack1 = resultInput;
-                        }
-                        
-                    }
-                } else if((stack1.getItem()== Items.book || stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
-                    //add first enchantment from item to book
-                    Iterator<Map.Entry<Integer, Integer>> it = enchantments2.entrySet().iterator();
-                    if(it.hasNext()) {
-                        Map.Entry<Integer, Integer> ench = it.next();
-                        enchantments1.put(ench.getKey(), ench.getValue());
-                        repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
+                }
+            } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book) {
+                //Copy an enchanted book
+                if(!enchantments2.isEmpty()) {
+                    this.resultInputStack = stack2.copy();
+                    for(Map.Entry<Integer, Integer> entry: enchantments2.entrySet()) {
+                        repairCost += entry.getValue() * Config.copyEnchantToBookCostMultiplier;
                         repairAmount += Config.copyEnchantToBookRepairBonus;
-                        enchantments2.remove(ench.getKey());
                     }
-                    workStack = new ItemStack(Items.enchanted_book);
-                    EnchantmentHelper.setEnchantments(enchantments1, workStack);
-                    ItemStack resultInput = stack2.copy();
-                    EnchantmentHelper.setEnchantments(enchantments2, resultInput);
-                    this.resultInputStack = resultInput;
-                    if(stack1.getItem() == Items.book) {
-                    	resultInput = stack1.copy();
-                    	resultInput.stackSize -= 1;
-                        if(resultInput.stackSize == 0) {
-                        	resultInput = null;
-                        }
+                    workStack = stack2.copy();
+                    if(stack1.stackSize == 1) {
+                        this.resultInputStack1 = null;
                     } else {
-                    	resultInput = null;
+                        ItemStack resultInput = stack1.copy();
+                        resultInput.stackSize -= 1;
+                        this.resultInputStack1 = resultInput;
                     }
-                    this.resultInputStack1 = resultInput;
-                } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
-                	CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
-                	repairCost = combined.repairCost;
-                    repairAmount = combined.repairAmount;
-                    EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
-                    if(combined.incompatEnchList.size() != 0) {
-                    	this.resultInputStack = new ItemStack(Items.enchanted_book);
-                        EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
-                    } else {
-                    	this.resultInputStack = new ItemStack(Items.book);
+
+                }
+            } else if((stack1.getItem()== Items.book | stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
+                //add first enchantment from item to book
+                Entry<Integer, Integer>[] enchantmentEntrySet = enchantments2.entrySet().toArray(new Entry[0]);
+                for(Entry<Integer, Integer> ench : enchantmentEntrySet) {
+                    enchantments1.put(ench.getKey(), ench.getValue());
+                    repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
+                    repairAmount += Config.copyEnchantToBookRepairBonus;
+                    enchantments2.remove(ench.getKey());
+                }
+                workStack = new ItemStack(Items.enchanted_book);
+                EnchantmentHelper.setEnchantments(enchantments1, workStack);
+                ItemStack resultInput = stack2.copy();
+                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
+                this.resultInputStack = resultInput;
+                if(stack1.getItem() == Items.book) {
+                    resultInput = stack1.copy();
+                    resultInput.stackSize -= 1;
+                    if(resultInput.stackSize <= 0) {
+                        resultInput = null;
                     }
+                } else {
+                    resultInput = null;
                 }
-            } else {
-            	this.outputSlot.setInventorySlotContents(0, null);
-            }
-            //Rename
-            if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
-                workStack.setStackDisplayName(this.repairedItemName);
-                repairCost += Config.renamingCost;
-                this.isRenamingOnly = repairCost == Config.renamingCost;
-                if (stack1.getItem().isRepairable()) repairAmount += Config.renamingRepairBonus;
-            }
-            //Repair
-            if(stack2 != null && stack1.getItem() == stack2.getItem() && stack1.getItem().isRepairable()) {
-                double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * Config.mainRepairBonusPercent);
-                repairAmount += amount;
-                repairCost += amount / 100;
-            } else if(stack2 != null && stack1.getItem().getIsRepairable(stack1, stack2)) {
-                double orig = stack1.getMaxDamage() - stack1.getItemDamage() - repairAmount;
-                double damage = orig;
-                int max = workStack.getMaxDamage();
-                int amount = 0;
-                for(int i = 0; i < stack2.stackSize && damage < max; i++) {
-                    damage = Math.min(damage + (max * Config.itemRepairAmount), max);
-                    amount++;
+                this.resultInputStack1 = resultInput;
+            } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
+                CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
+                repairCost = combined.repairCost;
+                repairAmount = combined.repairAmount;
+                EnchantmentHelper.setEnchantments(combined.compatEnchList, workStack);
+                if(combined.incompatEnchList.size() != 0) {
+                    this.resultInputStack = new ItemStack(Items.enchanted_book);
+                    EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
+                } else {
+                    this.resultInputStack = new ItemStack(Items.book);
                 }
-                this.resultInputStack = stack2.copy();
-                this.resultInputStack.stackSize = stack2.stackSize - amount;
-                if(this.resultInputStack.stackSize == 0) {
-                	this.resultInputStack = null;
-                }
-                repairAmount += Math.round(damage) - orig;
-                repairCost += amount * Config.repairCostPerItem;
             }
-            //Set outputs
-            workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));
-            this.maximumCost = (int) Math.round(repairCost * Config.costMultiplier);
-            if(this.maximumCost > 0 || this.isRenamingOnly) {
-                this.outputSlot.setInventorySlotContents(0, workStack);
-                this.hadOutput = true;
+        } else {
+            this.outputSlot.setInventorySlotContents(0, null);
+        }
+        //Rename
+        if (this.repairedItemName != null && this.repairedItemName.length() > 0 && !this.repairedItemName.equals(stack1.getDisplayName())) {
+            workStack.setStackDisplayName(this.repairedItemName);
+            repairCost += Config.renamingCost;
+            this.isRenamingOnly = repairCost == Config.renamingCost;
+            if (stack1.getItem().isRepairable()) repairAmount += Config.renamingRepairBonus;
+        }
+        //Repair
+        if(stack2 != null && stack1.getItem() == stack2.getItem() && stack1.getItem().isRepairable()) {
+            double amount = stack2.getMaxDamage() - stack2.getItemDamage() + ((double)stack1.getMaxDamage() * Config.mainRepairBonusPercent);
+            repairAmount += amount;
+            repairCost += amount / 100;
+        } else if(stack2 != null && stack1.getItem().getIsRepairable(stack1, stack2)) {
+            double orig = stack1.getMaxDamage() - stack1.getItemDamage() - repairAmount;
+            double damage = orig;
+            int max = workStack.getMaxDamage();
+            int amount = 0;
+            for(int i = 0; i < stack2.stackSize && damage < max; i++) {
+                damage = Math.min(damage + (max * Config.itemRepairAmount), max);
+                amount++;
             }
-            if(!this.getSlot(2).canTakeStack(thePlayer)) {
-            	this.outputSlot.setInventorySlotContents(0, (ItemStack)null);
+            this.resultInputStack = stack2.copy();
+            this.resultInputStack.stackSize = stack2.stackSize - amount;
+            if(this.resultInputStack.stackSize == 0) {
+                this.resultInputStack = null;
             }
+            repairAmount += Math.round(damage) - orig;
+            repairCost += amount * Config.repairCostPerItem;
+        }
+        //Set outputs
+        workStack.setItemDamage((int)Math.round(workStack.getItemDamage() - repairAmount));
+        this.maximumCost = (int) Math.round(repairCost * Config.costMultiplier);
+        if(this.maximumCost > 0 || this.isRenamingOnly) {
+            this.outputSlot.setInventorySlotContents(0, workStack);
+            this.hadOutput = true;
+        }
+        if(!this.getSlot(2).canTakeStack(thePlayer)) {
+            this.outputSlot.setInventorySlotContents(0, null);
         }
     }
 
@@ -239,7 +238,7 @@ public class ContainerRepairBA extends ContainerRepair {
             ItemStack itemstack2 = this.inputSlots.getStackInSlot(1);
             Map<Integer, Integer> enchantmentMap = (Map<Integer, Integer>)EnchantmentHelper.getEnchantments(itemstack1);
             boolean flag = false;
-            int repairCost = b0 + itemstack.getRepairCost() + (itemstack2 == null ? 0 : itemstack2.getRepairCost());
+            int repairCost = b0 + itemstack1.getRepairCost() + (itemstack2 == null ? 0 : itemstack2.getRepairCost());
             this.stackSizeToBeUsedInRepair = 0;
             int itemDamage1;
             int tempInt;
@@ -252,7 +251,7 @@ public class ContainerRepairBA extends ContainerRepair {
             if (itemstack2 != null) {
                 flag = itemstack2.getItem() == Items.enchanted_book && Items.enchanted_book.func_92110_g(itemstack2).tagCount() > 0;//has enchantments on book
 
-                if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack, itemstack2)) {
+                if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack1, itemstack2)) {
                     itemDamage1 = Math.min(itemstack1.getItemDamageForDisplay(), itemstack1.getMaxDamage() / 4);
 
                     if (itemDamage1 <= 0) {
@@ -277,7 +276,7 @@ public class ContainerRepairBA extends ContainerRepair {
                     }
 
                     if (itemstack1.isItemStackDamageable() && !flag) {
-                        itemDamage1 = itemstack.getMaxDamage() - itemstack.getItemDamageForDisplay();
+                        itemDamage1 = itemstack1.getMaxDamage() - itemstack1.getItemDamageForDisplay();
                         tempInt = itemstack2.getMaxDamage() - itemstack2.getItemDamageForDisplay();
                         tempInt1 = tempInt + itemstack1.getMaxDamage() * 12 / 100;
                         int itemDamage2 = itemDamage1 + tempInt1;
@@ -313,9 +312,9 @@ public class ContainerRepairBA extends ContainerRepair {
 
                         tempInt3 = enchantmentValue;
                         int finalEnchantmentValue = tempInt3 - tempInt2;
-                        boolean flag1 = enchantment.canApply(itemstack);
+                        boolean flag1 = enchantment.canApply(itemstack1);
 
-                        if (this.thePlayer.capabilities.isCreativeMode || itemstack.getItem() == Items.enchanted_book) {
+                        if (this.thePlayer.capabilities.isCreativeMode || itemstack1.getItem() == Items.enchanted_book) {
                             flag1 = true;
                         }
 
@@ -341,6 +340,12 @@ public class ContainerRepairBA extends ContainerRepair {
                                 case 2:
                                     enchantmentWeight = 4;
                                     break;
+                                case 5:
+                                    enchantmentWeight = 2;
+                                    break;
+                                case 10:
+                                    enchantmentWeight = 1;
+                                    break;
                                 case 3:
                                 case 4:
                                 case 6:
@@ -348,12 +353,6 @@ public class ContainerRepairBA extends ContainerRepair {
                                 case 8:
                                 case 9:
                                 default:
-                                    break;
-                                case 5:
-                                    enchantmentWeight = 2;
-                                    break;
-                                case 10:
-                                    enchantmentWeight = 1;
                                     break;
                             }
                             if (flag) {
@@ -392,6 +391,12 @@ public class ContainerRepairBA extends ContainerRepair {
                     case 2:
                         tempInt3 = 4;
                         break;
+                    case 5:
+                        tempInt3 = 2;
+                        break;
+                    case 10:
+                        tempInt3 = 1;
+                        break;
                     case 3:
                     case 4:
                     case 6:
@@ -399,12 +404,6 @@ public class ContainerRepairBA extends ContainerRepair {
                     case 8:
                     case 9:
                     default:
-                        break;
-                    case 5:
-                        tempInt3 = 2;
-                        break;
-                    case 10:
-                        tempInt3 = 1;
                         break;
                 }
                 if (flag) {

@@ -1,5 +1,6 @@
-package vdvman1.betterAnvil;
+package vdvman1.betterAnvil.common;
 
+import cpw.mods.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -7,8 +8,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiRepair;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
+import vdvman1.betterAnvil.BetterAnvil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,9 @@ public final class EventHandlerBA {
 
     public static final Object INSTANCE = new EventHandlerBA();
 
-    @SideOnly(Side.CLIENT)
+    private EventHandlerBA() {
+    }
+
     @SubscribeEvent
     public void anvilGui(AnvilUpdateEvent e) {
         //TODO
@@ -31,27 +34,32 @@ public final class EventHandlerBA {
     @SubscribeEvent
     public void onButtonPress(ActionPerformedEvent.Pre e) {
         if (e.gui instanceof GuiRepair) {
-            final GuiRepair repair = (GuiRepair)e.gui;
-
+            GuiRepair repair = (GuiRepair)e.gui;
             switch(e.button.id) {
                 //TODO
-                //
                 default:
                     break;
             }
         }
     }
 
+    @SuppressWarnings({"unchecked"})
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void addButtons(InitGuiEvent.Post e) {
         if (e.gui instanceof GuiRepair) {
             final List<GuiButton> list = new ArrayList<GuiButton>();
             //TODO Add buttons.
-
-
-
             e.buttonList.addAll(list);
+        }
+    }
+
+    @SubscribeEvent
+    public void onConfigChanged(OnConfigChangedEvent event) {
+        if (event.modID.equals(BetterAnvil.MOD_ID)) {
+            if (Config.getConfiguration() != null && (Config.getConfiguration().hasChanged() | !Config.getConfiguration().getConfigFile().exists())) {
+                Config.syncConfiguration(false);
+            }
         }
     }
 
