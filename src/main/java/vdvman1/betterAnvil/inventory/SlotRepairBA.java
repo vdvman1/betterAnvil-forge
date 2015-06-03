@@ -5,7 +5,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import vdvman1.betterAnvil.Config;
+import vdvman1.betterAnvil.common.Config;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 
 public class SlotRepairBA extends Slot {

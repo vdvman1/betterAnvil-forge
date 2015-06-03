@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import vdvman1.betterAnvil.BetterAnvil;
 
-public class BlockAnvilBA extends BlockAnvil
+public final class BlockAnvilBA extends BlockAnvil
 {
 
     public BlockAnvilBA() {

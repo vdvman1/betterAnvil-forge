@@ -53,9 +53,4 @@ task makeDeobfuscatedJar(type: Jar) {
     classifier = 'dev'
 }
 
-task makeJavaDocsJar(type: Jar) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-build.dependsOn makeSourcesJar, makeDeobfuscatedJar, makeJavaDocsJar
+build.dependsOn makeSourcesJar, makeDeobfuscatedJar

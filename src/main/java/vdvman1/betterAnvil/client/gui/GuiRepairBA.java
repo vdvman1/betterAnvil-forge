@@ -1,4 +1,4 @@
-package vdvman1.betterAnvil.gui;
+package vdvman1.betterAnvil.client.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ import vdvman1.betterAnvil.inventory.ContainerRepairBA;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiRepairBA extends GuiContainer implements ICrafting
+public final class GuiRepairBA extends GuiContainer implements ICrafting
 {
     private ContainerRepairBA repairContainer;
     private GuiTextField itemNameField;
