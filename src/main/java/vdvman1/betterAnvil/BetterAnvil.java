@@ -10,6 +10,8 @@ import cpw.mods.fml.common.registry.ExistingSubstitutionException;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.Type;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAnvilBlock;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
@@ -67,7 +69,8 @@ public final class BetterAnvil {
         for(Enchantment ench : Enchantment.enchantmentsList) {
             if(ench != null) {
                 String enchName = Utils.getEnchName(ench);
-                int defaulLimit = ench.getMaxLevel(), enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaulLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
+                int defaulLimit = ench.getMaxLevel();
+                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaulLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
                 Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
                 List<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {
@@ -89,10 +92,10 @@ public final class BetterAnvil {
             if (missingMapping.name.equals("BetterAnvil:anvilba")) {
                 switch(missingMapping.type) {
                     case BLOCK:
-                        missingMapping.remap(BetterAnvil.BLOCK_ANVIL);
+                        missingMapping.remap(Blocks.anvil);//Remap to Minecraft's anvil block (that is substituted).
                         break;
                     case ITEM:
-                        missingMapping.remap(BetterAnvil.ITEM_BLOCK_ANVIL);
+                        missingMapping.remap(Item.getItemFromBlock(Blocks.anvil));//Remap to Minecraft's anvil item block (that is substituted).
                         break;
                 }
             }
