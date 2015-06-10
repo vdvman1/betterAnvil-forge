@@ -1,6 +1,5 @@
 package vdvman1.betterAnvil.inventory;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,7 @@ import vdvman1.betterAnvil.common.*;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class ContainerRepairBA extends ContainerRepair {
+public final class ContainerRepairBA extends ContainerRepair {
 
     /** Here comes out item you merged and/or renamed. */
     private IInventory outputSlot = new InventoryCraftResult();
@@ -85,6 +84,7 @@ public class ContainerRepairBA extends ContainerRepair {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void updateRepairOutput() {
         isRenamingOnly = false;
@@ -135,7 +135,7 @@ public class ContainerRepairBA extends ContainerRepair {
                         repairAmount += Config.copyEnchantToBookRepairBonus;
                     }
                     workStack = stack2.copy();
-                    if(stack1.stackSize == 1) {
+                    if(stack1.stackSize <= 1) {
                         this.resultInputStack1 = null;
                     } else {
                         ItemStack resultInput = stack1.copy();
@@ -146,7 +146,7 @@ public class ContainerRepairBA extends ContainerRepair {
                 }
             } else if((stack1.getItem()== Items.book | stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
                 //add first enchantment from item to book
-                Entry<Integer, Integer>[] enchantmentEntrySet = enchantments2.entrySet().toArray(new Entry[0]);
+                Entry<Integer, Integer>[] enchantmentEntrySet = enchantments2.entrySet().toArray(new Entry[enchantments2.entrySet().size()]);
                 for(Entry<Integer, Integer> ench : enchantmentEntrySet) {
                     enchantments1.put(ench.getKey(), ench.getValue());
                     repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
@@ -171,7 +171,7 @@ public class ContainerRepairBA extends ContainerRepair {
             } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
                 CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
                 if (combined == null) {
-                    BetterAnvil.BETTER_ANVIL_LOGGER.warn(String.format("Failed to combine enchants from item stack %s and item stack %s!", notEnchanted.toString(), stack2.toString()));
+                    BetterAnvil.BETTER_ANVIL_LOGGER.warn("Failed to combine enchants from item stack {} and item stack {}!", notEnchanted.toString(), stack2.toString());
                     return;
                 }
                 repairCost = combined.repairCost;
@@ -422,18 +422,18 @@ public class ContainerRepairBA extends ContainerRepair {
             if (flag) {
                 repairCost = Math.max(1, repairCost / 2);
             }
-            this.maximumCost = (int)Math.round((repairCost + itemDamage) * Config.costMultiplier);
+            maximumCost = (int)Math.round((repairCost + itemDamage) * Config.costMultiplier);
             if (itemDamage <= 0) {
                 itemstack1 = null;
             }
             if (repairAmount == itemDamage && repairAmount > 0) {
                 if(Config.renamingCost == 0) {
-                    FMLCommonHandler.instance().getFMLLogger().info("Naming an item only, free renaming enabled, removing cost");
-                    this.maximumCost = 0;
-                    this.isRenamingOnly = true;
-                } else if(this.maximumCost >= 40) {
-                    FMLCommonHandler.instance().getFMLLogger().info("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
-                    this.maximumCost = 39;
+                    BetterAnvil.BETTER_ANVIL_LOGGER.info("Naming an item only, free renaming enabled, removing cost");
+                    maximumCost = 0;
+                    isRenamingOnly = true;
+                } else if(maximumCost >= 40) {
+                    BetterAnvil.BETTER_ANVIL_LOGGER.info("Naming an item only, cost too high; giving discount to cap cost to 39 levels");
+                    maximumCost = 39;
                 }
             }
             if (itemstack1 != null) {
@@ -451,8 +451,8 @@ public class ContainerRepairBA extends ContainerRepair {
                 itemstack1.setRepairCost(tempInt);
                 EnchantmentHelper.setEnchantments(enchantmentMap, itemstack1);
             }
-            this.outputSlot.setInventorySlotContents(0, itemstack1);
-            this.detectAndSendChanges();
+            outputSlot.setInventorySlotContents(0, itemstack1);
+            detectAndSendChanges();
         }
     }
 
@@ -462,11 +462,11 @@ public class ContainerRepairBA extends ContainerRepair {
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
         super.onContainerClosed(entityPlayer);
-        if (!this.theWorld.isRemote) {
-            for (int i = 0; i < this.inputSlots.getSizeInventory(); ++i) {
-                ItemStack itemstack = this.inputSlots.getStackInSlotOnClosing(i);
+        if (!theWorld.isRemote) {
+            for (int i = 0; i < inputSlots.getSizeInventory(); ++i) {
+                ItemStack itemstack = inputSlots.getStackInSlotOnClosing(i);
                 if (itemstack != null) {
-                    entityPlayer.entityDropItem(itemstack, theWorld.rand.nextFloat() + 0.05F);
+                    entityPlayer.dropPlayerItemWithRandomChoice(itemstack, false);
                 }
             }
         }
@@ -474,7 +474,7 @@ public class ContainerRepairBA extends ContainerRepair {
 
     @Override
     public boolean canInteractWith(EntityPlayer entityPlayer) {
-        return theWorld.getBlock(x, y, z) instanceof BlockAnvilBA && entityPlayer.getDistanceSq((double)this.x + 0.5D, (double)this.y + 0.5D, (double)this.z + 0.5D) <= 64.0D;
+        return theWorld.getBlock(x, y, z) instanceof BlockAnvilBA && entityPlayer.getDistanceSq(x + 0.5D, y + 0.5D, z + 0.5D) <= 64.0D;
     }
 
     /**

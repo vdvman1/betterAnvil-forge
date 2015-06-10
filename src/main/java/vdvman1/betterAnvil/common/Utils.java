@@ -15,7 +15,7 @@ public final class Utils {
         double repairAmount = 0;
         Map<Integer, Integer> compatEnchList = new HashMap<Integer, Integer>();
         Map<Integer, Integer> inCompatEnchList = new HashMap<Integer, Integer>();
-        if(enchList1 != null && !enchList1.isEmpty() && enchList2 != null && !enchList2.isEmpty()) {
+        if((enchList1 != null && enchList2 != null) && (!enchList1.isEmpty() || !enchList2.isEmpty())) {
             compatEnchList.putAll(enchList1);
             //Combine all enchantments
             for(Map.Entry<Integer, Integer> entry: enchList2.entrySet()) {
