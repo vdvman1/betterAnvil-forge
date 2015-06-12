@@ -46,17 +46,19 @@ public final class BetterAnvil {
     public void preInit(FMLPreInitializationEvent event) {
         Config.setConfiguration(new Configuration(new File(Loader.instance().getConfigDir(), "BetterAnvil.cfg")));
         Config.syncConfiguration(true);
+    }
+
+    //Called during initialization, used for registering everything etc.
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
+        //Why do we have to add substitution aliases here? It makes absolutely no sense. >_<
         try {
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.BLOCK_ANVIL);
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, BetterAnvil.ITEM_BLOCK_ANVIL);
         } catch(ExistingSubstitutionException e) {
             e.printStackTrace();
         }
-    }
 
-    //Called during initialization, used for registering everything etc.
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
         FMLCommonHandler.instance().bus().register(EventHandlerBA.INSTANCE);
 
@@ -89,13 +91,13 @@ public final class BetterAnvil {
     @EventHandler
     public void missingMappings(FMLMissingMappingsEvent event) {
         for(MissingMapping missingMapping : event.get()) {
-            if (missingMapping.name.equals("BetterAnvil:anvilba")) {
+            if (missingMapping.name.equals("BetterAnvil:anvilba") | missingMapping.name.equals("minecraft:anvil")) {
                 switch(missingMapping.type) {
                     case BLOCK:
-                        missingMapping.remap(Blocks.anvil);//Remap to Minecraft's anvil block (that is substituted).
+                        missingMapping.remap(Blocks.anvil);//Remap to Minecraft's anvil block [which is substituted].
                         break;
                     case ITEM:
-                        missingMapping.remap(Item.getItemFromBlock(Blocks.anvil));//Remap to Minecraft's anvil item block (that is substituted).
+                        missingMapping.remap(Item.getItemFromBlock(Blocks.anvil));//Remap to Minecraft's anvil item block [which is substituted].
                         break;
                 }
             }
