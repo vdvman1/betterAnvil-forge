@@ -45,7 +45,7 @@ processResources {
 
 task makeSourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    classifier = 'src'
 }
 
 task makeDeobfuscatedJar(type: Jar) {
