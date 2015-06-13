@@ -8,15 +8,11 @@ import net.minecraft.world.World;
 import vdvman1.betterAnvil.common.Config;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 
-public class SlotRepairBA extends Slot {
+public final class SlotRepairBA extends Slot {
 
     private final World theWorld;
 
-    private final int blockPosX;
-
-    private final int blockPosY;
-
-    private final int blockPosZ;
+    private final int blockPosX, blockPosY, blockPosZ;
 
     /** The anvil this slot belongs to. */
     private final ContainerRepairBA anvil;

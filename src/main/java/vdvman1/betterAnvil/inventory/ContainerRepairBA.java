@@ -22,7 +22,7 @@ public final class ContainerRepairBA extends ContainerRepair {
     private IInventory outputSlot = new InventoryCraftResult();
 
     /**
-     * The 2slots where you put your items in that you want to merge and/or rename.
+     * The 2 slots where you put your items in that you want to merge and/or rename.
      */
     private IInventory inputSlots = new InventoryRepairBA(this, "Repair", true, 2);
     private World theWorld;
