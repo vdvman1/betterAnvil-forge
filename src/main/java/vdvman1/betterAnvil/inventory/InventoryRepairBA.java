@@ -3,7 +3,7 @@ package vdvman1.betterAnvil.inventory;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.item.ItemStack;
 
-public class InventoryRepairBA extends InventoryBasic {
+public final class InventoryRepairBA extends InventoryBasic {
 
     /** Container of this anvil's block. */
     private final ContainerRepairBA theContainer;

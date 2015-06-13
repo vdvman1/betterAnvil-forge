@@ -46,6 +46,7 @@ public final class CategoryEnchantmentLimits extends CategoryBA {
                             }
                             String[] enchBlackList = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, propertyName, defaultBlackList.toArray(new String[defaultBlackList.size()])).getStringList();
                             Config.ENCHANT_BLACK_LIST.put(enchantment_0.effectId, enchBlackList);
+                            break;
                         }
                     }
                     super.set(object);
@@ -75,7 +76,7 @@ public final class CategoryEnchantmentLimits extends CategoryBA {
                 public void setToDefault() {
                     for(Enchantment enchantment_0 : Enchantment.enchantmentsList) {
                         if (enchantment_0 != null && Utils.getEnchName(enchantment_0).equals(propertyName)) {
-                            super.set(enchantment_0.getMaxLevel());
+                            set(enchantment_0.getMaxLevel());
                             break;
                         }
                     }

@@ -27,7 +27,7 @@ public final class Utils {
                 if (index < Enchantment.enchantmentsList.length) {
                     enchantment = Enchantment.enchantmentsList[index];
                 } else {
-                    BetterAnvil.BETTER_ANVIL_LOGGER.warn(String.format("Enchantment id %d, is invalid!", index));
+                    BetterAnvil.BETTER_ANVIL_LOGGER.warn("Enchantment id {}, is invalid!", index);
                 }
                 if (enchantment == null) {
                     continue;
@@ -90,7 +90,7 @@ public final class Utils {
     }
     
     public static boolean canApplyTogether(Enchantment ench1, Enchantment ench2) {
-        return Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), getEnchName(ench2));
+        return Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), Utils.getEnchName(ench2));
     }
 
 }
