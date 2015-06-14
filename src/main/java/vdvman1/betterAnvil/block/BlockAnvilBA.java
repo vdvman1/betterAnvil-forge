@@ -13,7 +13,7 @@ public final class BlockAnvilBA extends BlockAnvil
         setHardness(5.0F);
         setStepSound(Block.soundTypeAnvil);
         setResistance(2000.0F);
-        setBlockName("anvil");
+        setBlockName("betterAnvil");
     }
 
     /**
@@ -25,4 +25,5 @@ public final class BlockAnvilBA extends BlockAnvil
         entityPlayer.openGui(BetterAnvil.instance, 0, world, x, y, z);
         return true;
     }
+
 }
