@@ -56,15 +56,12 @@ public final class ContainerRepairBA extends ContainerRepair {
         this.addSlotToContainer(new Slot(this.inputSlots, 0, 27, 47));
         this.addSlotToContainer(new Slot(this.inputSlots, 1, 76, 47));
         this.addSlotToContainer(new SlotRepairBA(this, this.outputSlot, 2, 134, 47, world, x, y, z));
-        int l;
-
-        for (l = 0; l < 3; ++l) {
+        for (int l = 0; l < 3; ++l) {
             for (int i1 = 0; i1 < 9; ++i1) {
                 this.addSlotToContainer(new Slot(inventoryPlayer, i1 + l * 9 + 9, 8 + i1 * 18, 84 + l * 18));
             }
         }
-
-        for (l = 0; l < 9; ++l) {
+        for (int l = 0; l < 9; ++l) {
             this.addSlotToContainer(new Slot(inventoryPlayer, l, 8 + l * 18, 142));
         }
     }
@@ -158,6 +155,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                 ItemStack resultInput = stack2.copy();
                 EnchantmentHelper.setEnchantments(enchantments2, resultInput);
                 this.resultInputStack = resultInput;
+
                 if(stack1.getItem() == Items.book) {
                     resultInput = stack1.copy();
                     resultInput.stackSize -= 1;
@@ -167,6 +165,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                 } else {
                     resultInput = null;
                 }
+
                 this.resultInputStack1 = resultInput;
             } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
                 CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);

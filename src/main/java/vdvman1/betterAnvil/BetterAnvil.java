@@ -83,6 +83,9 @@ public final class BetterAnvil {
                     }
                 }
                 String[] enchBlackList = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultBlackList.toArray(new String[defaultBlackList.size()])).getStringList();
+                if (enchBlackList == null | (enchBlackList != null && enchBlackList.length <= 0)) {//Checking for invalid enchantment list.
+                    continue;
+                }
                 Config.ENCHANT_BLACK_LIST.put(ench.effectId, enchBlackList);
             }
         }
