@@ -45,11 +45,11 @@ public final class SlotRepairBA extends Slot {
     @Override
     public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack) {
         if (!entityPlayer.capabilities.isCreativeMode) {
-            entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
+            entityPlayer.addExperienceLevel(-anvil.maximumCost);//Removes experience levels from the player using the maximum cost from the anvil then making it a negative.
         }
 
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);//BUG-FIX: This should always go first.
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, this.anvil.resultInputStack);
-        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
         this.anvil.maximumCost = 0;
 
         if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlock(this.blockPosX, this.blockPosY, this.blockPosZ) instanceof BlockAnvilBA && entityPlayer.getRNG().nextFloat() < Config.breakChance) {
