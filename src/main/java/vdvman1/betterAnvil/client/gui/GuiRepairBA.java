@@ -2,6 +2,7 @@ package vdvman1.betterAnvil.client.gui;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -70,35 +71,22 @@ public final class GuiRepairBA extends GuiContainer implements ICrafting {
         if (this.repairContainer.maximumCost > 0 || this.repairContainer.isRenamingOnly) {
             int colour = 8453920;
             String s = StatCollector.translateToLocalFormatted("container.repair.cost", repairContainer.maximumCost);
-
-            /*if (!this.repairContainer.getSlot(2).getHasStack())
-            {
-                flag = false;
-            }
-            else if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player))
-            {
-                colour = 16736352;
-            }*/
-            if (!this.repairContainer.getSlot(2).canTakeStack(this.playerInventory.player)) {
+            if (!repairContainer.getSlot(2).canTakeStack(playerInventory.player)) {
                 colour = 16736352;
             }
-
-            if (this.repairContainer.hadOutput) {
+            if (repairContainer.hadOutput) {
                 int finalColour = -16777216 | (colour & 16579836) >> 2 | colour & -16777216;
-                int stringX = this.xSize - 8 - this.fontRendererObj.getStringWidth(s);
+                int stringX = (xSize - 8) - fontRendererObj.getStringWidth(s);
                 byte stringY = 67;
-
-                if (this.fontRendererObj.getUnicodeFlag()) {
-                    drawRect(stringX - 3, stringY - 2, this.xSize - 7, stringY + 10, -16777216);
-                    drawRect(stringX - 2, stringY - 1, this.xSize - 8, stringY + 9, -12895429);
-                } else
-                {
-                    this.fontRendererObj.drawString(s, stringX, stringY + 1, finalColour);
-                    this.fontRendererObj.drawString(s, stringX + 1, stringY, finalColour);
-                    this.fontRendererObj.drawString(s, stringX + 1, stringY + 1, finalColour);
+                if (fontRendererObj.getUnicodeFlag()) {
+                    Gui.drawRect(stringX - 3, stringY - 2, xSize - 7, stringY + 10, -16777216);
+                    Gui.drawRect(stringX - 2, stringY - 1, xSize - 8, stringY + 9, -12895429);
+                } else {
+                    fontRendererObj.drawString(s, stringX, stringY + 1, finalColour);
+                    fontRendererObj.drawString(s, stringX + 1, stringY, finalColour);
+                    fontRendererObj.drawString(s, stringX + 1, stringY + 1, finalColour);
                 }
-
-                this.fontRendererObj.drawString(s, stringX, stringY, colour);
+                fontRendererObj.drawString(s, stringX, stringY, colour);
             }
         }
 
@@ -143,13 +131,13 @@ public final class GuiRepairBA extends GuiContainer implements ICrafting {
     protected void drawGuiContainerBackgroundLayer(float x, int y, int z) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.renderEngine.bindTexture(new ResourceLocation("minecraft", "textures/gui/container/anvil.png"));
-        int centerX = (this.width - this.xSize) / 2;
-        int centerY = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(centerX, centerY, 0, 0, this.xSize, this.ySize);
-        this.drawTexturedModalRect(centerX + 59, centerY + 20, 0, this.ySize + (this.repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
+        final int centerX = (width - xSize) / 2;
+        final int centerY = (height - ySize) / 2;
+        drawTexturedModalRect(centerX, centerY, 0, 0, xSize, ySize);
+        drawTexturedModalRect(centerX + 59, centerY + 20, 0, ySize + (repairContainer.getSlot(0).getHasStack() ? 0 : 16), 110, 16);
 
-        if ((this.repairContainer.getSlot(0).getHasStack() || this.repairContainer.getSlot(1).getHasStack()) && !this.repairContainer.getSlot(2).getHasStack()) {
-            this.drawTexturedModalRect(centerX + 99, centerY + 45, this.xSize, 0, 28, 21);
+        if ((repairContainer.getSlot(0).getHasStack() || repairContainer.getSlot(1).getHasStack()) && !repairContainer.getSlot(2).getHasStack()) {
+            drawTexturedModalRect(centerX + 99, centerY + 45, xSize, 0, 28, 21);
         }
     }
 

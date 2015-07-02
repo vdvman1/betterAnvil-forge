@@ -8,6 +8,8 @@ import java.util.Map;
 
 public final class Config {
 
+    private static Configuration configuration = null;
+
     public static double breakChance, costMultiplier;
     public static int renamingCost;
     public static double itemRepairAmount;
@@ -17,8 +19,6 @@ public final class Config {
     public static boolean isLegacyMode;
     public static final Map<Integer, Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
     public static final Map<Integer, String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
-
-    private static Configuration configuration = null;
 
     public static final String CATEGORY_ADJUSTMENTS = "adjustments", CATEGORY_ENCHANTMENT_LIMITS = "enchantment limits";
 
@@ -34,10 +34,16 @@ public final class Config {
         if (Config.configuration == null) {
             return;
         }
-        if (load) {
+        if (load && Config.configuration.getConfigFile().exists()) {
             Config.configuration.load();
         }
         Property prop;
+
+        //Require a world restart for these categories.
+        Config.configuration.setCategoryRequiresWorldRestart(Configuration.CATEGORY_GENERAL, true);
+        Config.configuration.setCategoryRequiresWorldRestart(Config.CATEGORY_ADJUSTMENTS, true);
+        Config.configuration.setCategoryRequiresWorldRestart(Config.CATEGORY_ENCHANTMENT_LIMITS, true);
+
         Config.isLegacyMode = Config.configuration.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
         Config.breakChance = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "breakChance", 12.0D).setLanguageKey("gui.config.adjustments.breakChance").setMinValue(1.0D).setMaxValue(100.0D).getDouble(12.0D) / 100.0D;
         Config.costMultiplier = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "anvilCostMultiplier", 1.0D).setLanguageKey("gui.config.adjustments.anvilCostMultiplier").setMinValue(1.0D).setMaxValue(100.0D).getDouble(1.0D);
