@@ -38,6 +38,7 @@ public final class BetterAnvil {
     //Global variables
     public static final String MOD_ID = "BetterAnvil", MOD_NAME = "Better Anvils", VERSION = "@VERSION@";
 
+    //Logger
     public static final Logger BETTER_ANVIL_LOGGER = LogManager.getLogger(BetterAnvil.MOD_NAME);
 
     //Blocks
@@ -58,7 +59,7 @@ public final class BetterAnvil {
     //Called during initialization, used for registering everything etc.
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        GameRegistry.addShapedRecipe(new ItemStack(BetterAnvil.BLOCK_BETTER_ANVIL, 1, 0), "XYX", "XXX", 'X', Items.iron_ingot, 'Y', Blocks.anvil);
+        GameRegistry.addShapedRecipe(new ItemStack(BetterAnvil.BLOCK_BETTER_ANVIL, 1, 0), "XYX", "XXX", 'X', Items.iron_ingot, 'Y', new ItemStack(Blocks.anvil, 1, 0));//Only use a new anvil (that is not damaged) for the crafting recipe.
 
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
         FMLCommonHandler.instance().bus().register(EventHandlerBA.INSTANCE);
@@ -69,6 +70,10 @@ public final class BetterAnvil {
 
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
+        if (Config.getConfiguration() == null) {
+            BetterAnvil.BETTER_ANVIL_LOGGER.error("The configuration file was not initialised, please report this as a bug to the mod author(s).");
+            return;
+        }
         for(Enchantment ench : Enchantment.enchantmentsList) {
             if(ench != null) {
                 String enchName = Utils.getEnchName(ench);
@@ -95,7 +100,7 @@ public final class BetterAnvil {
     @EventHandler
     public void missingMappings(FMLMissingMappingsEvent event) {
         for(MissingMapping missingMapping : event.get()) {
-            if (missingMapping.name.equals("BetterAnvil:anvilba") | missingMapping.name.equals("minecraft:anvil")) {
+            if (missingMapping.name.equals("BetterAnvil:anvilba")) {
                 switch(missingMapping.type) {
                     case BLOCK:
                         missingMapping.remap(BetterAnvil.BLOCK_BETTER_ANVIL);

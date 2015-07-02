@@ -231,13 +231,13 @@ public final class ContainerRepairBA extends ContainerRepair {
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
 	public void updateRepairOutputOld() {
-        this.isRenamingOnly = false;
-        ItemStack itemstack = this.inputSlots.getStackInSlot(0);
+        isRenamingOnly = false;
+        hadOutput = false;
+        ItemStack itemstack = inputSlots.getStackInSlot(0);
         this.maximumCost = 0;
         int itemDamage = 0;
         byte b0 = 0;
         int repairAmount = 0;
-
         if (itemstack == null) {
             this.outputSlot.setInventorySlotContents(0, null);
             this.maximumCost = 0;
@@ -451,6 +451,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                 EnchantmentHelper.setEnchantments(enchantmentMap, itemstack1);
             }
             outputSlot.setInventorySlotContents(0, itemstack1);
+            hadOutput = itemstack1 != null;
             detectAndSendChanges();
         }
     }
