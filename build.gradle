@@ -18,15 +18,15 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'forge'
 
-sourceCompatibility = "1.6"
-targetCompatibility = "1.7"
+sourceCompatibility = '1.6'
+targetCompatibility = '1.7'
 
-version = project.properties['Version']
+version = project.properties['version']
 group = "vdvman1.betterAnvil.BetterAnvil"
 archivesBaseName = "BetterAnvil"
 
 minecraft {
-    version = project.properties['Forge_Version']
+    version = project.properties['forge_version']
     runDir = "build"
     replace "@VERSION@", project.version
 }
