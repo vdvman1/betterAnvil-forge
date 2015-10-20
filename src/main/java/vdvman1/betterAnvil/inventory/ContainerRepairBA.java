@@ -123,7 +123,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                         this.resultInputStack = new ItemStack(Items.book);
                     }
                 }
-            } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book) {
+            } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book && Config.enableEnchantDuplication) {//If the item in the first slot is a book, and the item in the second slot is an enchanted book, and the config has enabled enchant duplication.
                 //Copy an enchanted book
                 if(!enchantments2.isEmpty()) {
                     this.resultInputStack = stack2.copy();
@@ -141,7 +141,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                     }
 
                 }
-            } else if((stack1.getItem()== Items.book | stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
+            } else if((stack1.getItem()== Items.book || stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
                 //add first enchantment from item to book
                 Entry<Integer, Integer>[] enchantmentEntrySet = enchantments2.entrySet().toArray(new Entry[enchantments2.entrySet().size()]);
                 for(Entry<Integer, Integer> ench : enchantmentEntrySet) {

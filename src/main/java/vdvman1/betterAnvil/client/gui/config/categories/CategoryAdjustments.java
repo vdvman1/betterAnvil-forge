@@ -35,6 +35,8 @@ public final class CategoryAdjustments extends CategoryBA {
         list.add(new ConfigElementBA<Integer>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "copyEnchantToBookCostMultiplier", 1).setLanguageKey("gui.config.adjustments.copyEnchantToBookCostMultiplier").setMinValue(0).setMaxValue(Short.MAX_VALUE)).setName("Copy enchant to book cost multiplier"));
         list.add(new ConfigElementBA<Integer>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "copyEnchantToBookRepairBonus", 1).setLanguageKey("gui.config.adjustments.copyEnchantToBookRepairBonus").setMinValue(0).setMaxValue(Short.MAX_VALUE)).setName("Copy enchant to book repair multiplier"));
         list.add(new ConfigElementBA<Double>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "itemRepairAmount", 25.0D).setLanguageKey("gui.config.adjustments.itemRepairAmount").setMinValue(1.0D).setMaxValue(100.0D)).setName("Item repair amount"));
+
+        list.add(new ConfigElementBA<Boolean>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "enableEnchantDuplication", true).setLanguageKey("gui.config.adjustments.enableEnchantDuplication")));
         return list;
     }
 
