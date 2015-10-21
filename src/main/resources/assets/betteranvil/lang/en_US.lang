@@ -11,6 +11,7 @@ gui.config.adjustments.renamingRepairBonus.tooltip=
 gui.config.adjustments.mainRepairBonusPercent.tooltip=
 gui.config.adjustments.repairCostPerItem.tooltip=Cost to repair an item
 gui.config.adjustments.enableEnchantDuplication=Enable enchant duplication with books
+gui.config.adjustments.enableItemDestruction=Enable destruction of an item when pulling enchantments off of it
 
 gui.config.adjustments.enchantCombineRepairCost.tooltip=Cost to increase an enchantment by a level
 gui.config.adjustments.enchantTransferRepairCost.tooltip=Cost to transfer an enchantment to a tool

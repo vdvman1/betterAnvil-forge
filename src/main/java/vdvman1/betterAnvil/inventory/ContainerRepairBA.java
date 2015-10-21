@@ -8,7 +8,9 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import org.apache.commons.lang3.StringUtils;
+
 import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.common.*;
@@ -152,9 +154,17 @@ public final class ContainerRepairBA extends ContainerRepair {
                 }
                 workStack = new ItemStack(Items.enchanted_book);
                 EnchantmentHelper.setEnchantments(enchantments1, workStack);
-                ItemStack resultInput = stack2.copy();
-                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
-                this.resultInputStack = resultInput;
+                
+                ItemStack resultInput;
+                
+                if(Config.enableItemDestruction) {
+                	this.resultInputStack = null;
+                }
+                else {
+                	resultInput = stack2.copy();
+	                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
+	                this.resultInputStack = resultInput;
+                }
 
                 if(stack1.getItem() == Items.book) {
                     resultInput = stack1.copy();
