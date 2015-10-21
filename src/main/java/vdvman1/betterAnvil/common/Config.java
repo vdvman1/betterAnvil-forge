@@ -16,7 +16,7 @@ public final class Config {
     public static int enchantCombineRepairCost, enchantTransferRepairCost, enchantCombineRepairBonus, enchantTransferRepairBonus;
     public static int copyEnchantToBookCostMultiplier, copyEnchantToBookRepairBonus;
     public static int renamingRepairBonus, mainRepairBonusPercent, repairCostPerItem;
-    public static boolean isLegacyMode, enableEnchantDuplication;
+    public static boolean isLegacyMode, enableEnchantDuplication, enableItemDestruction;
     public static final Map<Integer, Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
     public static final Map<Integer, String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
 
@@ -52,6 +52,7 @@ public final class Config {
         Config.mainRepairBonusPercent = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "mainRepairBonusPercent", 12).setLanguageKey("gui.config.adjustments.mainRepairBonusPercent").setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(12) / 100;
         Config.repairCostPerItem = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "repairCostPerItem", 3).setLanguageKey("gui.config.adjustments.repairCostPerItem").setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(3);
         Config.enableEnchantDuplication = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableEnchantDuplication", true).setLanguageKey("gui.config.adjustments.enableEnchantDuplication").getBoolean();
+        Config.enableItemDestruction = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableItemDestruction", false).setLanguageKey("gui.config.adjustments.enableItemDestruction").getBoolean();
 
         prop = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
