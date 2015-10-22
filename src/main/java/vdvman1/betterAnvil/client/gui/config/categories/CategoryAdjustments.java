@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Created by Master801 on 6/2/2015 at 11:56 AM.
+ *
  * @author Master801
  */
 public final class CategoryAdjustments extends CategoryBA {
@@ -37,6 +38,7 @@ public final class CategoryAdjustments extends CategoryBA {
         list.add(new ConfigElementBA<Double>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "itemRepairAmount", 25.0D).setLanguageKey("gui.config.adjustments.itemRepairAmount").setMinValue(1.0D).setMaxValue(100.0D)).setName("Item repair amount"));
 
         list.add(new ConfigElementBA<Boolean>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "enableEnchantDuplication", true).setLanguageKey("gui.config.adjustments.enableEnchantDuplication")));
+        list.add(new ConfigElementBA<Boolean>(Config.getConfiguration().get(Config.CATEGORY_ADJUSTMENTS, "enableItemDestruction", true).setLanguageKey("gui.config.adjustments.enableItemDestruction")));
         return list;
     }
 

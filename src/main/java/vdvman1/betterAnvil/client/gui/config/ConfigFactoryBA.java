@@ -8,10 +8,11 @@ import vdvman1.betterAnvil.client.gui.config.screen.GuiScreenConfigBA;
 import java.util.Set;
 
 /**
+ * Used as a config factory in {@link cpw.mods.fml.common.Mod#guiFactory()} for {@link vdvman1.betterAnvil.BetterAnvil}.
+ *
+ *
  * Created by Master801 on 5/9/2015 at 12:40 PM.
- * <p>
- *     Used as a config factory in {@link cpw.mods.fml.common.Mod#guiFactory()} for {@link vdvman1.betterAnvil.BetterAnvil}.
- * </p>
+ *
  * @author Master801
  */
 @SuppressWarnings("unused")
