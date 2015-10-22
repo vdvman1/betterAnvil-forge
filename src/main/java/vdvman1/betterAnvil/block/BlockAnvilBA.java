@@ -13,10 +13,15 @@ import vdvman1.betterAnvil.BetterAnvil;
 public final class BlockAnvilBA extends BlockAnvil {
 	
 	//Icon names
-	private static final String[] anvilIconNames = new String[] {BetterAnvil.MOD_ID.toLowerCase()+":better_anvil_top_damaged_0", BetterAnvil.MOD_ID.toLowerCase()+":better_anvil_top_damaged_1", BetterAnvil.MOD_ID.toLowerCase()+":better_anvil_top_damaged_2"};
+	private static final String[] ANVIL_ICON_NAMES = new String[] {
+            BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_base",
+            BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_top_damaged_0",
+            BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_top_damaged_1",
+            BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_top_damaged_2"
+    };
 
     @SideOnly(Side.CLIENT)
-    private IIcon[] anvilIcons;  
+    private final IIcon[] anvilIcons = new IIcon[BlockAnvilBA.ANVIL_ICON_NAMES.length];
 
     public BlockAnvilBA() {
         setHardness(5.0F);
@@ -25,42 +30,23 @@ public final class BlockAnvilBA extends BlockAnvil {
         setBlockName("betterAnvil");
     }
 
-    /**
-     * Called upon block activation (right click on the block.)
-     */
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int sideHit, float sideHitX, float sideHitY, float sideHitZ) {
         entityPlayer.openGui(BetterAnvil.instance, 0, world, x, y, z);
         return true;
     }
 
-    /**
-     * Gets the block's texture. Args: side, meta
-     */
+    @Override
     @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int side, int meta)
-    {
-        if (this.anvilRenderSide == 3 && side == 1)
-        {
-            int k = (meta >> 2) % this.anvilIcons.length;
-            return this.anvilIcons[k];
-        }
-        else
-        {
-            return this.blockIcon;
-        }
+    public IIcon getIcon(int side, int meta) {
+        if (anvilRenderSide == 3 && side == 1) return anvilIcons[(meta >> 2) % anvilIcons.length];
+        return anvilIcons[0];
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-        this.blockIcon = iconRegister.registerIcon(BetterAnvil.MOD_ID.toLowerCase()+":better_anvil_base");
-        this.anvilIcons = new IIcon[anvilIconNames.length];
-
-        for (int i = 0; i < this.anvilIcons.length; ++i)
-        {
-            this.anvilIcons[i] = iconRegister.registerIcon(anvilIconNames[i]);
-        }
+    public void registerBlockIcons(IIconRegister iconRegister) {
+        for(int i = 0; i < anvilIcons.length; ++i) anvilIcons[i] = iconRegister.registerIcon(BlockAnvilBA.ANVIL_ICON_NAMES[i]);
     }
 
 }

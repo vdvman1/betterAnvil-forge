@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by Master801 on 6/2/2015 at 11:56 AM.
+ *
  * @author Master801
  */
 public final class CategoryEnchantmentLimits extends CategoryBA {

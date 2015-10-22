@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by Master801 on 6/2/2015 at 11:51 AM.
+ *
  * @author Master801
  */
 public abstract class CategoryBA extends ConfigElementBA<Object> {

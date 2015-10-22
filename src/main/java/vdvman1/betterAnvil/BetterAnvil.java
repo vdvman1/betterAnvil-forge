@@ -59,7 +59,7 @@ public final class BetterAnvil {
     //Called during initialization, used for registering everything etc.
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        GameRegistry.addShapedRecipe(new ItemStack(BetterAnvil.BLOCK_BETTER_ANVIL, 1, 0), "XYX", "XXX", 'X', Items.iron_ingot, 'Y', new ItemStack(Blocks.anvil, 1, 0));//Only use a new anvil (that is not damaged) for the crafting recipe.
+        GameRegistry.addShapedRecipe(new ItemStack(BetterAnvil.BLOCK_BETTER_ANVIL, 1, 0), "DAD", "XDX", 'X', Items.iron_ingot, 'A', new ItemStack(Blocks.anvil, 1, 0), 'D', Items.diamond);//Only use a new anvil (that is not damaged) for the crafting recipe.
 
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
         FMLCommonHandler.instance().bus().register(EventHandlerBA.INSTANCE);
@@ -77,8 +77,8 @@ public final class BetterAnvil {
         for(Enchantment ench : Enchantment.enchantmentsList) {
             if(ench != null) {
                 String enchName = Utils.getEnchName(ench);
-                int defaulLimit = ench.getMaxLevel();
-                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaulLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
+                int defaultLimit = ench.getMaxLevel();
+                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
                 Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
                 List<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {
@@ -88,9 +88,7 @@ public final class BetterAnvil {
                     }
                 }
                 String[] enchBlackList = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultBlackList.toArray(new String[defaultBlackList.size()])).getStringList();
-                if (enchBlackList == null | (enchBlackList != null && enchBlackList.length <= 0)) {//Checking for invalid enchantment list.
-                    continue;
-                }
+                if (enchBlackList == null || enchBlackList.length <= 0) continue;//Check for invalid enchantment list.
                 Config.ENCHANT_BLACK_LIST.put(ench.effectId, enchBlackList);
             }
         }

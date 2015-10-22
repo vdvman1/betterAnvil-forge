@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by Master801 on 6/1/2015 at 4:45 PM.
+ *
  * @author Master801
  */
 public class ConfigElementBA<T> extends ConfigElement<T> {

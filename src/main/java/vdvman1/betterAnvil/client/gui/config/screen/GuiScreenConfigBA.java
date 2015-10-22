@@ -11,6 +11,7 @@ import java.util.*;
 
 /**
  * Created by Master801 on 5/9/2015 at 12:44 PM.
+ *
  * @author Master801
  */
 public final class GuiScreenConfigBA extends GuiConfig {
@@ -19,7 +20,11 @@ public final class GuiScreenConfigBA extends GuiConfig {
      * Do not touch this constructor, it is reflectively gotten and invoked by the config factory.
      */
     public GuiScreenConfigBA(GuiScreen parentScreen) {
-        super(parentScreen, Arrays.asList((IConfigElement)new CategoryGeneral(), new CategoryAdjustments(), new CategoryEnchantmentLimits()), BetterAnvil.MOD_ID, "BA-CFG", false, false, BetterAnvil.MOD_NAME, GuiConfig.getAbridgedConfigPath(Config.getConfiguration().toString()));
+        super(parentScreen, Arrays.asList(
+                (IConfigElement)new CategoryGeneral(),
+                new CategoryAdjustments(),
+                new CategoryEnchantmentLimits()
+        ), BetterAnvil.MOD_ID, "BA-CFG", false, false, BetterAnvil.MOD_NAME, GuiConfig.getAbridgedConfigPath(Config.getConfiguration().toString()));
     }
 
 }
