@@ -21,7 +21,7 @@ public final class BlockAnvilBA extends BlockAnvil {
     };
 
     @SideOnly(Side.CLIENT)
-    private final IIcon[] anvilIcons = new IIcon[BlockAnvilBA.ANVIL_ICON_NAMES.length];
+    private IIcon[] anvilIcons;
 
     public BlockAnvilBA() {
         setHardness(5.0F);
@@ -39,14 +39,15 @@ public final class BlockAnvilBA extends BlockAnvil {
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
-        if (anvilRenderSide == 3 && side == 1) return anvilIcons[(meta >> 2) % anvilIcons.length];
+        if (anvilRenderSide == 3 && side == 1) return anvilIcons[((meta >> 2)+1) % anvilIcons.length];
         return anvilIcons[0];
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
-        for(int i = 0; i < anvilIcons.length; ++i) anvilIcons[i] = iconRegister.registerIcon(BlockAnvilBA.ANVIL_ICON_NAMES[i]);
+    	anvilIcons = new IIcon[BlockAnvilBA.ANVIL_ICON_NAMES.length];
+    	for(int i = 0; i < anvilIcons.length; ++i) anvilIcons[i] = iconRegister.registerIcon(BlockAnvilBA.ANVIL_ICON_NAMES[i]);
     }
 
 }

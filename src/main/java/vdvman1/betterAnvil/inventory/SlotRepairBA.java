@@ -48,8 +48,8 @@ public final class SlotRepairBA extends Slot {
             entityPlayer.addExperienceLevel(-anvil.maximumCost);//Removes experience levels from the player using the maximum cost from the anvil then making it a negative.
         }
         
-        ItemStack slot0Stack = this.anvil.resultInputStack1.copy();
-        ItemStack slot1Stack = this.anvil.resultInputStack.copy();
+        ItemStack slot0Stack = this.anvil.resultInputStack1 == null ? null : this.anvil.resultInputStack1.copy();
+        ItemStack slot1Stack = this.anvil.resultInputStack == null ? null : this.anvil.resultInputStack.copy();
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, slot0Stack);//BUG-FIX: This should always go first.
         ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, slot1Stack);
         this.anvil.maximumCost = 0;
