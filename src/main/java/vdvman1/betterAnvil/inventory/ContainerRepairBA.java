@@ -154,13 +154,12 @@ public final class ContainerRepairBA extends ContainerRepair {
                 }
                 workStack = new ItemStack(Items.enchanted_book);
                 EnchantmentHelper.setEnchantments(enchantments1, workStack);
-                
+
                 ItemStack resultInput;
-                
+
                 if(Config.enableItemDestruction) {
                 	this.resultInputStack = null;
-                }
-                else {
+                } else {
                 	resultInput = stack2.copy();
 	                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
 	                this.resultInputStack = resultInput;
@@ -240,7 +239,8 @@ public final class ContainerRepairBA extends ContainerRepair {
     /**
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
-	public void updateRepairOutputOld() {
+	@SuppressWarnings("unchecked")
+    public void updateRepairOutputOld() {
         isRenamingOnly = false;
         hadOutput = false;
         ItemStack itemstack = inputSlots.getStackInSlot(0);

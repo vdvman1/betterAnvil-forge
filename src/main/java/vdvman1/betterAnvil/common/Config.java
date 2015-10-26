@@ -8,7 +8,9 @@ import java.util.Map;
 
 public final class Config {
 
-    private static Configuration configuration = null;
+    public static final Map<Integer, Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
+    public static final Map<Integer, String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
+    public static final String CATEGORY_ADJUSTMENTS = "adjustments", CATEGORY_ENCHANTMENT_LIMITS = "enchantment limits";
 
     public static double breakChance, costMultiplier;
     public static int renamingCost;
@@ -17,10 +19,8 @@ public final class Config {
     public static int copyEnchantToBookCostMultiplier, copyEnchantToBookRepairBonus;
     public static int renamingRepairBonus, mainRepairBonusPercent, repairCostPerItem;
     public static boolean isLegacyMode, enableEnchantDuplication, enableItemDestruction;
-    public static final Map<Integer, Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
-    public static final Map<Integer, String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
 
-    public static final String CATEGORY_ADJUSTMENTS = "adjustments", CATEGORY_ENCHANTMENT_LIMITS = "enchantment limits";
+    private static Configuration configuration = null;
 
     public static void setConfiguration(Configuration configuration) {
         Config.configuration = configuration;
@@ -31,12 +31,8 @@ public final class Config {
     }
 
     public static void syncConfiguration(boolean load) {
-        if (Config.configuration == null) {
-            return;
-        }
-        if (load && Config.configuration.getConfigFile().exists()) {
-            Config.configuration.load();
-        }
+        if (Config.configuration == null) return;
+        if (load && Config.configuration.getConfigFile().exists()) Config.configuration.load();
         Property prop;
 
         //Require a world restart for these categories.
@@ -51,8 +47,8 @@ public final class Config {
         Config.renamingRepairBonus = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "renamingRepairBonus", 1).setLanguageKey("gui.config.adjustments.renamingRepairBonus").setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(1);
         Config.mainRepairBonusPercent = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "mainRepairBonusPercent", 12).setLanguageKey("gui.config.adjustments.mainRepairBonusPercent").setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(12) / 100;
         Config.repairCostPerItem = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "repairCostPerItem", 3).setLanguageKey("gui.config.adjustments.repairCostPerItem").setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(3);
-        Config.enableEnchantDuplication = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableEnchantDuplication", true).setLanguageKey("gui.config.adjustments.enableEnchantDuplication").getBoolean();
-        Config.enableItemDestruction = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableItemDestruction", false).setLanguageKey("gui.config.adjustments.enableItemDestruction").getBoolean();
+        Config.enableEnchantDuplication = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableEnchantDuplication", true).setLanguageKey("gui.config.adjustments.enableEnchantDuplication").getBoolean(true);
+        Config.enableItemDestruction = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enableItemDestruction", false).setLanguageKey("gui.config.adjustments.enableItemDestruction").getBoolean(false);
 
         prop = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
@@ -82,9 +78,7 @@ public final class Config {
         prop.comment = "Percentage each item will repair the tool by";
         Config.itemRepairAmount = prop.getDouble(25.0D) / 100.0D;
 
-        if (Config.configuration.hasChanged()) {
-            Config.configuration.save();
-        }
+        if (Config.configuration.hasChanged() || !Config.configuration.getConfigFile().exists()) Config.configuration.save();
     }
 
 }

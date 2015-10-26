@@ -16,6 +16,7 @@ import java.util.List;
 
 /**
  * Created by Master801 on 3/15/2015 at 12:07 PM.
+ *
  * @author Master801
  */
 public final class EventHandlerBA {
@@ -57,7 +58,7 @@ public final class EventHandlerBA {
     @SubscribeEvent
     public void onConfigChanged(OnConfigChangedEvent event) {
         if (event.modID.equals(BetterAnvil.MOD_ID)) {
-            if (Config.getConfiguration() != null && (Config.getConfiguration().hasChanged() | !Config.getConfiguration().getConfigFile().exists())) {
+            if (Config.getConfiguration() != null && (Config.getConfiguration().hasChanged() || !Config.getConfiguration().getConfigFile().exists())) {
                 Config.syncConfiguration(false);
             }
         }

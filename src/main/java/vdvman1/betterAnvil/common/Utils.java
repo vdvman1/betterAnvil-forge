@@ -19,9 +19,7 @@ public final class Utils {
             compatEnchList.putAll(enchList1);
             //Combine all enchantments
             for(Map.Entry<Integer, Integer> entry: enchList2.entrySet()) {
-                if (entry == null) {
-                    continue;
-                }
+                if (entry == null) continue;
                 Enchantment enchantment = null;
                 final int index = entry.getKey();
                 if (index < Enchantment.enchantmentsList.length) {
@@ -29,9 +27,7 @@ public final class Utils {
                 } else {
                     BetterAnvil.BETTER_ANVIL_LOGGER.warn("Enchantment id {}, is invalid!", index);
                 }
-                if (enchantment == null) {
-                    continue;
-                }
+                if (enchantment == null) continue;
                 if(compatEnchList.containsKey(enchantment.effectId)) {
                     int value = enchList2.get(enchantment.effectId);
                     int origVal = compatEnchList.get(enchantment.effectId);
@@ -69,7 +65,7 @@ public final class Utils {
         }
         return new CombinedEnchantments(repairCost, repairAmount, compatEnchList, inCompatEnchList);
     }
-    
+
     public static String getEnchName(Enchantment ench) {
         return ench.getName().substring(ench.getName().indexOf('.') + 1);
     }
@@ -88,7 +84,7 @@ public final class Utils {
         }
         return false;
     }
-    
+
     public static boolean canApplyTogether(Enchantment ench1, Enchantment ench2) {
         return Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), Utils.getEnchName(ench2));
     }

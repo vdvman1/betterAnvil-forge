@@ -6,15 +6,18 @@ gui.config.adjustments.tooltip=Adjustment Settings
 
 gui.config.adjustments.breakChance.tooltip=Percentage of how often the item will break
 gui.config.adjustments.anvilCostMultiplier.tooltip=
-gui.config.adjustments.renamingCost.tooltip=Cost to rename an item
+gui.config.adjustments.renamingCost.tooltip=The cost to rename an item
 gui.config.adjustments.renamingRepairBonus.tooltip=
 gui.config.adjustments.mainRepairBonusPercent.tooltip=
-gui.config.adjustments.repairCostPerItem.tooltip=Cost to repair an item
-gui.config.adjustments.enableEnchantDuplication=Enable enchant duplication with books
-gui.config.adjustments.enableItemDestruction=Enable destruction of an item when pulling enchantments off of it
+gui.config.adjustments.repairCostPerItem.tooltip=The cost to repair an item
+gui.config.adjustments.enableEnchantDuplication=Enable enchant duplication
+gui.config.adjustments.enableItemDestruction=Enable item destruction
 
-gui.config.adjustments.enchantCombineRepairCost.tooltip=Cost to increase an enchantment by a level
-gui.config.adjustments.enchantTransferRepairCost.tooltip=Cost to transfer an enchantment to a tool
+gui.config.adjustments.enableEnchantDuplication.tooltip=Enable enchant duplication with books
+gui.config.adjustments.enableItemDestruction.tooltip=Enable destruction of an item when pulling enchantments off of it
+
+gui.config.adjustments.enchantCombineRepairCost.tooltip=The cost to increase an enchantment by a level
+gui.config.adjustments.enchantTransferRepairCost.tooltip=The cost to transfer an enchantment to a tool
 gui.config.adjustments.enchantCombineRepairBonus.tooltip=Repair bonus added when increasing an enchantment by a level
 gui.config.adjustments.enchantTransferRepairBonus.tooltip=Repair bonus added when transferring an enchantment to a tool
 gui.config.adjustments.copyEnchantToBookCostMultiplier.tooltip=Cost multiplier per enchantment copied onto a book\nThis is multiplied by the enchantment level
