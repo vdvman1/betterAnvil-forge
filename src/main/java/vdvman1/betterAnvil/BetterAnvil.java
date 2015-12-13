@@ -12,6 +12,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -20,13 +21,16 @@ import net.minecraft.item.ItemAnvilBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 import vdvman1.betterAnvil.common.Config;
 import vdvman1.betterAnvil.common.EventHandlerBA;
 import vdvman1.betterAnvil.common.GuiHandler;
 import vdvman1.betterAnvil.common.Utils;
+import vdvman1.betterAnvil.inventory.TileEntityBA;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,19 +45,37 @@ public final class BetterAnvil {
     //Logger
     public static final Logger BETTER_ANVIL_LOGGER = LogManager.getLogger(BetterAnvil.MOD_NAME);
 
+    //Sound type
+    public static final Block.SoundType SOUND_TYPE_BETTER_ANVIL = new Block.SoundType("anvil", 0.3F, 1.0F)
+    {
+        public String getBreakSound()
+        {
+            return "dig.stone";
+        }
+        public String func_150496_b()
+        {
+            return "random.anvil_land";
+        }
+        public String getStepResourcePath()
+        {
+        	return MOD_ID+":step.anvil";
+        }
+    };
+
     //Blocks
     public static final BlockAnvilBA BLOCK_BETTER_ANVIL = new BlockAnvilBA();
-
+    
     @Instance(BetterAnvil.MOD_ID)
     public static BetterAnvil instance;
 
     //Called before initialization, usually used for configuration
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        Config.setConfiguration(new Configuration(new File(Loader.instance().getConfigDir(), "BetterAnvil.cfg")));
+        Config.setConfiguration(new Configuration(event.getSuggestedConfigurationFile()));
         Config.syncConfiguration(true);
 
         GameRegistry.registerBlock(BetterAnvil.BLOCK_BETTER_ANVIL, ItemAnvilBlock.class, "better_anvil");
+        GameRegistry.registerTileEntity(TileEntityBA.class, "tile_entity_better_anvil");
     }
 
     //Called during initialization, used for registering everything etc.
@@ -70,29 +92,7 @@ public final class BetterAnvil {
 
     @EventHandler
     public void modsLoaded(FMLPostInitializationEvent event) {
-        if (Config.getConfiguration() == null) {
-            BetterAnvil.BETTER_ANVIL_LOGGER.error("The configuration file was not initialised, please report this as a bug to the mod author(s).");
-            return;
-        }
-        for(Enchantment ench : Enchantment.enchantmentsList) {
-            if(ench != null) {
-                String enchName = Utils.getEnchName(ench);
-                int defaultLimit = ench.getMaxLevel();
-                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
-                Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
-                List<String> defaultBlackList = new ArrayList<String>();
-                for(Enchantment ench1: Enchantment.enchantmentsList) {
-                    if(ench1 != null && ench1.effectId != ench.effectId && !ench.canApplyTogether(ench1)) {
-                        String ench1Name = Utils.getEnchName(ench1);
-                        defaultBlackList.add(ench1Name);
-                    }
-                }
-                String[] enchBlackList = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultBlackList.toArray(new String[defaultBlackList.size()])).getStringList();
-                if (enchBlackList == null || enchBlackList.length <= 0) continue;//Check for invalid enchantment list.
-                Config.ENCHANT_BLACK_LIST.put(ench.effectId, enchBlackList);
-            }
-        }
-        Config.getConfiguration().save();
+        Config.loadLists(true);
     }
 
     @EventHandler

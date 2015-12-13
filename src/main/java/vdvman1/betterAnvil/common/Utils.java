@@ -47,7 +47,7 @@ public final class Utils {
                         if (entry2 == null) {
                             continue;
                         }
-                        if(Utils.contains(Config.ENCHANT_BLACK_LIST.get(entry2.getKey()), Utils.getEnchName(enchantment.effectId))) {
+                        if(areIncompatible(Enchantment.enchantmentsList[entry2.getKey()], enchantment)) {
                             inCompatEnchList.put(enchantment.effectId, entry.getValue());
                             found = true;
                             break;
@@ -85,8 +85,8 @@ public final class Utils {
         return false;
     }
 
-    public static boolean canApplyTogether(Enchantment ench1, Enchantment ench2) {
-        return Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), Utils.getEnchName(ench2));
+    public static boolean areIncompatible(Enchantment ench1, Enchantment ench2) {
+        return Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench1.effectId), Utils.getEnchName(ench2)) || Utils.contains(Config.ENCHANT_BLACK_LIST.get(ench2.effectId), Utils.getEnchName(ench1));
     }
 
 }

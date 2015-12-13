@@ -1,16 +1,21 @@
 package vdvman1.betterAnvil.common;
 
+import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import vdvman1.betterAnvil.BetterAnvil;
 
 public final class Config {
 
     public static final Map<Integer, Integer> ENCHANT_LIMITS = new HashMap<Integer, Integer>();
     public static final Map<Integer, String[]> ENCHANT_BLACK_LIST = new HashMap<Integer, String[]>();
-    public static final String CATEGORY_ADJUSTMENTS = "adjustments", CATEGORY_ENCHANTMENT_LIMITS = "enchantment limits";
+    public static final String CATEGORY_ADJUSTMENTS = "adjustments", CATEGORY_ENCHANTMENT_LIMITS = "enchantment limits", CATEGORY_ENCHANTMENT_INCOMPATIBILITIES = "enchantment incompatibilities";
 
     public static double breakChance, costMultiplier;
     public static int renamingCost;
@@ -39,6 +44,7 @@ public final class Config {
         Config.configuration.setCategoryRequiresWorldRestart(Configuration.CATEGORY_GENERAL, true);
         Config.configuration.setCategoryRequiresWorldRestart(Config.CATEGORY_ADJUSTMENTS, true);
         Config.configuration.setCategoryRequiresWorldRestart(Config.CATEGORY_ENCHANTMENT_LIMITS, true);
+        Config.configuration.setCategoryRequiresWorldRestart(Config.CATEGORY_ENCHANTMENT_INCOMPATIBILITIES, true);
 
         Config.isLegacyMode = Config.configuration.get(Configuration.CATEGORY_GENERAL, "legacyMode", false).getBoolean(false);
         Config.breakChance = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "breakChance", 12.0D).setLanguageKey("gui.config.adjustments.breakChance").setMinValue(1.0D).setMaxValue(100.0D).getDouble(12.0D) / 100.0D;
@@ -77,8 +83,42 @@ public final class Config {
         prop = Config.configuration.get(Config.CATEGORY_ADJUSTMENTS, "itemRepairAmount", 25.0D);
         prop.comment = "Percentage each item will repair the tool by";
         Config.itemRepairAmount = prop.getDouble(25.0D) / 100.0D;
+        
+        if(!load) {
+        	loadLists(false);
+        }
 
-        if (Config.configuration.hasChanged() || !Config.configuration.getConfigFile().exists()) Config.configuration.save();
+        if (!load && Config.configuration.hasChanged() || !Config.configuration.getConfigFile().exists()) Config.configuration.save();
+    }
+    
+    public static void loadLists(boolean load) {
+    	if (Config.getConfiguration() == null) {
+            BetterAnvil.BETTER_ANVIL_LOGGER.error("The configuration file was not initialised, please report this as a bug to the mod author(s).");
+            return;
+        }
+        for(Enchantment ench : Enchantment.enchantmentsList) {
+            if(ench != null) {
+                String enchName = Utils.getEnchName(ench);
+                int defaultLimit = ench.getMaxLevel();
+                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultLimit).setRequiresWorldRestart(false).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
+                Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
+                List<String> defaultBlackList = new ArrayList<String>();
+                for(Enchantment ench1: Enchantment.enchantmentsList) {
+                    if(ench1 != null && ench1.effectId != ench.effectId && !ench.canApplyTogether(ench1)) {
+                        String ench1Name = Utils.getEnchName(ench1);
+                        defaultBlackList.add(ench1Name);
+                    }
+                }
+                String[] enchBlackList = defaultBlackList.toArray(new String[defaultBlackList.size()]);
+                enchBlackList = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_INCOMPATIBILITIES, enchName, defaultBlackList.toArray(new String[defaultBlackList.size()])).getStringList();
+                if (enchBlackList == null || enchBlackList.length <= 0) continue;//Check for invalid enchantment list.
+                Config.ENCHANT_BLACK_LIST.put(ench.effectId, enchBlackList);
+            }
+        }
+        
+        if(load) {
+        	configuration.save();
+        }
     }
 
 }
