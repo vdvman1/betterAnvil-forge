@@ -1,45 +1,33 @@
 package vdvman1.betterAnvil.inventory;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ContainerRepair;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-
 import org.apache.commons.lang3.StringUtils;
-
 import vdvman1.betterAnvil.BetterAnvil;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
-import vdvman1.betterAnvil.common.CombinedEnchantments;
-import vdvman1.betterAnvil.common.Config;
-import vdvman1.betterAnvil.common.Utils;
+import vdvman1.betterAnvil.common.*;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public final class ContainerRepairBA extends ContainerRepair {
 
     /** Here comes out item you merged and/or renamed. */
     private IInventory outputSlot = new InventoryCraftResult();
 
-    /**
-     * The 2 slots where you put your items in that you want to merge and/or rename.
-     */
     private TileEntityBA inputSlots;
-    private World theWorld;
-    private int x;
-    private int y;
-    private int z;
+    private final World theWorld;
+    private final int x;
+    private final int y;
+    private final int z;
 
     /** determined by damage of input item and stackSize of repair materials */
     private int stackSizeToBeUsedInRepair = 0;
@@ -61,9 +49,8 @@ public final class ContainerRepairBA extends ContainerRepair {
         if(tile instanceof TileEntityBA) {
         	this.inputSlots = (TileEntityBA) tile;
         	this.inputSlots.setContainer(this);
-        }
-        else {
-        	BetterAnvil.BETTER_ANVIL_LOGGER.error("Uh oh! No Tile Entity found for the better anvil! Things will crash!");
+        } else {
+        	BetterAnvil.BETTER_ANVIL_LOGGER.error("Uh oh! No Tile Entity found for the Better Anvil! Things will crash!");
         }
     	this.theWorld = world;
         this.x = x;

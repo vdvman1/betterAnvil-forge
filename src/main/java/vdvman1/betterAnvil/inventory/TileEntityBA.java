@@ -1,6 +1,5 @@
 package vdvman1.betterAnvil.inventory;
 
-import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,194 +8,130 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBA extends TileEntity implements IInventory {
-	private ItemStack[] contents = new ItemStack[2];
-	/** Container of this anvil's block. */
-    private ContainerRepairBA theContainer;
-    
-    public void setContainer(ContainerRepairBA container) {
-    	this.theContainer = container;
-    }
-    
+
+    private final ItemStack[] inventory = new ItemStack[2];
+
     /**
-     * Called when an the contents of an Inventory change, usually
+     * Container of this anvil's block.
      */
+    private ContainerRepairBA theContainer;
+
+    public void setContainer(ContainerRepairBA container) {
+        this.theContainer = container;
+    }
+
     @Override
     public void markDirty() {
         super.markDirty();
-        if(this.theContainer != null) {
-        	this.theContainer.onCraftMatrixChanged(this);
-        }
+        if (theContainer != null) theContainer.onCraftMatrixChanged(this);
     }
 
-    /**
-     * Returns the number of slots in the inventory.
-     */
-    public int getSizeInventory()
-    {
-        return 2;
+    @Override
+    public int getSizeInventory() {
+        return inventory.length;
     }
-    
-    /**
-     * Returns the stack in slot i
-     */
-    public ItemStack getStackInSlot(int slot)
-    {
-        return this.contents[slot];
+
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return inventory[slot];
     }
-    
-    /**
-     * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a
-     * new stack.
-     */
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)
-    {
-        if (this.contents[p_70298_1_] != null)
-        {
+
+    @Override
+    public ItemStack decrStackSize(int slotIndex, int stackSize) {
+        if (inventory[slotIndex] != null) {
             ItemStack itemstack;
-
-            if (this.contents[p_70298_1_].stackSize <= p_70298_2_)
-            {
-                itemstack = this.contents[p_70298_1_];
-                this.contents[p_70298_1_] = null;
-                this.markDirty();
+            if (inventory[slotIndex].stackSize <= stackSize) {
+                itemstack = inventory[slotIndex];
+                inventory[slotIndex] = null;
+                markDirty();
                 return itemstack;
-            }
-            else
-            {
-                itemstack = this.contents[p_70298_1_].splitStack(p_70298_2_);
-
-                if (this.contents[p_70298_1_].stackSize == 0)
-                {
-                    this.contents[p_70298_1_] = null;
-                }
-
-                this.markDirty();
+            } else {
+                itemstack = inventory[slotIndex].splitStack(stackSize);
+                if (inventory[slotIndex].stackSize == 0) inventory[slotIndex] = null;
+                markDirty();
                 return itemstack;
             }
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
-    /**
-     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
-     * like when you close a workbench GUI.
-     */
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_)
-    {
-        if (this.contents[p_70304_1_] != null)
-        {
-            ItemStack itemstack = this.contents[p_70304_1_];
-            this.contents[p_70304_1_] = null;
+    @Override
+    public ItemStack getStackInSlotOnClosing(int slotIndex) {
+        if (inventory[slotIndex] != null) {
+            ItemStack itemstack = inventory[slotIndex];
+            inventory[slotIndex] = null;
             return itemstack;
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
-    /**
-     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-     */
-    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)
-    {
-        this.contents[p_70299_1_] = p_70299_2_;
-
-        if (p_70299_2_ != null && p_70299_2_.stackSize > this.getInventoryStackLimit())
-        {
-            p_70299_2_.stackSize = this.getInventoryStackLimit();
+    @Override
+    public void setInventorySlotContents(int slotIndex, ItemStack stack) {
+        this.inventory[slotIndex] = stack;
+        if (stack != null && stack.stackSize > this.getInventoryStackLimit()) {
+            stack.stackSize = this.getInventoryStackLimit();
         }
-
         this.markDirty();
     }
 
-    /**
-     * Returns the name of the inventory
-     */
-    public String getInventoryName()
-    {
+    @Override
+    public String getInventoryName() {
         return "container.betteranvil";
     }
-    
-    /**
-     * Returns if the inventory is named
-     */
-    public boolean hasCustomInventoryName()
-    {
-        return false;
+
+    @Override
+    public boolean hasCustomInventoryName() {
+        return true;
     }
-    
-    public void readFromNBT(NBTTagCompound tag)
-    {
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         NBTTagList nbttaglist = tag.getTagList("Items", 10);
-        this.contents = new ItemStack[this.getSizeInventory()];
-
-        for (int i = 0; i < nbttaglist.tagCount(); ++i)
-        {
+        for(int i = 0; i < nbttaglist.tagCount(); ++i) {
             NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-            int j = nbttagcompound1.getByte("Slot") & 255;
-
-            if (j >= 0 && j < this.contents.length)
-            {
-                this.contents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
-            }
+            int j = nbttagcompound1.getByte("Slot") & 255;//Makes the slot a whole byte. Slot = 1000; Slot & 255 = { Slot = 255 }
+            if (j >= 0 && j < inventory.length) inventory[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
         }
     }
 
-    public void writeToNBT(NBTTagCompound tag)
-    {
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         NBTTagList nbttaglist = new NBTTagList();
-
-        for (int i = 0; i < this.contents.length; ++i)
-        {
-            if (this.contents[i] != null)
-            {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte)i);
-                this.contents[i].writeToNBT(nbttagcompound1);
-                nbttaglist.appendTag(nbttagcompound1);
+        for(int i = 0; i < inventory.length; ++i) {
+            if (inventory[i] != null) {
+                NBTTagCompound slotNBTTag = new NBTTagCompound();
+                slotNBTTag.setByte("Slot", (byte) i);
+                inventory[i].writeToNBT(slotNBTTag);
+                nbttaglist.appendTag(slotNBTTag);
             }
         }
-
         tag.setTag("Items", nbttaglist);
     }
 
-    /**
-     * Returns the maximum stack size for a inventory slot.
-     */
-    public int getInventoryStackLimit()
-    {
+    @Override
+    public int getInventoryStackLimit() {
         return 64;
     }
 
-    /**
-     * Do not make give this method the name canInteractWith because it clashes with Container
-     */
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
-    {
-        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : p_70300_1_.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
-    }
-    
-    public void openInventory()
-    {
-    	
-    }
-    
-    public void closeInventory()
-    {
-    	
+    @Override
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return player.getDistanceSq(xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D) <= 64.0D;
     }
 
-    /**
-     * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
-     */
-    public boolean isItemValidForSlot(int slot, ItemStack stack)
-    {
-        return true;
+    @Override
+    public void openInventory() {
+        //NOOP
+    }
+
+    @Override
+    public void closeInventory() {
+        //NOOP
+    }
+
+    @Override
+    public boolean isItemValidForSlot(int slot, ItemStack stack) {
+        return false;
     }
 }

@@ -1,14 +1,14 @@
 {
 
-  "step.anvil": {
+  "step.better_anvil": {
     "category": "neutral",
     "sounds": [
-      "step/anvil1",
-      "step/anvil2",
-      "step/anvil3",
-      "step/anvil4",
-      "step/anvil5",
-      "step/anvil6"
+      "step/better_anvil_1",
+      "step/better_anvil_2",
+      "step/better_anvil_3",
+      "step/better_anvil_4",
+      "step/better_anvil_5",
+      "step/better_anvil_6"
     ]
   }
 

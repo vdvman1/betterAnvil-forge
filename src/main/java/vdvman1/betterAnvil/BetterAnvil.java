@@ -1,40 +1,24 @@
 package vdvman1.betterAnvil;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
+import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAnvilBlock;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import vdvman1.betterAnvil.block.BlockAnvilBA;
-import vdvman1.betterAnvil.common.Config;
-import vdvman1.betterAnvil.common.EventHandlerBA;
-import vdvman1.betterAnvil.common.GuiHandler;
-import vdvman1.betterAnvil.common.Utils;
+import vdvman1.betterAnvil.common.*;
 import vdvman1.betterAnvil.inventory.TileEntityBA;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mod(modid = BetterAnvil.MOD_ID, name = BetterAnvil.MOD_NAME, version = BetterAnvil.VERSION, guiFactory = "vdvman1.betterAnvil.client.gui.config.ConfigFactoryBA")
 public final class BetterAnvil {
@@ -46,19 +30,25 @@ public final class BetterAnvil {
     public static final Logger BETTER_ANVIL_LOGGER = LogManager.getLogger(BetterAnvil.MOD_NAME);
 
     //Sound type
-    public static final Block.SoundType SOUND_TYPE_BETTER_ANVIL = new Block.SoundType("anvil", 0.3F, 1.0F)
+    public static final Block.SoundType SOUND_TYPE_BETTER_ANVIL = new Block.SoundType("better_anvil", 0.3F, 1.0F)
     {
+
+        @Override
         public String getBreakSound()
         {
             return "dig.stone";
         }
+
+        @Override
         public String func_150496_b()
         {
             return "random.anvil_land";
         }
+
+        @Override
         public String getStepResourcePath()
         {
-        	return MOD_ID+":step.anvil";
+        	return BetterAnvil.MOD_ID.toLowerCase() + ":" + "step.anvil";
         }
     };
 
@@ -98,7 +88,7 @@ public final class BetterAnvil {
     @EventHandler
     public void missingMappings(FMLMissingMappingsEvent event) {
         for(MissingMapping missingMapping : event.get()) {
-            if (missingMapping.name.equals("BetterAnvil:anvilba")) {
+            if (missingMapping.name.equals("BetterAnvil:anvilba")) {//Unique id, do not change or replace with field constants
                 switch(missingMapping.type) {
                     case BLOCK:
                         missingMapping.remap(BetterAnvil.BLOCK_BETTER_ANVIL);
