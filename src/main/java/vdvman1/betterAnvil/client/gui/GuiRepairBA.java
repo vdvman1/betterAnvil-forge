@@ -74,7 +74,7 @@ public final class GuiRepairBA extends GuiContainer implements ICrafting {
             if (!repairContainer.getSlot(2).canTakeStack(playerInventory.player)) {
                 colour = 16736352;
             }
-            if (repairContainer.hadOutput) {
+            if (repairContainer.hadOutput || repairContainer.hasCustomRecipe) {
                 int finalColour = -16777216 | (colour & 16579836) >> 2 | colour & -16777216;
                 int stringX = (xSize - 8) - fontRendererObj.getStringWidth(s);
                 byte stringY = 67;

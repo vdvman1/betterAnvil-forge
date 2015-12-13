@@ -10,8 +10,8 @@ gui.config.adjustments.renamingCost.tooltip=The cost to rename an item
 gui.config.adjustments.renamingRepairBonus.tooltip=
 gui.config.adjustments.mainRepairBonusPercent.tooltip=
 gui.config.adjustments.repairCostPerItem.tooltip=The cost to repair an item
-gui.config.adjustments.enableEnchantDuplication=Enable enchant duplication
-gui.config.adjustments.enableItemDestruction=Enable item destruction
+gui.config.adjustments.enableEnchantDuplication.tooltip=Enable enchant duplication
+gui.config.adjustments.enableItemDestruction.tooltip=Enable item destruction
 
 gui.config.adjustments.enableEnchantDuplication.tooltip=Enable enchant duplication with books
 gui.config.adjustments.enableItemDestruction.tooltip=Enable destruction of an item when pulling enchantments off of it
@@ -27,3 +27,5 @@ gui.config.adjustments.itemRepairAmount.tooltip=Percentage each item will repair
 tile.betterAnvil.intact.name=Better Anvil
 tile.betterAnvil.slightlyDamaged.name=Slightly Damaged Better Anvil
 tile.betterAnvil.veryDamaged.name=Very Damaged Better Anvil
+
+container.betteranvil=Repair

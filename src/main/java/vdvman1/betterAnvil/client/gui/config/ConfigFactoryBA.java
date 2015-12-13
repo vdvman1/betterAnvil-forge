@@ -15,7 +15,6 @@ import java.util.Set;
  *
  * @author Master801
  */
-@SuppressWarnings("unused")
 public final class ConfigFactoryBA implements IModGuiFactory {
 
     @Override
