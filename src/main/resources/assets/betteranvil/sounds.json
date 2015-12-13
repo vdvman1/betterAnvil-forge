@@ -1,0 +1,15 @@
+{
+
+  "step.anvil": {
+    "category": "neutral",
+    "sounds": [
+      "step/anvil1",
+      "step/anvil2",
+      "step/anvil3",
+      "step/anvil4",
+      "step/anvil5",
+      "step/anvil6"
+    ]
+  }
+
+}

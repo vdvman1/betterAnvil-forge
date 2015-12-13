@@ -1,22 +1,20 @@
 package vdvman1.betterAnvil.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ContainerRepair;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import vdvman1.betterAnvil.Config;
+import net.minecraftforge.common.ForgeHooks;
+import vdvman1.betterAnvil.common.Config;
 import vdvman1.betterAnvil.block.BlockAnvilBA;
 
-public class SlotRepairBA extends Slot {
+public final class SlotRepairBA extends Slot {
 
     private final World theWorld;
 
-    private final int blockPosX;
-
-    private final int blockPosY;
-
-    private final int blockPosZ;
+    private final int blockPosX, blockPosY, blockPosZ;
 
     /** The anvil this slot belongs to. */
     private final ContainerRepairBA anvil;
@@ -49,11 +47,16 @@ public class SlotRepairBA extends Slot {
     @Override
     public void onPickupFromSlot(EntityPlayer entityPlayer, ItemStack itemStack) {
         if (!entityPlayer.capabilities.isCreativeMode) {
-            entityPlayer.addExperienceLevel(-this.anvil.maximumCost);
+            entityPlayer.addExperienceLevel(-anvil.maximumCost);//Removes experience levels from the player using the maximum cost from the anvil then making it a negative.
         }
-
-        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, this.anvil.resultInputStack);
-        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, this.anvil.resultInputStack1);
+        
+        ForgeHooks.onAnvilRepair(entityPlayer, itemStack, this.anvil.resultInputStack1, this.anvil.resultInputStack);
+        
+        ItemStack slot0Stack = this.anvil.resultInputStack1 == null ? null : this.anvil.resultInputStack1.copy();
+        ItemStack slot1Stack = this.anvil.resultInputStack == null ? null : this.anvil.resultInputStack.copy();
+        
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(0, slot0Stack);
+        ContainerRepairBA.getRepairInputInventory(this.anvil).setInventorySlotContents(1, slot1Stack);
         this.anvil.maximumCost = 0;
 
         if (!entityPlayer.capabilities.isCreativeMode && !this.theWorld.isRemote && this.theWorld.getBlock(this.blockPosX, this.blockPosY, this.blockPosZ) instanceof BlockAnvilBA && entityPlayer.getRNG().nextFloat() < Config.breakChance) {
