@@ -46,19 +46,21 @@ public final class BetterAnvil {
     public static final Logger BETTER_ANVIL_LOGGER = LogManager.getLogger(BetterAnvil.MOD_NAME);
 
     //Sound type
-    public static final Block.SoundType SOUND_TYPE_BETTER_ANVIL = new Block.SoundType("anvil", 0.3F, 1.0F)
-    {
-        public String getBreakSound()
-        {
+    public static final Block.SoundType SOUND_TYPE_BETTER_ANVIL = new Block.SoundType("anvil", 0.3F, 1.0F) {
+        
+        @Override
+        public String getBreakSound() {
             return "dig.stone";
         }
-        public String func_150496_b()
-        {
+        
+        @Override
+        public String func_150496_b() {
             return "random.anvil_land";
         }
-        public String getStepResourcePath()
-        {
-        	return MOD_ID+":step.anvil";
+        
+        @Override
+        public String getStepResourcePath() {
+            return MOD_ID+":step.anvil";
         }
     };
 

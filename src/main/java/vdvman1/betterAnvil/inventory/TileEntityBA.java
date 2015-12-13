@@ -1,6 +1,5 @@
 package vdvman1.betterAnvil.inventory;
 
-import net.minecraft.block.BlockChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,12 +8,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityBA extends TileEntity implements IInventory {
-	private ItemStack[] contents = new ItemStack[2];
-	/** Container of this anvil's block. */
+    private ItemStack[] contents = new ItemStack[2];
+    /** Container of this anvil's block. */
     private ContainerRepairBA theContainer;
     
     public void setContainer(ContainerRepairBA container) {
-    	this.theContainer = container;
+        this.theContainer = container;
     }
     
     /**
@@ -24,13 +23,14 @@ public class TileEntityBA extends TileEntity implements IInventory {
     public void markDirty() {
         super.markDirty();
         if(this.theContainer != null) {
-        	this.theContainer.onCraftMatrixChanged(this);
+            this.theContainer.onCraftMatrixChanged(this);
         }
     }
 
     /**
      * Returns the number of slots in the inventory.
      */
+    @Override
     public int getSizeInventory()
     {
         return 2;
@@ -39,6 +39,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Returns the stack in slot i
      */
+    @Override
     public ItemStack getStackInSlot(int slot)
     {
         return this.contents[slot];
@@ -48,6 +49,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
      * Removes from an inventory slot (first arg) up to a specified number (second arg) of items and returns them in a
      * new stack.
      */
+    @Override
     public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_)
     {
         if (this.contents[p_70298_1_] != null)
@@ -84,6 +86,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
      * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
      * like when you close a workbench GUI.
      */
+    @Override
     public ItemStack getStackInSlotOnClosing(int p_70304_1_)
     {
         if (this.contents[p_70304_1_] != null)
@@ -101,6 +104,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
      */
+    @Override
     public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_)
     {
         this.contents[p_70299_1_] = p_70299_2_;
@@ -116,6 +120,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Returns the name of the inventory
      */
+    @Override
     public String getInventoryName()
     {
         return "container.betteranvil";
@@ -124,11 +129,13 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Returns if the inventory is named
      */
+    @Override
     public boolean hasCustomInventoryName()
     {
         return false;
     }
     
+    @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
@@ -146,7 +153,8 @@ public class TileEntityBA extends TileEntity implements IInventory {
             }
         }
     }
-
+    
+    @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
@@ -169,6 +177,7 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Returns the maximum stack size for a inventory slot.
      */
+    @Override
     public int getInventoryStackLimit()
     {
         return 64;
@@ -177,24 +186,28 @@ public class TileEntityBA extends TileEntity implements IInventory {
     /**
      * Do not make give this method the name canInteractWith because it clashes with Container
      */
+    @Override
     public boolean isUseableByPlayer(EntityPlayer p_70300_1_)
     {
         return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : p_70300_1_.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
     }
     
+    @Override
     public void openInventory()
     {
-    	
+        
     }
     
+    @Override
     public void closeInventory()
     {
-    	
+        
     }
 
     /**
      * Returns true if automation is allowed to insert the given stack (ignoring stack size) into the given slot.
      */
+    @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
         return true;

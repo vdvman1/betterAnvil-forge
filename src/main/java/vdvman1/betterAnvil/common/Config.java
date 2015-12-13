@@ -1,14 +1,13 @@
 package vdvman1.betterAnvil.common;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.enchantment.Enchantment;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import vdvman1.betterAnvil.BetterAnvil;
 
 public final class Config {
@@ -85,14 +84,14 @@ public final class Config {
         Config.itemRepairAmount = prop.getDouble(25.0D) / 100.0D;
         
         if(!load) {
-        	loadLists(false);
+            loadLists(false);
         }
 
         if (!load && Config.configuration.hasChanged() || !Config.configuration.getConfigFile().exists()) Config.configuration.save();
     }
     
     public static void loadLists(boolean load) {
-    	if (Config.getConfiguration() == null) {
+        if (Config.getConfiguration() == null) {
             BetterAnvil.BETTER_ANVIL_LOGGER.error("The configuration file was not initialised, please report this as a bug to the mod author(s).");
             return;
         }
@@ -100,7 +99,7 @@ public final class Config {
             if(ench != null) {
                 String enchName = Utils.getEnchName(ench);
                 int defaultLimit = ench.getMaxLevel();
-                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultLimit).setRequiresWorldRestart(false).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
+                int enchLimit = Config.getConfiguration().get(Config.CATEGORY_ENCHANTMENT_LIMITS, enchName, defaultLimit).setRequiresWorldRestart(true).setMinValue(0).setMaxValue(Short.MAX_VALUE).getInt(5);
                 Config.ENCHANT_LIMITS.put(ench.effectId, enchLimit);
                 List<String> defaultBlackList = new ArrayList<String>();
                 for(Enchantment ench1: Enchantment.enchantmentsList) {
@@ -117,7 +116,7 @@ public final class Config {
         }
         
         if(load) {
-        	configuration.save();
+            configuration.save();
         }
     }
 

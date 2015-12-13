@@ -1,7 +1,7 @@
 package vdvman1.betterAnvil.client.gui;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.List;
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -13,12 +13,14 @@ import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+
 import org.apache.commons.io.Charsets;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import vdvman1.betterAnvil.inventory.ContainerRepairBA;
 
-import java.util.List;
+import vdvman1.betterAnvil.inventory.ContainerRepairBA;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class GuiRepairBA extends GuiContainer implements ICrafting {
@@ -142,7 +144,7 @@ public final class GuiRepairBA extends GuiContainer implements ICrafting {
     }
 
     @Override
-	public void sendContainerAndContentsToPlayer(Container container, List inventoryList) {
+    public void sendContainerAndContentsToPlayer(Container container, List inventoryList) {
         this.sendSlotContents(container, 0, container.getSlot(0).getStack());
     }
 

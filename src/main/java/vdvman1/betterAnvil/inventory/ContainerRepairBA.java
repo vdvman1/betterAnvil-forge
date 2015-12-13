@@ -45,7 +45,7 @@ public final class ContainerRepairBA extends ContainerRepair {
     private int stackSizeToBeUsedInRepair = 0;
     public ItemStack resultInputStack = null;
     public ItemStack resultInputStack1 = null;
-    private String repairedItemName;
+    private String repairedItemName;    
 
     /** The player that has this container open. */
     private final EntityPlayer thePlayer;
@@ -59,13 +59,13 @@ public final class ContainerRepairBA extends ContainerRepair {
         super(inventoryPlayer, world, x, y, z, entityPlayer);
         TileEntity tile = world.getTileEntity(x, y, z);
         if(tile instanceof TileEntityBA) {
-        	this.inputSlots = (TileEntityBA) tile;
-        	this.inputSlots.setContainer(this);
+            this.inputSlots = (TileEntityBA) tile;
+            this.inputSlots.setContainer(this);
         }
         else {
-        	BetterAnvil.BETTER_ANVIL_LOGGER.error("Uh oh! No Tile Entity found for the better anvil! Things will crash!");
+            BetterAnvil.BETTER_ANVIL_LOGGER.error("Uh oh! No Tile Entity found for the better anvil! Things will crash!");
         }
-    	this.theWorld = world;
+        this.theWorld = world;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -97,9 +97,9 @@ public final class ContainerRepairBA extends ContainerRepair {
         super.onCraftMatrixChanged(iInventory);
         if (iInventory == inputSlots) {
             if(Config.isLegacyMode) {
-            	updateRepairOutputOld();
+                updateRepairOutputOld();
             } else {
-            	updateRepairOutput();
+                updateRepairOutput();
             }
         }
     }
@@ -123,10 +123,10 @@ public final class ContainerRepairBA extends ContainerRepair {
         ItemStack workStack = stack1.copy();
         //Combine enchantments
         if(stack2 != null) {
-        	this.hasCustomRecipe = true;
-        	if (!ForgeHooks.onAnvilChange(this, stack1, stack2, outputSlot, repairedItemName, 0)) return;
-        	this.hasCustomRecipe = false;
-        	
+            this.hasCustomRecipe = true;
+            if (!ForgeHooks.onAnvilChange(this, stack1, stack2, outputSlot, repairedItemName, 0)) return;
+            this.hasCustomRecipe = false;
+            
             Map<Integer, Integer> enchantments1 = (Map<Integer, Integer>)EnchantmentHelper.getEnchantments(stack1);
             Map<Integer, Integer> enchantments2 = (Map<Integer, Integer>)EnchantmentHelper.getEnchantments(stack2);
             //Used for checking if the stack can be enchanted
@@ -146,13 +146,13 @@ public final class ContainerRepairBA extends ContainerRepair {
                     this.resultInputStack = new ItemStack(Items.book);
                 }
                 if(combined.incompatEnchList.size() != 0) {
-                	if(stack2.getItem() == Items.enchanted_book) {
+                    if(stack2.getItem() == Items.enchanted_book) {
                         this.resultInputStack = new ItemStack(Items.enchanted_book);
                     }
-                	else {
-                		this.resultInputStack = stack2.copy();
-                		//this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
-                	}
+                    else {
+                        this.resultInputStack = stack2.copy();
+                        //this.resultInputStack.setItemDamage(this.resultInputStack.getMaxDamage() - combined.incompatEnchList.size());
+                    }
                     EnchantmentHelper.setEnchantments(combined.incompatEnchList, this.resultInputStack);
                 }
             } else if(stack1.getItem() == Items.book && stack2.getItem() == Items.enchanted_book && Config.enableEnchantDuplication) {
@@ -177,41 +177,41 @@ public final class ContainerRepairBA extends ContainerRepair {
                 }
             } else if(stack1.getItem()== Items.book && stack2.getItem() == Items.enchanted_book && enchantments2.size() > 0) {
                 //Move part of the enchantments from book to book
-            	boolean ignore = false;
-            	Iterator<Entry<Integer, Integer>> iterator = enchantments2.entrySet().iterator();
-            	Entry<Integer, Integer> ench = iterator.next();
-	            if(enchantments2.size() > 1) {
-            		iterator.remove();
-	            	enchantments1.put(ench.getKey(), ench.getValue());
-            	}
-            	else {
-            		if(ench.getValue() <= 1) {
-            			ignore = true;
-            		}
-            		else {
-            			ench.setValue(ench.getValue()-1);
-            			enchantments1.put(ench.getKey(), 1);
-            		}
-            	}
-	            if(!ignore) {
-		            repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
-	                repairAmount += Config.copyEnchantToBookRepairBonus;
-	
-	            	workStack = new ItemStack(Items.enchanted_book);
-	                EnchantmentHelper.setEnchantments(enchantments1, workStack);
-	
-	                ItemStack resultInput = new ItemStack(Items.enchanted_book);
-	                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
-	                this.resultInputStack = resultInput;
-	                
-	                if(stack1.stackSize <= 1) {
-	                    this.resultInputStack1 = null;
-	                } else {
-	                    resultInput = stack1.copy();
-	                    resultInput.stackSize -= 1;
-	                    this.resultInputStack1 = resultInput;
-	                }
-	            }
+                boolean ignore = false;
+                Iterator<Entry<Integer, Integer>> iterator = enchantments2.entrySet().iterator();
+                Entry<Integer, Integer> ench = iterator.next();
+                if(enchantments2.size() > 1) {
+                    iterator.remove();
+                    enchantments1.put(ench.getKey(), ench.getValue());
+                }
+                else {
+                    if(ench.getValue() <= 1) {
+                        ignore = true;
+                    }
+                    else {
+                        ench.setValue(ench.getValue()-1);
+                        enchantments1.put(ench.getKey(), 1);
+                    }
+                }
+                if(!ignore) {
+                    repairCost += ench.getValue() * Config.copyEnchantToBookCostMultiplier;
+                    repairAmount += Config.copyEnchantToBookRepairBonus;
+    
+                    workStack = new ItemStack(Items.enchanted_book);
+                    EnchantmentHelper.setEnchantments(enchantments1, workStack);
+    
+                    ItemStack resultInput = new ItemStack(Items.enchanted_book);
+                    EnchantmentHelper.setEnchantments(enchantments2, resultInput);
+                    this.resultInputStack = resultInput;
+                    
+                    if(stack1.stackSize <= 1) {
+                        this.resultInputStack1 = null;
+                    } else {
+                        resultInput = stack1.copy();
+                        resultInput.stackSize -= 1;
+                        this.resultInputStack1 = resultInput;
+                    }
+                }
             } else if((stack1.getItem()== Items.book || stack1.getItem() == Items.enchanted_book) && stack2.isItemEnchanted()) {
                 //Add enchantments from item to book, destroying if config option enabled
                 Entry<Integer, Integer>[] enchantmentEntrySet = enchantments2.entrySet().toArray(new Entry[enchantments2.entrySet().size()]);
@@ -227,11 +227,11 @@ public final class ContainerRepairBA extends ContainerRepair {
                 ItemStack resultInput;
 
                 if(Config.enableItemDestruction) {
-                	this.resultInputStack = null;
+                    this.resultInputStack = null;
                 } else {
-                	resultInput = stack2.copy();
-	                EnchantmentHelper.setEnchantments(enchantments2, resultInput);
-	                this.resultInputStack = resultInput;
+                    resultInput = stack2.copy();
+                    EnchantmentHelper.setEnchantments(enchantments2, resultInput);
+                    this.resultInputStack = resultInput;
                 }
                 
 
@@ -243,7 +243,7 @@ public final class ContainerRepairBA extends ContainerRepair {
                     this.resultInputStack1 = resultInput;
                 }
             } else if(notEnchanted.isItemEnchantable() && stack2.getItem() == Items.enchanted_book) {
-            	//Put enchantments onto item
+                //Put enchantments onto item
                 CombinedEnchantments combined = Utils.combine(enchantments1, enchantments2, stack1);
                 if (combined == null) {
                     BetterAnvil.BETTER_ANVIL_LOGGER.warn("Failed to combine enchants from item stack {} and item stack {}!", notEnchanted.toString(), stack2.toString());
@@ -306,7 +306,7 @@ public final class ContainerRepairBA extends ContainerRepair {
     /**
      * called when the Anvil Input Slot changes, calculates the new result and puts it in the output slot
      */
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     public void updateRepairOutputOld() {
         isRenamingOnly = false;
         hadOutput = false;
@@ -334,9 +334,9 @@ public final class ContainerRepairBA extends ContainerRepair {
             Enchantment enchantment;
 
             if (itemstack2 != null) {
-            	this.hasCustomRecipe = true;
-            	if (!ForgeHooks.onAnvilChange(this, itemstack, itemstack2, outputSlot, repairedItemName, repairCost)) return;
-            	this.hasCustomRecipe = false;
+                this.hasCustomRecipe = true;
+                if (!ForgeHooks.onAnvilChange(this, itemstack, itemstack2, outputSlot, repairedItemName, repairCost)) return;
+                this.hasCustomRecipe = false;
                 flag = itemstack2.getItem() == Items.enchanted_book && Items.enchanted_book.func_92110_g(itemstack2).tagCount() > 0;//has enchantments on book
 
                 if (itemstack1.isItemStackDamageable() && itemstack1.getItem().getIsRepairable(itemstack1, itemstack2)) {
@@ -541,11 +541,11 @@ public final class ContainerRepairBA extends ContainerRepair {
      */
     @Override
     public void onContainerClosed(EntityPlayer entityPlayer) {
-    	InventoryPlayer inventoryplayer = entityPlayer.inventory;
+        InventoryPlayer inventoryplayer = entityPlayer.inventory;
 
         if (inventoryplayer.getItemStack() != null)
         {
-        	entityPlayer.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack(), false);
+            entityPlayer.dropPlayerItemWithRandomChoice(inventoryplayer.getItemStack(), false);
             inventoryplayer.setItemStack((ItemStack)null);
         }
     }

@@ -18,9 +18,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public final class BlockAnvilBA extends BlockAnvil implements ITileEntityProvider {
-	
-	//Icon names
-	private static final String[] ANVIL_ICON_NAMES = new String[] {
+    
+    //Icon names
+    private static final String[] ANVIL_ICON_NAMES = new String[] {
             BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_base",
             BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_top_damaged_0",
             BetterAnvil.MOD_ID.toLowerCase() + ":" + "better_anvil_top_damaged_1",
@@ -53,22 +53,23 @@ public final class BlockAnvilBA extends BlockAnvil implements ITileEntityProvide
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
-    	anvilIcons = new IIcon[BlockAnvilBA.ANVIL_ICON_NAMES.length];
-    	for(int i = 0; i < anvilIcons.length; ++i) anvilIcons[i] = iconRegister.registerIcon(BlockAnvilBA.ANVIL_ICON_NAMES[i]);
+        anvilIcons = new IIcon[BlockAnvilBA.ANVIL_ICON_NAMES.length];
+        for(int i = 0; i < anvilIcons.length; ++i) anvilIcons[i] = iconRegister.registerIcon(BlockAnvilBA.ANVIL_ICON_NAMES[i]);
     }
 
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta) {
-		return new TileEntityBA();
-	}
-	
-	public void breakBlock(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, Block p_149749_5_, int p_149749_6_)
+    @Override
+    public TileEntity createNewTileEntity(World world, int meta) {
+        return new TileEntityBA();
+    }
+    
+    @Override
+    public void breakBlock(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, Block p_149749_5_, int p_149749_6_)
     {
         TileEntity tileentity = p_149749_1_.getTileEntity(p_149749_2_, p_149749_3_, p_149749_4_);
 
         if (tileentity instanceof TileEntityBA)
         {
-        	TileEntityBA tile = (TileEntityBA)tileentity;
+            TileEntityBA tile = (TileEntityBA)tileentity;
 
             for (int i1 = 0; i1 < tile.getSizeInventory(); ++i1)
             {
@@ -76,7 +77,7 @@ public final class BlockAnvilBA extends BlockAnvil implements ITileEntityProvide
 
                 if (itemstack != null)
                 {
-                	Random rand = new Random();
+                    Random rand = new Random();
                     float f = rand.nextFloat() * 0.8F + 0.1F;
                     float f1 = rand.nextFloat() * 0.8F + 0.1F;
                     float f2 = rand.nextFloat() * 0.8F + 0.1F;

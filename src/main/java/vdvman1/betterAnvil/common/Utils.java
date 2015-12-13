@@ -1,12 +1,12 @@
 package vdvman1.betterAnvil.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import vdvman1.betterAnvil.BetterAnvil;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class Utils {
 
