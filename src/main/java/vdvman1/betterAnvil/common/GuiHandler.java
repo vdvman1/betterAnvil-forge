@@ -25,7 +25,7 @@ public final class GuiHandler implements IGuiHandler {
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
         switch(id) {
             case 0:
-                return new GuiRepairBA(player.inventory, world, z, z, z);
+                return new GuiRepairBA(player.inventory, world, x, y, z);
             default:
                 return null;
         }
