@@ -18,8 +18,8 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'forge'
 
-sourceCompatibility = "1.6"
-targetCompatibility = "1.7"
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
 
 version = project.properties['Version']
 group = "vdvman1.betterAnvil.BetterAnvil"

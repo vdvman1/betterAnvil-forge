@@ -50,47 +50,48 @@ public final class BetterAnvil {
         Config.renamingRepairBonus = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "renamingRepairBonus", 1).getInt(1);
         Config.mainRepairBonusPercent = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "mainRepairBonusPercent", 12).getInt(12) / 100;
         Config.repairCostPerItem = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "repairCostPerItem", 3).getInt(3);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "enchantCombineRepairCost", 2);
         prop.comment = "Cost to increase an enchantment by a level";
         Config.enchantCombineRepairCost = prop.getInt(2);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "enchantTransferRepairCost", 1);
         prop.comment = "Cost to transfer an enchantment to a tool";
         Config.enchantTransferRepairCost = prop.getInt(1);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "enchantCombineRepairBonus", 2);
         prop.comment = "Repair bonus added when increasing an enchantment by a level";
         Config.enchantCombineRepairBonus = prop.getInt(2);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "enchantTransferRepairBonus", 1);
         prop.comment = "Repair bonus added when transfering an enchantment to a tool";
         Config.enchantTransferRepairBonus = prop.getInt(1);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "copyEnchantToBookCostMultiplier", 1);
         prop.comment = "Cost muliplier per enchantment copied onto a book\nThis is multiplied by the enchantment level";
         Config.copyEnchantToBookCostMultiplier = prop.getInt(2);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "copyEnchantToBookRepairBonus", 1);
         prop.comment = "Repair bonus added when copying an enchantment to a book";
         Config.copyEnchantToBookRepairBonus = prop.getInt(1);
-        
+
         prop = config.get(BetterAnvil.CATEGORY_ADJUSTMENTS, "itemRepairAmount", 25);
         prop.comment = "Percentage each item will repair the tool by";
         Config.itemRepairAmount = prop.getInt(25) / 100.0D;
         config.save();
 
-    }
-
-    //Called during initialization, used for registering everything etc.
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
+        //Register substitutes for anvil
         try {
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.BLOCK, BetterAnvil.ANVIL);
             GameRegistry.addSubstitutionAlias("minecraft:anvil", Type.ITEM, new ItemAnvilBlock(BetterAnvil.ANVIL));
         } catch(ExistingSubstitutionException e) {
             e.printStackTrace();
         }
+    }
+
+    //Called during initialization, used for registering everything etc.
+    @EventHandler
+    public void init(FMLInitializationEvent event) {
         MinecraftForge.EVENT_BUS.register(EventHandlerBA.INSTANCE);
 
         //register gui

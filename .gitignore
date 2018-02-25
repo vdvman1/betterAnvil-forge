@@ -18,3 +18,10 @@
 /forge_logo.png
 /mcpmod.info
 /Start.java
+
+##Workspace
+/.gradle
+*.iml
+*.ipr
+*.iws
+/build
